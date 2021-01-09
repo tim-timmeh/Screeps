@@ -1,0 +1,11 @@
+{
+  "libs": [
+    "screeps"
+  ],
+  "plugins": {
+    "node": {},
+    "doc_comment": {
+      "fullDocs": true
+    }
+  }
+}
