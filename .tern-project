@@ -1,7 +1,9 @@
 {
   "libs": [
-    "screeps",
     "underscore"
+  ],
+  "loadEagerly": [
+    "ScreepsAutocomplete/**/*.js"
   ],
   "plugins": {
     "node": {},
