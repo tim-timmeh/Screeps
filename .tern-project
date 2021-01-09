@@ -1,6 +1,7 @@
 {
   "libs": [
-    "screeps"
+    "screeps",
+    "underscore"
   ],
   "plugins": {
     "node": {},
