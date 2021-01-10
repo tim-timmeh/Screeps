@@ -1,4 +1,4 @@
-// These are updated Screeps constants to use with linter-eslint. 
+// These are updated Screeps constants to use with linter-eslint.
 //
 const constants = require('lib/constants.js');
 const node = require('lib/node.js');
