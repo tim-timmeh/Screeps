@@ -1,61 +1,29 @@
-'use strict'
+
+
+
+state steps:
+  build/init: Instantiate objects, setup the framework for everything, including operations and missions.
+  pre-run: calculations, creep assignments etc
+  run: run game state changing tasks
+  post: perform post action tasks / cleanup
+
+framework:
+King top level management
+  queen (loophelper) generates General for each colony/controller
+General generates Operations
+Operations generate Missions
+Missions assign tasks to Creeps
+Creeps perform tasks
+
+assisting framework:
+  Defcon sets
+-----
 
 //Function factorys dont use new/this, use object.create to link prototype.
 //Constructor Functions use new, .call(this), .prototype = object.create(.prototype), prototype.constructer.
 //Classes use new, class, constructor, extend.
 
-----
-
-function king() { // factory, how to build the object
-
-}
-king.prototype.build = function () { // Initialize / build objects required
-
-};
-king.prototype.rolecall = function () { // perform rolecall on required creeps spawn if needed
-
-};
-king.prototype.action = function () { // perform actions / missions
-
-};
-//king.prototype.finalize = function () { // finalize?
-//
-//};
-//
-// Additional methods/functions below
-
-----
-
-function OperationBase(flag, flagName, flagType, king) {
-  let opBase = Object.create(Operation(this, flag, flagName, flagType, king)); // uses params to pass object through operation factory first
-  opBase.priority = PRIORITY.CORE;
-  opBase.memory.bootstrapTimer = opBase.memory.bootstrapTimer || 280
-  return opBase;
-};
-
------
-
-//https://medium.com/javascript-in-plain-english/class-factory-and-object-prototypes-b4a7fff7dba8
-//Example of factory function. Inheritance is from Object.create (Object.create() method creates a new object, using an existing object as the prototype of the newly created object.)
-
-const RegularEmployee = {
-  wagePerHour: 15,
-  getWageReport: function () {
-    const totalWage = calculateWage(this.wagePerHour, this.hours);
-    return `${this.name} total wages: ${totalWage}`;
-  }
-};
-const Employee = (name, hoursWorked, model) => {
-   let newEmployee = Object.create(model);
-   newEmployee.name = name;
-   newEmployee.hours = hoursWorked;
-   newEmployee.totalWage = newEmployee.getWageReport();
-   return Object.freeze(newEmployee);
-}
-const employeeThree = Employee("Amy", 20, RegularEmployeeModel);
-employeeThree.totalWage; // output: "Amy total wages: 300"
-
------
+-----  OLD
 
 let fname = { firstName : 'Black' };
 let lname = { lastName : 'Panther'}
