@@ -6,5 +6,8 @@
         {
             "path": "..\\..\\..\\..\\..\\AppData\\Local\\Screeps\\scripts\\screeps.com"
         }
-    ]
+    ],
+    "settings": {
+        "editor.tabSize": 2
+    }
 }

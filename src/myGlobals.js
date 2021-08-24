@@ -50,3 +50,16 @@ global.hasRespawned = function () {
     Memory.respawnTick = Game.time;    // if all cases point to a respawn, you've respawned
     return true;
 }
+
+global.respawn = function() { // resets flags and memory
+    for (let f in Game.flags) {
+      Game.flags[f].remove();
+    }
+    //Memory = {}; // cant re-assign constant
+    for (let member in Memory) delete Memory[member];
+    RawMemory.set("");
+};
+
+export default function () {
+    
+}
