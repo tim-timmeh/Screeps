@@ -11,9 +11,11 @@ if (global.hasRespawned()) { // check for respawn. needs fix?
 
 if(global.debug)console.log(`#Global has been reset!\n#Overhead reset CPU: ${Game.cpu.getUsed().toFixed(2)} (${(Game.cpu.getUsed()/Game.cpu.limit*100).toFixed(2) || '(sim)'}%), Memory: ${global.memorySize/1000} KB(${(global.memorySize/2048000*100).toFixed(2)}%)`);
 
+global.profilerGlobalReset.prime()
+
 export function loop () { // Main loop
   profiler.wrap(function(){ // profiler wrapper
-
+    global.profilerGlobalReset.run()
   });
   exportStats()
 }

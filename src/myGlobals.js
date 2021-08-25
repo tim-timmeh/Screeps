@@ -1,4 +1,5 @@
 'use strict'
+import './config';
 
 /**
  * global.hasRespawned(), returns boolean whether this is the first tick after a respawn or not
@@ -59,6 +60,24 @@ global.respawn = function() { // resets flags and memory
     for (let member in Memory) delete Memory[member];
     RawMemory.set("");
 };
+
+/**
+ * Runs profiler, .prime will set it to run on global reset for config value or 10s, .run will run profiler at loop 
+ * 
+ */
+global.profilerGlobalReset = {
+    prime : function() {
+      if(global.debug){if(global.profilerGlobalResetSetTicks === undefined)global.profilerGlobalResetSetTicks = 10;
+        global.profilerGlobalResetSetTicks ? console.log(`#Activating profiler for ${global.profilerGlobalResetSetTicks} ticks`):'';  // Set profiler to be run
+      }
+    },
+    run : function() {
+      if(global.debug && global.profilerGlobalResetSetTicks) { // Run profiler
+        Game.profiler.profile(global.profilerGlobalResetSetTicks);
+        global.profilerGlobalResetSetTicks = 0;
+      }
+    }
+  }
 
 export default function () {
     
