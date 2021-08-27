@@ -26,7 +26,6 @@ Object.defineProperty(OwnedStructure.prototype, "memory", { // Shortcut for Owne
   enumerable: false
 });
 
-
 Object.defineProperty(Source.prototype, 'memory', { // Shortcut for source memory
     configurable: true,
     get: function() {
