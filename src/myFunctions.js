@@ -1,6 +1,7 @@
 'use strict'
-import _ from "lodash";
 // Custom functions reusable in code
+
+import _ from "lodash";
 
 /**
  * Converts an array to an object

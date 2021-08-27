@@ -1,11 +1,18 @@
 'use strict'
+// Prototypes are giving an object not yet created a function object to execute. Eg Certain creep/spawn/room to do something.
+
 import _ from 'lodash';
 import { ensureMemTreeObj } from './myFunctions';
-// Giving an object not yet created a function to perform. Eg Certain creep/spawn/room to do something.
 
-StructureSpawn.prototype['spawnTest'] = function() { // Test function
-  console.log(this.name + ' spawnTest');
+//TEST FUNCTION
+StructureSpawn.prototype.spawnTest = function() { //Prototypes like this will error until declared. defineProperty pre declared for get/set?
+  console.log(this.name + ' spawnTest' + this.spawnTest);
 };
+// @ts-ignore
+let testProto = new StructureSpawn('TestSpawnId');
+testProto.spawnTest()
+testProto.memory.get()
+//TEST FUNCTION
 
 Object.defineProperty(OwnedStructure.prototype, "memory", { // Shortcut for Owned Structures Memory
   get: function() { // Returns memory, if undefined creates & returns empty obj
@@ -18,6 +25,7 @@ Object.defineProperty(OwnedStructure.prototype, "memory", { // Shortcut for Owne
   configurable: true,
   enumerable: false
 });
+
 
 Object.defineProperty(Source.prototype, 'memory', { // Shortcut for source memory
     configurable: true,
@@ -57,7 +65,7 @@ Object.defineProperty(Source.prototype, 'memory', { // Shortcut for source memor
 
 Object.defineProperty(Room.prototype, 'sources', { // Get stored room sources, Set if none stored
   /**
-   * 
+   * testy
    * @returns 
    */
   get: function() {

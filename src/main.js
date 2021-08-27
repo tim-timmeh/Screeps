@@ -1,21 +1,24 @@
 'use strict'
-import './myGlobals';
+import {debug} from './config'
+import {hasRespawned, respawn, profilerGlobalReset} from './myHelperFn';
+import MemHack from './MemHack'
 import * as profiler from './screeps-profiler1';
 import {exportStats} from  './myFunctions';
 profiler.enable();
 
-if (global.hasRespawned()) { // check for respawn. needs fix?
+if (hasRespawned()) { // check for respawn. needs fix?
   console.log('******* RESPAWN DETECTED ********')
-  global.respawn(); // reset flags and meory
+  respawn(); // reset flags and meory
 }
 
-if(global.debug)console.log(`#Global has been reset!\n#Overhead reset CPU: ${Game.cpu.getUsed().toFixed(2)} (${(Game.cpu.getUsed()/Game.cpu.limit*100).toFixed(2) || '(sim)'}%), Memory: ${global.memorySize/1000} KB(${(global.memorySize/2048000*100).toFixed(2)}%)`);
+if(debug)console.log(`#Global has been reset!\n#Overhead reset CPU: ${Game.cpu.getUsed().toFixed(2)} (${(Game.cpu.getUsed()/Game.cpu.limit*100).toFixed(2) || '(sim)'}%), Memory: ${global.memorySize/1000} KB(${(global.memorySize/2048000*100).toFixed(2)}%)`);
 
-global.profilerGlobalReset.prime()
+let profilerRun = profilerGlobalReset.prime() //primes to run profiler or not
 
 export function loop () { // Main loop
+  MemHack.pretick()
   profiler.wrap(function(){ // profiler wrapper
-    global.profilerGlobalReset.run()
+    if (profilerRun) {profilerRun = profilerGlobalReset.run()} // if primed, run profiler
   });
   exportStats()
 }

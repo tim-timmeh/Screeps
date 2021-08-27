@@ -1,5 +1,8 @@
 'use strict'
-import './config';
+//General upper level helper functions
+
+import {debug, profilerGlobalResetSetTicks} from './config';
+let profilerGlobalResetTicks = (profilerGlobalResetSetTicks || 10);
 
 /**
  * global.hasRespawned(), returns boolean whether this is the first tick after a respawn or not
@@ -25,7 +28,7 @@ import './config';
  * v1.1 (by qnz): - fixed a condition where room.controller.safeMode can be SAFE_MODE_DURATION too
  *                - improved performance of creep number check (https://jsperf.com/isempty-vs-isemptyobject/23)
  */
-global.hasRespawned = function () {
+export function hasRespawned() {
     if(Memory.respawnTick && Memory.respawnTick === Game.time) {    // check for multiple calls on same tick
         return true;
     }
@@ -51,8 +54,10 @@ global.hasRespawned = function () {
     Memory.respawnTick = Game.time;    // if all cases point to a respawn, you've respawned
     return true;
 }
-
-global.respawn = function() { // resets flags and memory
+/**
+ * Resets flags and memory
+ */
+export function respawn() { 
     for (let f in Game.flags) {
       Game.flags[f].remove();
     }
@@ -63,18 +68,26 @@ global.respawn = function() { // resets flags and memory
 
 /**
  * Runs profiler, .prime will set it to run on global reset for config value or 10s, .run will run profiler at loop 
- * 
  */
-global.profilerGlobalReset = {
+export const profilerGlobalReset = {
+  /**
+   * Set profiler to be run (if debug)
+   * @returns true
+   */
     prime : function() {
-      if(global.debug){if(global.profilerGlobalResetSetTicks === undefined)global.profilerGlobalResetSetTicks = 10;
-        global.profilerGlobalResetSetTicks ? console.log(`#Activating profiler for ${global.profilerGlobalResetSetTicks} ticks`):'';  // Set profiler to be run
+      if(debug && profilerGlobalResetTicks){
+        console.log(`#Activating profiler for ${profilerGlobalResetTicks} ticks`); 
+        return true;
       }
     },
+    /**
+     * Run profiler (if debug) 
+     * @returns false
+     */
     run : function() {
-      if(global.debug && global.profilerGlobalResetSetTicks) { // Run profiler
-        Game.profiler.profile(global.profilerGlobalResetSetTicks);
-        global.profilerGlobalResetSetTicks = 0;
+      if(debug && profilerGlobalResetTicks) {
+        Game.profiler.profile(profilerGlobalResetTicks);
+        return false;
       }
     }
   }
