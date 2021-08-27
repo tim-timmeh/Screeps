@@ -28,7 +28,7 @@ function setupProfiler() {
     restart() {
       if (Profiler.isProfiling()) {
         const filter = Memory.profiler.filter;
-        let duration;
+        let duration = false;
         if (!!Memory.profiler.disableTick) {
           // Calculate the original duration, profile is enabled on the tick after the first call,
           // so add 1.
@@ -308,36 +308,43 @@ const Profiler = {
   },
 };
 
-export function wrap(callback) {
-  if (enabled) {
-    setupProfiler();
-  }
+module.exports = {
+  wrap(callback) {
+    if (enabled) {
+      setupProfiler();
+    }
 
-  if (Profiler.isProfiling()) {
-    usedOnStart = Game.cpu.getUsed();
+    if (Profiler.isProfiling()) {
+      usedOnStart = Game.cpu.getUsed();
 
-    // Commented lines are part of an on going experiment to keep the profiler
-    // performant, and measure certain types of overhead.
-    // var callbackStart = Game.cpu.getUsed();
-    const returnVal = callback();
-    // var callbackEnd = Game.cpu.getUsed();
-    Profiler.endTick();
-    // var end = Game.cpu.getUsed();
-    // var profilerTime = (end - start) - (callbackEnd - callbackStart);
-    // var callbackTime = callbackEnd - callbackStart;
-    // var unaccounted = end - profilerTime - callbackTime;
-    // console.log('total-', end, 'profiler-', profilerTime, 'callbacktime-',
-    // callbackTime, 'start-', start, 'unaccounted', unaccounted);
-    return returnVal;
-  }
+      // Commented lines are part of an on going experiment to keep the profiler
+      // performant, and measure certain types of overhead.
 
-  return callback();
-}
-export function enable() {
-  enabled = true;
-  hookUpPrototypes();
-}
-export const output = Profiler.output;
-export const registerObject = profileObjectFunctions;
-export const registerFN = profileFunction;
-export const registerClass = profileObjectFunctions;
+      // var callbackStart = Game.cpu.getUsed();
+      const returnVal = callback();
+      // var callbackEnd = Game.cpu.getUsed();
+      Profiler.endTick();
+      // var end = Game.cpu.getUsed();
+
+      // var profilerTime = (end - start) - (callbackEnd - callbackStart);
+      // var callbackTime = callbackEnd - callbackStart;
+      // var unaccounted = end - profilerTime - callbackTime;
+      // console.log('total-', end, 'profiler-', profilerTime, 'callbacktime-',
+      // callbackTime, 'start-', start, 'unaccounted', unaccounted);
+      return returnVal;
+    }
+
+    return callback();
+  },
+
+  enable() {
+    enabled = true;
+    hookUpPrototypes();
+  },
+
+  output: Profiler.output,
+
+  registerObject: profileObjectFunctions,
+  registerFN: profileFunction,
+  registerClass: profileObjectFunctions,
+};
