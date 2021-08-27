@@ -2,7 +2,7 @@
 import {debug} from './config'
 import {hasRespawned, respawn, profilerGlobalReset} from './myHelperFn';
 import MemHack from './MemHack'
-import * as profiler from './screeps-profiler1';
+import * as profiler from './screeps-profiler';
 import {exportStats} from  './myFunctions';
 profiler.enable();
 
