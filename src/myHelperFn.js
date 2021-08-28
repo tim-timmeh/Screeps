@@ -52,6 +52,8 @@ export function hasRespawned() {
         return false;
     }
     Memory.respawnTick = Game.time;    // if all cases point to a respawn, you've respawned
+    console.log('******* RESPAWN DETECTED ********');
+    respawn(); // reset flags and meory
     return true;
 }
 /**
