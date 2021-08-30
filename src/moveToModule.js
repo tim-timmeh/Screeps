@@ -1,8 +1,11 @@
 "use strict";
-var positionMem;
-                                      //Destination, ignore creeps, stuck counter
+let positionMem;
+
+/**
+ * Patches moveTo() function to include reset pathing on creep stuck count
+ */
 Creep.prototype.moveToModule = function(destination, ignore = true, ticks = 2) {
-  var reusePath = 50;
+  let reusePath = 50;
   if (!this.memory.stuckCount) {
     this.memory.stuckCount = 0;
   }
@@ -19,10 +22,11 @@ Creep.prototype.moveToModule = function(destination, ignore = true, ticks = 2) {
     reusePath = 1;
   }
   this.memory.position = this.pos;
-  this.moveTo(destination, {
+  let moveResult = this.moveTo(destination, {
     reusePath: reusePath,
     ignoreCreeps: ignore,
     visualizePathStyle: {stroke: '#fff'},
   });
+  return moveResult;
 };
 module.exports = Creep.prototype.moveToModule;

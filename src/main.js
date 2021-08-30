@@ -1,59 +1,33 @@
 "use strict";
-var roleHarvester = require("role.harvester");
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = require("role.builder");
-var roleRepairer = require("role.repairer");
-var roleTower = require("role.tower");
-var roleMiner = require("role.miner");
-var roleHauler = require("role.hauler");
-var roleButler = require("role.butler");
-var roleClaimer = require("role.claimer");
-var rolePioneer = require("role.pioneer");
-var roleAttacker = require("role.attacker");
-var roleTank = require("role.tank");
-var roleDefender = require("role.defender");
-var roleHealer = require("role.healer");
-var exportStats = require('stats');
+const roleHarvester = require("./role.harvester");
+const roleUpgrader = require("./role.upgrader");
+const roleBuilder = require("./role.builder");
+const roleRepairer = require("./role.repairer");
+const roleTower = require("./role.tower");
+const roleMiner = require("./role.miner");
+const roleHauler = require("./role.hauler");
+const roleButler = require("./role.butler");
+const roleClaimer = require("./role.claimer");
+const rolePioneer = require("./role.pioneer");
+const roleAttacker = require("./role.attacker");
+const roleTank = require("./role.tank");
+const roleDefender = require("./role.defender");
+const roleHealer = require("./role.healer");
+const exportStats = require('./stats');
+const myFunc = require('./myFunc');
+const profiler = require('screeps-profiler');
+
+const _ = require("lodash");
+
 let enemyspotted;
 let globalResetTick = Game.time;
 
-
-// Is obj empty?
-function isEmpty(obj) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      return false;
-    }
-  }
-  return true;
-}
-const profiler = require('screeps-profiler');
-
-// This line monkey patches the global prototypes.
+/**
+ * This line monkey patches the global prototypes.
+ */
 profiler.enable();
 module.exports.loop = function () {
   profiler.wrap(function () {
-
-    /*TODO*
-    ***claimer to change signs
-    ** Research Overmind.
-
-    *** Check if MemoryPathing broke resource pickup from ground
-    *** Wipe old containers from memory if they die.
-    *** Check how miners are spawned and not limited by haulers as when starting miners will be more (building containers for hauler spawn)
-    *** If get stuck do normal move
-    ** Creeps get from storage > container > source
-    ** Dynamic creep size spawning
-    ** Miners to place/build container and add id to memory. (Needs work part)
-    ** Upgrader if storage.rangeTo(Upgrader) > 4 then Build Link (Or spawn with MOVE/CARRY parts? untill link?)
-    ** Haulers to build Roads
-    * while above ~50% storage spawn super || multiple upgraders?
-    * find resource(not in mem), add to mem, if hauler.xy close to mem.xy & !carryCapacity, pickup, continue
-    * breakup main into different modules (spawner etc)
-    * Optimise vars to .deserialize from memory if possible, if not do find then .serialize to memory.
-    * .serializePath && .deserializePath - if memory false -> Do findClosestByPath -> serialize to memory ->
-    creep.move via memory -> at error || end = clear memory
-    */
 
     // Clear memory of old creeps.
     for (var name in Memory.creeps) {
@@ -88,8 +62,7 @@ module.exports.loop = function () {
       var newName;
       var lastContainer;
       var spawnRoomContainers = spawn.room.name;
-
-
+        //console.log((spawn.room.storage.store.getFreeCapacity(RESOURCE_ENERGY)))
       // Check role array, spawn if below specified count.
       if (butlers.length < 2) {
         newName = "Butler" + Game.time + spawn.room.name;
@@ -99,7 +72,6 @@ module.exports.loop = function () {
             role: "butler"
           }
         });
-
       } else if ((enemyspotted = spawn.room.find(FIND_HOSTILE_CREEPS)).length > 0 && defender.length < 1){
         console.log('ENEMYS FOUND' + enemyspotted.length);
         if (enemyspotted[0].owner.username != 'Invader' || spawn.room.controller.level <= 2 || enemyspotted.length >=2) {
@@ -127,7 +99,7 @@ module.exports.loop = function () {
           }
         }
 
-      } else if (spawn.room.energyCapacityAvailable > 800 && (miners.length < 1 || !(isEmpty(targetsSt = spawn.room.find(FIND_MY_STRUCTURES, {
+      } else if (spawn.room.energyCapacityAvailable > 800 && (miners.length < 1 || !(myFunc.isEmpty(targetsSt = spawn.room.find(FIND_MY_STRUCTURES, {
         filter: (s) => {
           return (s.structureType == STRUCTURE_STORAGE);
         }
@@ -194,7 +166,7 @@ module.exports.loop = function () {
             role: "upgrader"
           }
         });
-      } else if (upgraders.length < 1) {
+      } else if (upgraders.length < 1 || (spawn.room.storage && (spawn.room.storage.store.getFreeCapacity(RESOURCE_ENERGY) == 0))) {
         newName = "Upgrader" + Game.time + spawn.room.name;
         console.log("Upgraders: " + spawn.room.name + " - " + upgraders.length + "\nSpawning new upgrader: " + newName);
         spawn.spawnCreep([ WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE,], newName, {
@@ -239,7 +211,7 @@ module.exports.loop = function () {
       }
 
       // Check for claimer flag
-      if (!isEmpty(Game.flags) && Game.flags.claimFlag) {
+      if (!myFunc.isEmpty(Game.flags) && Game.flags.claimFlag) {
         var claimers = _.filter(Game.creeps, (creep) => creep.memory.role == "claimer");
         if (claimers.length == 0) {
           newName = "Claimer" + Game.time + spawn.room.name;
@@ -253,7 +225,7 @@ module.exports.loop = function () {
       }
 
       // Check for pioneer flag
-      if (!isEmpty(Game.flags) && Game.flags.pioneerFlag) {
+      if (!myFunc.isEmpty(Game.flags) && Game.flags.pioneerFlag) {
         var pioneers = _.filter(Game.creeps, (creep) => creep.memory.role == "pioneer");
         if (pioneers.length < 2) {
           newName = "Pioneer" + Game.time + spawn.room.name;
@@ -267,7 +239,7 @@ module.exports.loop = function () {
       }
 
       // Check for attacker flag
-      if (!isEmpty(Game.flags) && Game.flags.attackerFlag) {
+      if (!myFunc.isEmpty(Game.flags) && Game.flags.attackerFlag) {
         var attackers = _.filter(Game.creeps, (creep) => creep.memory.role == "attacker");
         if (attackers.length < 1) {
           newName = "Attacker" + Game.time + spawn.room.name;
@@ -282,7 +254,7 @@ module.exports.loop = function () {
       }
 
       // Check tank flag
-      if (!isEmpty(Game.flags) && Game.flags.tankFlag) {
+      if (!myFunc.isEmpty(Game.flags) && Game.flags.tankFlag) {
         var tanks = _.filter(Game.creeps, (creep) => creep.memory.role == "tank");
         if (tanks.length < 1) {
           newName = "Tank" + Game.time + spawn.room.name;
@@ -298,7 +270,7 @@ module.exports.loop = function () {
         }
       }
       // Check defender flag
-      if (!isEmpty(Game.flags) && Game.flags.defenderFlag) {
+      if (!myFunc.isEmpty(Game.flags) && Game.flags.defenderFlag) {
         var defender = _.filter(Game.creeps, (creep) => creep.memory.role == "defender");
         if (defender.length < 1) {
           newName = "Defender" + Game.time + spawn.room.name;
@@ -314,7 +286,7 @@ module.exports.loop = function () {
         }
       }
       // Check for healer flag
-      if (!isEmpty(Game.flags) && Game.flags.healerFlag) {
+      if (!myFunc.isEmpty(Game.flags) && Game.flags.healerFlag) {
         var healer = _.filter(Game.creeps, (creep) => creep.memory.role == "healer");
         if (healer.length < 3) {
           newName = "Healer" + Game.time + spawn.room.name;

@@ -1,9 +1,12 @@
 "use strict";
-require("moveToModule");
+require("./moveToModule");
 var roleUpgrader = require("role.upgrader");
 var roleBuilder = {
 
-  /** @param {Creep} creep **/
+  /**
+   * 
+   * @param {Creep} creep 
+   */
   run: function(creep) {
     if (creep.memory.building && creep.carry.energy == 0) {
       creep.memory.building = false;
