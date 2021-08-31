@@ -16,7 +16,7 @@ var roleTower = {
 			console.log("Enemy Found, \ud83d\udd2b Attacking " + enemy);
 			tower.attack(enemy);
 		// Heal creeps while above 25% energy
-	    } else if (targetsCreepRepair != "" && tower.energy > (tower.energyCapacity * 0.25)) {
+	    } else if (targetsCreepRepair && tower.energy > (tower.energyCapacity * 0.25)) {
 			tower.heal(targetsCreepRepair[0]);
 		// Repair my structures while above 50% energy
 	} else if (targetsMyRepair != "" && targetsMyRepair[0].hits < 100000 && tower.energy > (tower.energyCapacity * 0.5)) {

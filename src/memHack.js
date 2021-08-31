@@ -1,11 +1,15 @@
 // @ts-nocheck
-// Usage:
-// At top of main: import MemHack from './MemHack'
-// At top of loop(): MemHack.pretick()
-// Thats it!
+/**
+ * Stores Memory in global to skip JSON.parse() at first-access of Memory in a tick. 
+ * At top of main: import MemHack from './MemHack'.
+ * At top of loop(): MemHack.pretick().
+ */
 const MemHack = {
   memory: null,
   parseTime: -1,
+  /**
+   * Parses Memory to global.Memory
+   */
   register () {
     const start = Game.cpu.getUsed()
     this.memory = Memory
@@ -14,6 +18,9 @@ const MemHack = {
     if (global.debug) console.log(`MemHack Parse Time: ${this.parseTime}`)
     this.memory = RawMemory._parsed
   },
+  /**
+   * Sets Memory from global.Memory obj saving parse time.
+   */
   pretick () {
     delete global.Memory
     global.Memory = this.memory

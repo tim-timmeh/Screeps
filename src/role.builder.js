@@ -1,7 +1,7 @@
 "use strict";
 require("./moveToModule");
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = {
+const roleUpgrader = require("./role.upgrader");
+const roleBuilder = {
 
   /**
    * 
@@ -33,7 +33,7 @@ var roleBuilder = {
           return (s.structureType == STRUCTURE_STORAGE);
         }
       });
-      if (targetsS != "" && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
+      if (targetsS && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
         if (creep.withdraw(targetsS[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targetsS[0]);
         }

@@ -32,6 +32,7 @@ function setupProfiler() {
         if (!!Memory.profiler.disableTick) {
           // Calculate the original duration, profile is enabled on the tick after the first call,
           // so add 1.
+          // @ts-ignore
           duration = Memory.profiler.disableTick - Memory.profiler.enabledTick + 1;
         }
         const type = Memory.profiler.type;

@@ -1,4 +1,5 @@
 "use strict";
+/*
 const roleHarvester = require("./role.harvester");
 const roleUpgrader = require("./role.upgrader");
 const roleBuilder = require("./role.builder");
@@ -13,14 +14,16 @@ const roleAttacker = require("./role.attacker");
 const roleTank = require("./role.tank");
 const roleDefender = require("./role.defender");
 const roleHealer = require("./role.healer");
-const exportStats = require('./stats');
+*/
+const rolesMy = require ('./rolesMy');
 const myFunc = require('./myFunc');
 const profiler = require('screeps-profiler');
 
+// Delete when pushing to world? for TS checking in VSCode.
 const _ = require("lodash");
 
 let enemyspotted;
-let globalResetTick = Game.time;
+const globalResetTick = Game.time;
 
 /**
  * This line monkey patches the global prototypes.
@@ -36,12 +39,14 @@ module.exports.loop = function () {
         console.log("Clearing non-existing creep memory: ", name);
       }
     }
+    // @ts-ignore
     let targetsSt = undefined;
     // Multi room - run code on each room
     for (var spawnName in Game.spawns) {
       var spawn = Game.spawns[spawnName];
       var spawnRoomCreeps = spawn.room.find(FIND_MY_CREEPS);
       // Create array of each creep role.
+      // @ts-ignore
       var harvesters = _.filter(spawnRoomCreeps, (creep) => creep.memory.role == "harvester");
       var repairers = _.filter(spawnRoomCreeps, (creep) => creep.memory.role == "repairer");
       var upgraders = _.filter(spawnRoomCreeps, (creep) => creep.memory.role == "upgrader");
@@ -56,7 +61,8 @@ module.exports.loop = function () {
       });
       var roomAllSources = roomSources//.concat(roomMinerals);
       //roomSources.push(...roomMinerals)
-      if (spawn.room.find(FIND_MY_STRUCTURES, {filter: e => e.structureType == STRUCTURE_EXTRACTOR}) != "") {
+      if (spawn.room.find(FIND_MY_STRUCTURES, {filter: e => e.structureType == STRUCTURE_EXTRACTOR})) {
+        // @ts-ignore
         roomAllSources = roomSources.concat(roomMinerals);
       }
       var newName;
@@ -106,9 +112,10 @@ module.exports.loop = function () {
       }))) && (miners.length < roomAllSources.length && haulers.length > 0))) {
         for (var source of roomAllSources) {
           let filteredCreep = _.filter(Game.creeps, (creep) => creep.memory.minerSource == source.id);
-          if (filteredCreep != "") {
+          if (filteredCreep) {
             continue;
-          } else if (roomMinerals != "" && source.id == roomMinerals[0].id) {
+          // @ts-ignore
+          } else if (roomMinerals && source.id == roomMinerals[0].id) {
             newName = "Mineral Miner" + Game.time + spawn.room.name;
             console.log("This source has no creep: " + spawn.room.name + " - " + source + "\nSpawning new mineral miner: " + newName);
             spawn.spawnCreep([WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE], newName, {
@@ -132,7 +139,7 @@ module.exports.loop = function () {
         }
       } else if (spawn.room.energyCapacityAvailable > 800 && (Memory.containersTest[spawnRoomContainers] && haulers.length < Memory.containersTest[spawnRoomContainers].length)) {
         for (var container of Memory.containersTest[spawnRoomContainers]) {
-          if (lastContainer == container || _.filter(Game.creeps, (creep) => creep.memory.role == "hauler" && creep.memory.haulerSource == container) == "") {
+          if (lastContainer == container || _.filter(Game.creeps, (creep) => creep.memory.role == "hauler" && creep.memory.haulerSource == container)) {
             newName = "Hauler" + Game.time + spawn.room.name;
             console.log("Haulers: " + spawn.room.name + " - " + haulers.length + "\nSpawning new hauler: " + newName + "\nFor container : " + container);
             spawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY], newName, {
@@ -314,53 +321,66 @@ module.exports.loop = function () {
       // Creep AI
       for (var name in Game.creeps) {
         var creep = Game.creeps[name];
+        // @ts-ignore
         var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
         if (creep.memory.role == "butler") {
-          roleButler.run(creep);
+          // @ts-ignore
+          rolesMy.butler.run(creep);
           continue;
         }
         if (creep.memory.role == "upgrader") {
-          roleUpgrader.run(creep);
+          // @ts-ignore
+          rolesMy.upgrader.run(creep);
           continue;
         }
         if (creep.memory.role == "builder") {
-          roleBuilder.run(creep);
+          // @ts-ignore
+          rolesMy.builder.run(creep);
           continue;
         }
         if (creep.memory.role == "repairer") {
-          roleRepairer.run(creep);
+          // @ts-ignore
+          rolesMy.repairer.run(creep);
           continue;
         }
         if (creep.memory.role == "miner") {
-          roleMiner.run(creep);
+          // @ts-ignore
+          rolesMy.miner.run(creep);
           continue;
         }
         if (creep.memory.role == "hauler") {
-          roleHauler.run(creep);
+          // @ts-ignore
+          rolesMy.hauler.run(creep);
           continue;
         }
         if (creep.memory.role == "claimer") {
-          roleClaimer.run(creep);
+          // @ts-ignore
+          rolesMy.claimer.run(creep);
           continue;
         }
         if (creep.memory.role == "pioneer") {
-          rolePioneer.run(creep);
+          // @ts-ignore
+          rolesMy.pioneer.run(creep);
           continue;
         }
         if (creep.memory.role == "attacker") {
-          roleAttacker.run(creep);
+          // @ts-ignore
+          rolesMy.attacker.run(creep);
           continue;
         }
         if (creep.memory.role == "tank") {
-          roleTank.run(creep);
+          // @ts-ignore
+          rolesMy.tank.run(creep);
           continue;
         }
         if (creep.memory.role == "defender") {
-          roleDefender.run(creep);
+          // @ts-ignore
+          rolesMy.defender.run(creep);
           continue;
         }
         if (creep.memory.role == "healer") {
-          roleHealer.run(creep);
+          // @ts-ignore
+          rolesMy.healer.run(creep);
           continue;
         }
       }
@@ -368,8 +388,9 @@ module.exports.loop = function () {
       // Tower AI
       var towers = _.filter(Game.structures, s => s.structureType == STRUCTURE_TOWER);
       for (var tower of towers) {
-        roleTower.run(tower);
+        // @ts-ignore
+        rolesMy.tower.run(tower);
       }
-      exportStats(globalResetTick)
+      myFunc.exportStats(globalResetTick);
     });
   };

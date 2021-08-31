@@ -1,14 +1,11 @@
 "use strict";
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = require("role.builder");
-var rolePioneer = require("role.pioneer");
-require("moveToModule");
-var attackerFlag;
-var enemyRanged;
-var enemyTower;
-var enemyCreep;
-var enemyStructure;
-var roleAttacker = {
+//require("./moveToModule");
+let attackerFlag;
+let enemyRanged;
+let enemyTower;
+let enemyCreep;
+let enemyStructure;
+const roleAttacker = {
 
   /** @param {Creep} creep **/
   run: function(creep) {
