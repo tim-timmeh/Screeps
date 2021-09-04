@@ -14,7 +14,7 @@ const tank = require("./role.tank");
 const defender = require("./role.defender");
 const healer = require("./role.healer");
 
-modules.exports = {
+const rolesMy = {
   harvester,
   upgrader,
   builder,
@@ -30,3 +30,5 @@ modules.exports = {
   defender,
   healer,
 }
+
+module.exports = rolesMy
