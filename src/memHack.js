@@ -4,7 +4,7 @@
  * At top of main: import MemHack from './MemHack'.
  * At top of loop(): MemHack.pretick().
  */
-const MemHack = {
+const memHack = {
   memory: null,
   parseTime: -1,
   /**
@@ -27,5 +27,5 @@ const MemHack = {
     RawMemory._parsed = this.memory
   }
 }
-MemHack.register()
-module.exports = MemHack
+memHack.register()
+module.exports = memHack

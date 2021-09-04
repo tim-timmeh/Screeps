@@ -5,7 +5,7 @@ interface StructureSpawn {
     spawnTest(): any;
 }
 
-interface Creep {
+interface Creep extends Creep {
   /**
    * Patches moveTo() function to include reset pathing on creep stuck count
    * @param destination Can be an object with a room position, a room position object, or x,y position.
