@@ -26,12 +26,12 @@ const roleHauler = {
             stroke: '#fa0'
           }
         });
-      } else if (creep.withdraw(haulerSource, RESOURCE_LEMERGIUM) == ERR_NOT_IN_RANGE || creep.withdraw(haulerSource, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      } else if (creep.withdraw(haulerSource, RESOURCE_OXYGEN) == ERR_NOT_IN_RANGE || creep.withdraw(haulerSource, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveToModule(haulerSource);
       }
     } else {
       var targets;
-      if (creep.carry.energy != 0) {
+      if (creep.store.energy != 0) {
         targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {
           filter: (s) => {
             return (s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_SPAWN) &&
@@ -39,18 +39,31 @@ const roleHauler = {
           }
         });
       }
-      var targetsS = creep.room.find(FIND_MY_STRUCTURES, {
-        filter: (s) => {
-          return (s.structureType == STRUCTURE_STORAGE);
-        }
-      });
+      let targetsS
+      if (creep.store.energy != 0) {
+        targetsS = creep.room.find(FIND_MY_STRUCTURES, {
+          filter: (s) => {
+            return (s.structureType == STRUCTURE_STORAGE);
+          }
+        });
+      } else {
+        targetsS = creep.room.find(FIND_MY_STRUCTURES, {
+          filter: (s) => {
+            return (s.structureType == STRUCTURE_TERMINAL);
+          }
+        });
+      }
 
       if (targets != undefined) {
         if (creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targets);
         }
+      } else if (targetsS != "" && creep.store.energy == 0) {
+        if (creep.transfer(targetsS[0], RESOURCE_OXYGEN) == ERR_NOT_IN_RANGE) {
+          creep.moveToModule(targetsS[0]);
+        }
       } else if (targetsS != "" && creep.room.storage.store[RESOURCE_ENERGY] < targetsS[0].storeCapacity) {
-        if (creep.transfer(targetsS[0], RESOURCE_LEMERGIUM) == ERR_NOT_IN_RANGE || creep.transfer(targetsS[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.transfer(targetsS[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targetsS[0]);
         }
       } else {

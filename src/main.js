@@ -16,9 +16,9 @@ const _ = require("lodash");
 const globalResetTick = Game.time;
 
 /**
- * This line monkey patches the global prototypes.
+ * This line monkey patches the global prototypes. Broken?
  */
-profiler.enable();
+//profiler.enable();
 module.exports.loop = function () {
   profiler.wrap(function () {
 

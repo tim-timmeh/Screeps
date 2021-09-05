@@ -22,8 +22,7 @@ const creepSpawn = function () {
     });
     let roomAllSources = roomSources//.concat(roomMinerals);
     //roomSources.push(...roomMinerals)
-    if (spawn.room.find(FIND_MY_STRUCTURES, {filter: e => e.structureType == STRUCTURE_EXTRACTOR})) {
-      // @ts-ignore
+    if (spawn.room.find(FIND_MY_STRUCTURES, {filter: e => e.structureType == STRUCTURE_EXTRACTOR}).length) {
       roomAllSources = roomSources.concat(roomMinerals);
     }
     let newName;
@@ -73,10 +72,9 @@ const creepSpawn = function () {
     }))) && (miners.length < roomAllSources.length && haulers.length > 0))) {
       for (let source of roomAllSources) {
         let filteredCreep = _.filter(Game.creeps, (creep) => creep.memory.minerSource == source.id);
-        if (filteredCreep) {
+        if (filteredCreep.length) {
           continue;
-        // @ts-ignore
-        } else if (roomMinerals && source.id == roomMinerals[0].id) {
+        } else if (roomMinerals.length && source.id == roomMinerals[0].id) {
           newName = "Mineral Miner" + Game.time + spawn.room.name;
           console.log("This source has no creep: " + spawn.room.name + " - " + source + "\nSpawning new mineral miner: " + newName);
           spawn.spawnCreep([WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE], newName, {
@@ -126,7 +124,6 @@ const creepSpawn = function () {
         }
       });
     } else if (upgraders.length < 1 && spawn.room.energyCapacityAvailable <= 800) {
-        console.log(spawn.room.energyCapacityAvailable);
       newName = "Upgrader" + Game.time + spawn.room.name;
       console.log("Upgraders: " + spawn.room.name + " - " + upgraders.length + "\nSpawning new upgrader: " + newName);
       spawn.spawnCreep([WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], newName, {
