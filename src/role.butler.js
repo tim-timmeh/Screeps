@@ -6,7 +6,7 @@ const roleBuilder = require("./role.builder");
 const roleButler = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
+  run: function (creep) {
 
     if (creep.memory.building && creep.carry.energy == 0) {
       creep.memory.building = false;
@@ -18,13 +18,13 @@ const roleButler = {
     }
 
     if (!creep.memory.building) {
-      var sources;
-      var targetsS = creep.room.find(FIND_MY_STRUCTURES, {
+      let sources;
+      let targetsS = creep.room.find(FIND_MY_STRUCTURES, {
         filter: (s) => {
           return (s.structureType == STRUCTURE_STORAGE);
         }
       });
-      var droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5);
+      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5);
       if (droppedSource != "" && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
         creep.moveTo(droppedSource[0], {
           visualizePathStyle: {
@@ -39,13 +39,13 @@ const roleButler = {
         creep.moveToModule(sources);
       }
     } else {
-      var targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+      let targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
             structure.energy < structure.energyCapacity;
         }
       });
-      var targetsT = creep.room.find(FIND_STRUCTURES, {
+      let targetsT = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
         }

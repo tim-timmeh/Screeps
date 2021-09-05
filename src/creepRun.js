@@ -1,7 +1,7 @@
 'use strict';
-const rolesMy = require ('./rolesMy');
+const rolesMy = require('./rolesMy');
 
-const creepRun = function() {
+const creepRun = function () {
   for (let name in Game.creeps) {
     let creep = Game.creeps[name];
     //let targets = creep.room.find(FIND_CONSTRUCTION_SITES);
@@ -56,4 +56,4 @@ const creepRun = function() {
   }
 };
 
-module.exports = creepRun
+module.exports = creepRun;

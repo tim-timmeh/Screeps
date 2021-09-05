@@ -3,9 +3,9 @@ require('./moveToModule');
 const _ = require('lodash');
 
 const roleMiner = {
-  run: function(creep) {
+  run: function (creep) {
     let source = Game.getObjectById(creep.memory.minerSource);
-    let creepRoomName = creep.room.name
+    let creepRoomName = creep.room.name;
     let structures = [];
     if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(source);

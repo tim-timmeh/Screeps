@@ -1,2 +1,3 @@
 # Screeps
-2021 attempt at screeps. Setting up.
+
+Screeps, to learn & play with javascript/VSCode/git/github.

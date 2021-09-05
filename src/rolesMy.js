@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 const harvester = require("./role.harvester");
 const upgrader = require("./role.upgrader");
 const builder = require("./role.builder");
@@ -29,6 +29,6 @@ const rolesMy = {
   tank,
   defender,
   healer,
-}
+};
 
-module.exports = rolesMy
+module.exports = rolesMy;

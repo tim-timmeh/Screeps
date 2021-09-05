@@ -1,12 +1,12 @@
 "use strict";
 require('./moveToModule');
 const _ = require('lodash');
-const roleBuilder = require("role.builder");
+const roleBuilder = require("./role.builder");
 
 const roleRepairer = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
+  run: function (creep) {
 
     if (creep.memory.building && creep.carry.energy == 0) {
       creep.memory.building = false;
@@ -18,14 +18,14 @@ const roleRepairer = {
     }
 
     if (creep.memory.building) {
-      var targetsRepair
-      var targetsT = creep.room.find(FIND_STRUCTURES, {
+      let targetsRepair;
+      let targetsT = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
         }
       });
       if (targetsT.length > 0 && !(creep.room.storage) || targetsT.length > 0 && (creep.room.storage && (creep.room.storage.store[RESOURCE_ENERGY] > 500))) {
-        targetsT.sort((a, b) => a.energy - b.energy)
+        targetsT.sort((a, b) => a.energy - b.energy);
         if (creep.transfer(targetsT[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targetsT[0]);
         }
@@ -39,8 +39,8 @@ const roleRepairer = {
         roleBuilder.run(creep);
       }
     } else {
-      var sources;
-      var targetsS = creep.room.find(FIND_MY_STRUCTURES, {
+      let sources;
+      let targetsS = creep.room.find(FIND_MY_STRUCTURES, {
         filter: (s) => {
           return (s.structureType == STRUCTURE_STORAGE);
         }

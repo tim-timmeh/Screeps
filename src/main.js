@@ -32,15 +32,15 @@ module.exports.loop = function () {
         console.log("Clearing non-existing creep memory: ", name);
       }
     }
-    
+
     // Multi room - run code on each room
-    creepSpawn()
+    creepSpawn();
 
     // Creep AI
-    creepRun()
+    creepRun();
 
     // Tower AI
-    towerRun()
+    towerRun();
 
     myFunc.exportStats(globalResetTick);
   });

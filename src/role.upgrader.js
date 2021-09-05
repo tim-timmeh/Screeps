@@ -1,9 +1,10 @@
 "use strict";
-require("moveToModule");
-var roleUpgrader = {
+require("./moveToModule");
+
+const roleUpgrader = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
+  run: function (creep) {
     if (creep.memory.building && creep.carry.energy == 0) {
       creep.memory.building = false;
       creep.say("\u26CF harvest");
@@ -13,13 +14,13 @@ var roleUpgrader = {
       creep.say("\uD83D\uDC8E Upgrade");
     }
     if (!creep.memory.building) {
-      var sources;
-      var targetsS = creep.room.find(FIND_MY_STRUCTURES, {
+      let sources;
+      let targetsS = creep.room.find(FIND_MY_STRUCTURES, {
         filter: (s) => {
           return (s.structureType == STRUCTURE_STORAGE);
         }
       });
-      if (targetsS != "" && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
+      if (targetsS.length && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
         if (creep.withdraw(targetsS[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targetsS[0]);
         }

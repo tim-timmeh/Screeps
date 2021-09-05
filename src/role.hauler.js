@@ -6,7 +6,7 @@ const roleUpgrader = require("./role.upgrader");
 const roleHauler = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
+  run: function (creep) {
 
     if (creep.memory.building && _.sum(creep.carry) == 0) {
       creep.memory.building = false;
@@ -39,7 +39,7 @@ const roleHauler = {
           }
         });
       }
-      let targetsS
+      let targetsS;
       if (creep.store.energy != 0) {
         targetsS = creep.room.find(FIND_MY_STRUCTURES, {
           filter: (s) => {

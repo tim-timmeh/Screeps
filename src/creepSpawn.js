@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 const myFunc = require('./myFunc');
 const _ = require('lodash');
 
@@ -20,15 +20,18 @@ const creepSpawn = function () {
     let roomMinerals = spawn.room.find(FIND_MINERALS, {
       filter: a => a.mineralAmount > 0
     });
-    let roomAllSources = roomSources//.concat(roomMinerals);
+    let roomAllSources = roomSources; //.concat(roomMinerals);
     //roomSources.push(...roomMinerals)
-    if (spawn.room.find(FIND_MY_STRUCTURES, {filter: e => e.structureType == STRUCTURE_EXTRACTOR}).length) {
+    if (spawn.room.find(FIND_MY_STRUCTURES, {
+      filter: e => e.structureType == STRUCTURE_EXTRACTOR
+    }).length) {
+      // @ts-ignore
       roomAllSources = roomSources.concat(roomMinerals);
     }
     let newName;
     let lastContainer;
     let spawnRoomContainers = spawn.room.name;
-      //console.log((spawn.room.storage.store.getFreeCapacity(RESOURCE_ENERGY)))
+    //console.log((spawn.room.storage.store.getFreeCapacity(RESOURCE_ENERGY)))
     // Check role array, spawn if below specified count.
     if (butlers.length < 2) {
       newName = "Butler" + Game.time + spawn.room.name;
@@ -38,9 +41,9 @@ const creepSpawn = function () {
           role: "butler"
         }
       });
-    } else if ((enemyspotted = spawn.room.find(FIND_HOSTILE_CREEPS)).length > 0 && defender.length < 1){
+    } else if ((enemyspotted = spawn.room.find(FIND_HOSTILE_CREEPS)).length > 0 && defender.length < 1) {
       console.log('ENEMYS FOUND' + enemyspotted.length);
-      if (enemyspotted[0].owner.username != 'Invader' || spawn.room.controller.level <= 2 || enemyspotted.length >=2) {
+      if (enemyspotted[0].owner.username != 'Invader' || spawn.room.controller.level <= 2 || enemyspotted.length >= 2) {
 
         if (spawn.room.energyCapacityAvailable < 520) {
           console.log('Requires Defender!');
@@ -74,6 +77,7 @@ const creepSpawn = function () {
         let filteredCreep = _.filter(Game.creeps, (creep) => creep.memory.minerSource == source.id);
         if (filteredCreep.length) {
           continue;
+        // @ts-ignore
         } else if (roomMinerals.length && source.id == roomMinerals[0].id) {
           newName = "Mineral Miner" + Game.time + spawn.room.name;
           console.log("This source has no creep: " + spawn.room.name + " - " + source + "\nSpawning new mineral miner: " + newName);
@@ -101,7 +105,7 @@ const creepSpawn = function () {
         if (lastContainer == container || _.filter(Game.creeps, (creep) => creep.memory.role == "hauler" && creep.memory.haulerSource == container)) {
           newName = "Hauler" + Game.time + spawn.room.name;
           console.log("Haulers: " + spawn.room.name + " - " + haulers.length + "\nSpawning new hauler: " + newName + "\nFor container : " + container);
-          spawn.spawnCreep([MOVE,MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY], newName, {
+          spawn.spawnCreep([MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], newName, {
             memory: {
               role: "hauler",
               haulerSource: container
@@ -118,7 +122,7 @@ const creepSpawn = function () {
     } else if (upgraders.length < 1 && spawn.room.energyCapacityAvailable < 500) {
       newName = "Upgrader" + Game.time + spawn.room.name;
       console.log("Upgraders: " + spawn.room.name + " - " + upgraders.length + "\nSpawning new upgrader: " + newName);
-      spawn.spawnCreep([ WORK, CARRY, MOVE], newName, {
+      spawn.spawnCreep([WORK, CARRY, MOVE], newName, {
         memory: {
           role: "upgrader"
         }
@@ -134,7 +138,7 @@ const creepSpawn = function () {
     } else if (upgraders.length < 1 || (spawn.room.storage && (spawn.room.storage.store.getFreeCapacity(RESOURCE_ENERGY) == 0))) {
       newName = "Upgrader" + Game.time + spawn.room.name;
       console.log("Upgraders: " + spawn.room.name + " - " + upgraders.length + "\nSpawning new upgrader: " + newName);
-      spawn.spawnCreep([ WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE,], newName, {
+      spawn.spawnCreep([WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE,], newName, {
         memory: {
           role: "upgrader"
         }
@@ -148,7 +152,7 @@ const creepSpawn = function () {
             role: "repairer"
           }
         });
-      } else if (spawn.room.energyCapacityAvailable < 800){
+      } else if (spawn.room.energyCapacityAvailable < 800) {
         newName = "Repairer" + Game.time + spawn.room.name;
         console.log("repairer: " + spawn.room.name + " - " + repairers.length + "\nSpawning new repairer: " + newName);
         spawn.spawnCreep([WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], newName, {
@@ -156,7 +160,7 @@ const creepSpawn = function () {
             role: "repairer"
           }
         });
-      } else if (repairers.length < 1){
+      } else if (repairers.length < 1) {
         newName = "Repairer" + Game.time + spawn.room.name;
         console.log("repairer: " + spawn.room.name + " - " + repairers.length + "\nSpawning new repairer: " + newName);
         spawn.spawnCreep([WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE], newName, {
@@ -267,8 +271,8 @@ const creepSpawn = function () {
     if (spawn.spawning) {
       let spawningCreep = Game.creeps[spawn.spawning.name];
       spawn.room.visual.text("\u2692" + spawningCreep.memory.role,
-      spawn.pos.x + 1,
-      spawn.pos.y, {
+        spawn.pos.x + 1,
+        spawn.pos.y, {
         align: "left",
         opacity: 0.8
       });
@@ -276,4 +280,4 @@ const creepSpawn = function () {
   }
 };
 
-module.exports = creepSpawn
+module.exports = creepSpawn;

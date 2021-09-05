@@ -1,3 +1,3 @@
 # Screeps!
 
-Screeps to play with javascript/atom/git/github
+Screeps to play with javascript/VSCode/git/github

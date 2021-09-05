@@ -7,7 +7,7 @@ const roleBuilder = {
    * 
    * @param {Creep} creep 
    */
-  run: function(creep) {
+  run: function (creep) {
     if (creep.memory.building && creep.carry.energy == 0) {
       creep.memory.building = false;
       creep.say("\u26CF harvest");
@@ -17,7 +17,7 @@ const roleBuilder = {
       creep.say("\ud83d\udd28 Build");
     }
     if (creep.memory.building) {
-      var targets = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+      let targets = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
 
       if (targets) {
         if (creep.build(targets) == ERR_NOT_IN_RANGE) {
@@ -27,8 +27,8 @@ const roleBuilder = {
         roleUpgrader.run(creep);
       }
     } else {
-      var sources;
-      var targetsS = creep.room.find(FIND_MY_STRUCTURES, {
+      let sources;
+      let targetsS = creep.room.find(FIND_MY_STRUCTURES, {
         filter: (s) => {
           return (s.structureType == STRUCTURE_STORAGE);
         }

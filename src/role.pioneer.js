@@ -6,10 +6,10 @@ const roleBuilder = require('./role.builder');
 const rolePioneer = {
 
   /** @param {Creep} creep **/
-  run: function(creep) {
-    let pioneerFlag = _.filter(Game.flags, f => f.name == "pioneerFlag")
+  run: function (creep) {
+    let pioneerFlag = _.filter(Game.flags, f => f.name == "pioneerFlag");
     if (pioneerFlag[0] && creep.pos.roomName != pioneerFlag[0].pos.roomName) {
-     creep.moveToModule(pioneerFlag[0].pos)
+      creep.moveToModule(pioneerFlag[0].pos);
     } else {
       if (creep.memory.building && creep.carry.energy == 0) {
         creep.memory.building = false;
@@ -21,20 +21,20 @@ const rolePioneer = {
       }
 
       if (!creep.memory.building) {
-        var sources;
-        var targetsS = creep.room.find(FIND_MY_STRUCTURES, {
+        let sources;
+        let targetsS = creep.room.find(FIND_MY_STRUCTURES, {
           filter: (s) => {
             return (s.structureType == STRUCTURE_STORAGE);
           }
         });
-        var droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
-      if (droppedSource != "" && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(droppedSource, {
-          visualizePathStyle: {
-            stroke: '#fa0'
-          }
-        });
-      } else if (targetsS != "" && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
+        let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
+        if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(droppedSource, {
+            visualizePathStyle: {
+              stroke: '#fa0'
+            }
+          });
+        } else if (targetsS.length && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
           if (creep.withdraw(targetsS[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveToModule(targetsS[0]);
           }
@@ -42,13 +42,13 @@ const rolePioneer = {
           creep.moveToModule(sources);
         }
       } else {
-        var targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        let targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
               structure.energy < structure.energyCapacity;
           }
         });
-        var targetsT = creep.room.find(FIND_STRUCTURES, {
+        let targetsT = creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType == STRUCTURE_TOWER) && structure.energy < (structure.energyCapacity / 2);
           }

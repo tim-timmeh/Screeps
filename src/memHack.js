@@ -10,22 +10,22 @@ const memHack = {
   /**
    * Parses Memory to global.Memory
    */
-  register () {
-    const start = Game.cpu.getUsed()
-    this.memory = Memory
-    const end = Game.cpu.getUsed()
-    this.parseTime = end - start
-    if (global.debug) console.log(`MemHack Parse Time: ${this.parseTime}`)
-    this.memory = RawMemory._parsed
+  register() {
+    const start = Game.cpu.getUsed();
+    this.memory = Memory;
+    const end = Game.cpu.getUsed();
+    this.parseTime = end - start;
+    if (global.debug) console.log(`MemHack Parse Time: ${this.parseTime}`);
+    this.memory = RawMemory._parsed;
   },
   /**
    * Sets Memory from global.Memory obj saving parse time.
    */
-  pretick () {
-    delete global.Memory
-    global.Memory = this.memory
-    RawMemory._parsed = this.memory
+  pretick() {
+    delete global.Memory;
+    global.Memory = this.memory;
+    RawMemory._parsed = this.memory;
   }
-}
-memHack.register()
-module.exports = memHack
+};
+memHack.register();
+module.exports = memHack;
