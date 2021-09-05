@@ -1,6 +1,9 @@
 "use strict";
-var roleBuilder = require("role.builder");
-var roleButler = {
+require('./moveToModule');
+const _ = require('lodash');
+const roleBuilder = require("./role.builder");
+
+const roleButler = {
 
   /** @param {Creep} creep **/
   run: function(creep) {

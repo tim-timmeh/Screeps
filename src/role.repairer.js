@@ -1,7 +1,9 @@
 "use strict";
-require("moveToModule");
-var roleBuilder = require("role.builder");
-var roleRepairer = {
+require('./moveToModule');
+const _ = require('lodash');
+const roleBuilder = require("role.builder");
+
+const roleRepairer = {
 
   /** @param {Creep} creep **/
   run: function(creep) {

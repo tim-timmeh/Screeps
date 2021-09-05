@@ -2,15 +2,13 @@
 const myFunc = require('./myFunc');
 const _ = require('lodash');
 
-let targetsSt; // ??
-let enemyspotted; // ??
-
 const creepSpawn = function () {
+  let targetsSt; // ??
+  let enemyspotted; // ??
   for (let spawnName in Game.spawns) {
     let spawn = Game.spawns[spawnName];
     let spawnRoomCreeps = spawn.room.find(FIND_MY_CREEPS);
     // Create array of each creep role.
-    // @ts-ignore
     let repairers = _.filter(spawnRoomCreeps, (creep) => creep.memory.role == "repairer");
     let upgraders = _.filter(spawnRoomCreeps, (creep) => creep.memory.role == "upgrader");
     let builders = _.filter(spawnRoomCreeps, (creep) => creep.memory.role == "builder");

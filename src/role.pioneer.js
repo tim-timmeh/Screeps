@@ -1,13 +1,13 @@
 "use strict";
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = require("role.builder");
-require("moveToModule");
-var pioneerFlag;
-var rolePioneer = {
+require('./moveToModule');
+const _ = require('lodash');
+const roleBuilder = require('./role.builder');
+
+const rolePioneer = {
 
   /** @param {Creep} creep **/
   run: function(creep) {
-    pioneerFlag = _.filter(Game.flags, f => f.name == "pioneerFlag")
+    let pioneerFlag = _.filter(Game.flags, f => f.name == "pioneerFlag")
     if (pioneerFlag[0] && creep.pos.roomName != pioneerFlag[0].pos.roomName) {
      creep.moveToModule(pioneerFlag[0].pos)
     } else {

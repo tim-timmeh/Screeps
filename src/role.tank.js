@@ -1,17 +1,16 @@
 "use strict";
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = require("role.builder");
-var rolePioneer = require("role.pioneer");
-require("moveToModule");
-var tankFlag;
-var enemyRanged;
-var enemyTower;
-var enemyCreep;
-var enemyStructure;
+require('./moveToModule');
+const _ = require('lodash');
+
 var roletank = {
 
   /** @param {Creep} creep **/
   run: function(creep) {
+    let tankFlag;
+    let enemyRanged;
+    let enemyTower;
+    let enemyCreep;
+    let enemyStructure;
     tankFlag = _.filter(Game.flags, f => f.name == "tankFlag")
     if (tankFlag[0] && creep.pos.roomName != tankFlag[0].pos.roomName) {
       creep.moveToModule(tankFlag[0].pos)

@@ -1,7 +1,9 @@
 "use strict";
-require("moveToModule");
-var roleUpgrader = require("role.upgrader");
-var roleHauler = {
+require('./moveToModule');
+const _ = require('lodash');
+const roleUpgrader = require("./role.upgrader");
+
+const roleHauler = {
 
   /** @param {Creep} creep **/
   run: function(creep) {

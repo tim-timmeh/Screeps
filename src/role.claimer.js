@@ -1,7 +1,8 @@
 "use strict";
-require("moveToModule");
-var claimFlag
-var roleClaimer = {
+require("./moveToModule");
+const _ = require('lodash');
+let claimFlag
+let roleClaimer = {
 
   /** @param {Creep} creep **/
   run: function(creep) {

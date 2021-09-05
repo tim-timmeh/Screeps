@@ -1,14 +1,15 @@
 "use strict";
 //require("./moveToModule");
-let attackerFlag;
-let enemyRanged;
-let enemyTower;
-let enemyCreep;
-let enemyStructure;
+
 const roleAttacker = {
 
   /** @param {Creep} creep **/
   run: function(creep) {
+    let attackerFlag;
+    let enemyRanged;
+    let enemyTower;
+    let enemyCreep;
+    let enemyStructure;
     attackerFlag = _.filter(Game.flags, f => f.name == "attackerFlag")
     if (attackerFlag[0] && creep.pos.roomName != attackerFlag[0].pos.roomName) {
       creep.moveToModule(attackerFlag[0].pos)

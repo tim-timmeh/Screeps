@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = {
+const myFunc = {
 
 /**
  * Check if object empty
@@ -69,3 +69,5 @@ module.exports = {
     }
     //Memory.rooms[room].spawnMemory.log
 };
+
+module.exports = myFunc

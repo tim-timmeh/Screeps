@@ -1,17 +1,17 @@
 "use strict";
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = require("role.builder");
-var rolePioneer = require("role.pioneer");
-require("moveToModule");
-var defenderFlag;
-var enemyRanged;
-var enemyTower;
-var enemyCreep;
-var enemyStructure;
-var roledefender = {
+require("./moveToModule");
+const _ = require('lodash');
+
+let roledefender = {
 
   /** @param {Creep} creep **/
+
   run: function(creep) {
+    let defenderFlag;
+    let enemyRanged;
+    let enemyTower;
+    let enemyCreep;
+    let enemyStructure;
     defenderFlag = _.filter(Game.flags, f => f.name == "defenderFlag")
     if (defenderFlag[0] && creep.pos.roomName != defenderFlag[0].pos.roomName) {
       creep.moveToModule(defenderFlag[0].pos)
@@ -48,6 +48,7 @@ var roledefender = {
         creep.heal(creep)
       }
         }
+      // @ts-ignore
       } else if (defenderFlag[0] && !creep.pos.isNearTo(defenderFlag)) {
         creep.moveToModule(defenderFlag[0].pos)
       } if (!enemyRanged && !enemyTower && !enemyCreep && creep.hits < creep.hitsMax) {
