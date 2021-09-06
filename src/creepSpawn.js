@@ -102,8 +102,7 @@ const creepSpawn = function () {
       }
     } else if (spawn.room.energyCapacityAvailable > 800 && (Memory.containersTest[spawnRoomContainers] && haulers.length < Memory.containersTest[spawnRoomContainers].length)) {
       for (let container of Memory.containersTest[spawnRoomContainers]) {
-        if (lastContainer == container || _.filter(Game.creeps, (creep) => creep.memory.role == "hauler" && creep.memory.haulerSource == container)) {
-          newName = "Hauler" + Game.time + spawn.room.name;
+        if (/*lastContainer == container ||*/ !(_.filter(Game.creeps, (creep) => creep.memory.role == "hauler" && creep.memory.haulerSource == container)).length) {  newName = "Hauler" + Game.time + spawn.room.name;
           console.log("Haulers: " + spawn.room.name + " - " + haulers.length + "\nSpawning new hauler: " + newName + "\nFor container : " + container);
           spawn.spawnCreep([MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], newName, {
             memory: {
