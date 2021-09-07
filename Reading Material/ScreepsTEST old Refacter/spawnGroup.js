@@ -21,7 +21,7 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
   //this.isAvailable = false;
   for (let spawn of this.spawns) {
     if (spawn.spawning == null){
-      spawnResults = spawn.createCreep(body, name, memory);
+      spawnResults = spawn.spawnCreep(body, name, memory);
       console.log(`Spawn: ${spawn.name}, Spawning: ${name}, Body: ${body}\n Results: ${spawnResults}`);
       break;
     }

@@ -20,7 +20,7 @@ function Mission(operation, name) {
 Mission.prototype.init = function () { // Initialize / build objects required
 
 };
-Mission.prototype.rolecall = function () { // perform rolecall on required creeps spawn if needed
+Mission.prototype.roleCall = function () { // perform rolecall on required creeps spawn if needed
 
 };
 Mission.prototype.action = function () { // perform actions / missions
@@ -44,9 +44,8 @@ Mission.prototype.finalize = function () { // finalize? Invalidate Cache's/Re-ca
 Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1, options = {} ) { // what mission needs. job name, what kinda body, how many, additional options (Pre-spawn, priority reservation etc)
   let creepArray = [];
   if (!this.memory.spawn[roleName]) {
-    console.log('Code TODO getlostcreeps');
-    this.memory.spawn[roleName] = this.getLostCreeps(roleName); // DO GET LOST CREEPS FUNCTION
-  }
+    this.memory.spawn[roleName] = this.getLostCreeps(roleName);
+  };
   let creepCount = 0;
   for (let i = 0; i < this.memory.spawn[roleName].length; i++) {
     let creepName = this.memory.spawn[roleName][i];
@@ -54,11 +53,11 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
     if (creep){
       creepArray.push(creep);
       let creepPrespawnTicks = 0;
-      if (options.prespawn != undefined) { // eg if prespawn is 30ticks
+      if (options.prespawn !== undefined) { // eg if prespawn is 30ticks
         creepPrespawnTicks += creep.body.length * 3; // each bodypart = 3s
         creepPrespawnTicks += options.prespawn; // add prespawn timer to spawn timer (miner 30 ticks from base + time to spawn = get there when old miner dies)
       }
-      if (creep.ticksToLive > creepPrespawnTicks || creep.spawning) {
+      if (creep.spawning || creep.ticksToLive > creepPrespawnTicks) {
         creepCount++;
       }
     } else {
@@ -67,7 +66,7 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
       i--
     }
   }
-  if (this.SpawnGroup.isAvailable && creepCount < creepAmount && this.hasVision) {
+  if (this.SpawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
     let creepName = this.opName.substring(9,12) + '.' + this.roleName.substring(0,3) + '.' + (Game.time % 100);//add spawngroup # to name
     if (this.SpawnGroup.spawn(creepBody, creepName, options.memory) == 0) {
       this.memory.spawn[roleName].push(creepName);
@@ -75,6 +74,16 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
   }
   return creepArray;
 };
+
+Mission.prototype.getLostCreeps = function (roleName) {
+  let creepNames = [];
+        for (let creepName in Game.creeps) {
+            if (creepName.indexOf(this.opName.substring(9,12) + '.' + this.roleName.substring(0,3) + '.') > -1) {
+                creepNames.push(creepName);
+            }
+        }
+        return creepNames;
+}
 
 /**
 * [Takes creep body and multiplies by max energy available, with options. Returns creep body array for spawning]

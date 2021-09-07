@@ -25,7 +25,7 @@ OperationBase.prototype.constructor = OperationBase; // reset constructor to ope
 OperationBase.prototype.initOp = function () { // Initialize / build objects required
   //Room Layout?
 
-  this.spawnGroup = this.king.getSpawnGroup(this.flag.room.name);
+  this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
   if (!this.spawnGroup){console.log('no spawn group in room, create remote spawngroup code')} //get closest spawn group
 
   this.addMission(new MissionButler(this));
@@ -45,13 +45,13 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   //upgrader missions
   //*/
 };
-OperationBase.prototype.rolecall = function () { // perform rolecall on required creeps spawn if needed
+OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 
 };
-OperationBase.prototype.action = function () { // perform actions / missions
+OperationBase.prototype.actionOp = function () { // perform actions / missions
 
 };
-OperationBase.prototype.finalize = function () { // finalize?
+OperationBase.prototype.finalizeOp = function () { // finalize?
 
 };
 

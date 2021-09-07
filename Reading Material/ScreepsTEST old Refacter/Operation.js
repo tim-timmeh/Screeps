@@ -31,18 +31,35 @@ Operation.prototype.init = function () { // Initialize / build objects required
   myFunc.tryWrap(() => {
     this.initOp(); // instantiate all objects require for operation including missions
   },`ERROR initOp ${this.name} ${this.type}`);
-  for (missions in this.missions) { // then instantiate objects required for missions and functions
-
+  for (let missionName in this.missions) { // then instantiate objects required for missions and functions
+    myFunc.tryWrap(() => {
+      this.missions[missionName].initMiss();
+    },`ERROR initMiss ${missionName} , ${this.name}`);
   }
 };
-Operation.prototype.rolecall = function () { // perform rolecall on required creeps spawn if needed
-
+Operation.prototype.roleCall = function () { // perform rolecall on required creeps spawn if needed
+  for (let missionName in this.missions) {
+    myFunc.tryWrap(() => {
+      this.missions[missionName].roleCallMiss();
+    },`ERROR roleCallMiss ${missionName} , ${this.name}`);
+  }
 };
 Operation.prototype.action = function () { // perform actions / missions
-
+  for (let missionName in this.missions) {
+    myFunc.tryWrap(() => {
+      this.missions[missionName].actionMiss();
+    },`ERROR actionMiss ${missionName} , ${this.name}`);
+  }
 };
 Operation.prototype.finalize = function () { // finalize?
-
+  for (let missionName in this.missions) {
+    myFunc.tryWrap(() => {
+      this.missions[missionName].finalizeMiss();
+    },`ERROR finalizeMiss ${missionName} , ${this.name}`);
+  };
+  myFunc.tryWrap(() => {
+    this.finalizeOp();
+  },`ERROR finalizeOp ${this.name} ${this.type}`);
 };
 
 // Additional methods/functions below
