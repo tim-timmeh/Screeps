@@ -1,19 +1,37 @@
 'use strict'
-require('SpawnGroup');
 
-function King() { // constructor, how to build the object
+const SpawnGroup = require('./SpawnGroup');
 
+/**
+ * King is top level management. Manages nukes, terminal, trade etc
+ * @constructor how to build the object
+ */
+function King() { 
+  if(!Memory.empire) Memory.empire = {};
+  this.memory = Memory.empire;
 }
-King.prototype.init = function () { // Initialize / build objects required
+/**
+ * Initialize / build objects required
+ */
+King.prototype.init = function () {
 
 };
-King.prototype.rolecall = function () { // perform rolecall on required creeps spawn if needed
+/**
+ * perform rolecall on required creeps spawn if needed
+ */
+King.prototype.rolecall = function () {
 
 };
-King.prototype.action = function () { // perform actions / missions
+/**
+ * perform actions / missions
+ */
+King.prototype.action = function () { 
 
 };
-King.prototype.finalize = function () { // finalize?
+/**
+ * Finalise?
+ */
+King.prototype.finalize = function () { 
 
 };
 

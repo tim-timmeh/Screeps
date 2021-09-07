@@ -58,3 +58,5 @@ SpawnGroup.prototype.getSpawnAvailability = function () {
   //Memory.stats["SpawnGroups." + this.room.name + ".idleSpawns"] = count;
   return count;
 }
+
+module.exports = SpawnGroup;

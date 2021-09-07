@@ -2,7 +2,7 @@
 require('mission');
 
 function MissionButler(operation) { // constructor, how to build the object
-  Mission.call(operation,'Mission Butler')
+  Mission.call(operation,'butler')
 }
 
 MissionButler.prototype = Object.create(Mission.prototype); // makes operationbase protos copy of operation protos
