@@ -37,29 +37,30 @@ MissionButler.prototype.butlerActions = function (creep) {
     }
     if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
       creep.memory.building = true;
+      delete creep.memory.currentSource;
       creep.say("Urg");
     }
 
     if (!creep.memory.building) {
-      let sources;
-      let targetsS = creep.room.find(FIND_MY_STRUCTURES, {
-        filter: (s) => {
-          return (s.structureType == STRUCTURE_STORAGE);
-        }
-      });
-      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5);
-      if (droppedSource != "" && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+      let sourceMy;
+      let storageMy = creep.room.storage;
+      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5); //change to inRangeTo (cheaper)
+      if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
         creep.moveTo(droppedSource[0], {
           visualizePathStyle: {
             stroke: '#fa0'
           }
         });
-      } else if (targetsS != "" && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
-        if (creep.withdraw(targetsS[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveToModule(targetsS[0]);
+      } else if (storageMy && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
+        if (creep.withdraw(storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveToModule(storageMy);
         }
-      } else if (creep.harvest(sources = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
-        creep.moveToModule(sources);
+        delete creep.memory.currentSource;
+      } else if (creep.memory.currentSource) {
+        creep.moveToModule(creep.memory.currentSource);
+      } else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
+        creep.moveToModule(sourceMy);
+        creep.memory.currentSource = sourceMy;
       }
     } else {
       let targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -68,16 +69,16 @@ MissionButler.prototype.butlerActions = function (creep) {
             structure.energy < structure.energyCapacity;
         }
       });
-      let targetsT = creep.room.find(FIND_STRUCTURES, {
+      let targetsT; /*= creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
         }
-      });
-      if (targets != null) {
+      });*/
+      if (targets.length) {
         if (creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targets);
         }
-      } else if (targetsT.length > 0) {
+      } else if ((targetsT = targetsTF(creep)).length) {
         targetsT.sort((a, b) => a.energy - b.energy);
         if (creep.transfer(targetsT[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targetsT[0]);
@@ -87,5 +88,14 @@ MissionButler.prototype.butlerActions = function (creep) {
       }
     }
   }
-}
-module.exports = MissionButler
+};
+
+function targetsTF(creep) { 
+  let t = creep.room.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+    }
+  });
+return t};
+
+module.exports = MissionButler;
