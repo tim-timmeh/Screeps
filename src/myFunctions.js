@@ -2,7 +2,7 @@
 // Custom functions reusable in code
 module.exports = {
 
-  convertArrayToObject: function(array, key) { // Converts an array to object with key as the key
+  convertArrayToObject: function (array, key) { // Converts an array to object with key as the key
     const initialValue = {};
     return array.reduce((obj, item) => {
       return {
@@ -12,7 +12,7 @@ module.exports = {
     }, initialValue);
   },
 
-  isEmpty: function(obj) { // Is object empty?
+  isEmpty: function (obj) { // Is object empty?
     for (let key in obj) {
       if (obj.hasOwnProperty(key)) {
         return false;
@@ -21,13 +21,13 @@ module.exports = {
     return true;
   },
 
-  ensureMemTreeObj: function(fn,defaultVal) { // Pass Memory location as function, will return if exists, will create if error
+  ensureMemTreeObj: function (fn, defaultVal) { // Pass Memory location as function, will return if exists, will create if error
     try {
       return fn(); // will exit if parent exists
     } catch (e) { // will create tree if parent does not exist
-      if(global.debug)console.log(`  #Setting Memory Tree: Memory.${defaultVal}`);
-      _.set(Memory, defaultVal,{});
-      return  _.get(Memory,defaultVal)
+      if (global.debug) console.log(`  #Setting Memory Tree: Memory.${defaultVal}`);
+      _.set(Memory, defaultVal, {});
+      return _.get(Memory, defaultVal)
     }
   },
 
@@ -35,16 +35,16 @@ module.exports = {
   //myFunc.tryWrap(() => {
   //
   //},`ERROR `)
-  tryWrap : function (fn, description = 'Nondescript Error') { // wrap any function in a try/catch to let code keep running around error
+  tryWrap: function (fn, description = 'Nondescript Error') { // wrap any function in a try/catch to let code keep running around error
     try {
       return fn(); // try to do function. (Not sure if to use return or not?)
     } catch (e) {
-        console.log(`${description} @ ${e.stack}`) // if error console log stack at error
+      console.log(`${description} @ ${e.stack}`) // if error console log stack at error
       //console.log(`${description} @ ${__file} : ${__line}\n${e.stack}`) // if error console log stack at error
     }
   },
 
-  getKeyByValue : function (object, value) {
+  getKeyByValue: function (object, value) {
     return Object.keys(object).find(key => object[key] === value);
   }
 

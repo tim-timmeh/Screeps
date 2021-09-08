@@ -42,7 +42,7 @@ Mission.prototype.finalize = function () { // finalize? Invalidate Cache's/Re-ca
 *                                  []
 * @return {creep[]}                 [Array of Creeps matching roleName]
 */
-Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1, options = {} ) { // what mission needs. job name, what kinda body, how many, additional options (Pre-spawn, priority reservation etc)
+Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1, options = {}) { // what mission needs. job name, what kinda body, how many, additional options (Pre-spawn, priority reservation etc)
   let creepArray = [];
   if (!this.memory.spawn[roleName]) {
     this.memory.spawn[roleName] = this.getLostCreeps(roleName);
@@ -51,7 +51,7 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
   for (let i = 0; i < this.memory.spawn[roleName].length; i++) {
     let creepName = this.memory.spawn[roleName][i];
     let creep = Game.creeps[creepName];
-    if (creep){
+    if (creep) {
       creepArray.push(creep);
       let creepPrespawnTicks = 0;
       if (options.prespawn !== undefined) { // eg if prespawn is 30ticks
@@ -68,7 +68,7 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
     }
   };
   if (this.spawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
-    let creepName = (this.opType.substring(2,5) + '.' + roleName.substring(0,3) + '.' + (Game.time % 100));//add this.spawnGroup.room.name
+    let creepName = (this.opType.substring(2, 5) + '.' + roleName.substring(0, 3) + '.' + (Game.time % 100));//add this.spawnGroup.room.name
     let spawnResult = this.spawnGroup.spawn(creepBody, creepName, options.memory);
     if (spawnResult == 0) {
       this.memory.spawn[roleName].push(creepName);
@@ -79,12 +79,12 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
 
 Mission.prototype.getLostCreeps = function (roleName) {
   let creepNames = [];
-        for (let creepName in Game.creeps) {
-            if (creepName.indexOf(this.opName.substring(9,12) + '.' + this.roleName.substring(0,3) + '.') > -1) {
-                creepNames.push(creepName);
-            }
-        }
-        return creepNames;
+  for (let creepName in Game.creeps) {
+    if (creepName.indexOf(this.opName.substring(9, 12) + '.' + this.roleName.substring(0, 3) + '.') > -1) {
+      creepNames.push(creepName);
+    }
+  }
+  return creepNames;
 }
 
 /**
@@ -106,7 +106,7 @@ Mission.prototype.getBody = function (bodyConfig, options = {}) { //, ,
       creepBody.push(bodyPart.toLowerCase())
     }
     let arrays = Array.apply(null, new Array(blockMultiplier));// Create an array of size "n" with undefined values
-    arrays = arrays.map(function() { return creepBody });// Replace each "undefined" with our array, resulting in an array of n copies of our array
+    arrays = arrays.map(function () { return creepBody });// Replace each "undefined" with our array, resulting in an array of n copies of our array
     creepBody = [].concat.apply([], arrays) // Flatten our array of arrays and apply to creepBody
   } else { //Spreads Format eg [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
     for (let bodyPart in bodyConfig) {
@@ -118,7 +118,7 @@ Mission.prototype.getBody = function (bodyConfig, options = {}) { //, ,
       creepBody = creepBody.concat(Array((options.addBodyPart[bodyPart])).fill(bodyPart.toLowerCase()));
     }
   }
-  if (options.removeBodyPart){
+  if (options.removeBodyPart) {
     let partIndex = creepBody.findIndex((p) => p == options.removeBodyPart.toLowerCase())
     if (partIndex > -1) {
       creepBody.splice(partIndex, 1);
@@ -140,7 +140,7 @@ Mission.prototype.bodyBlockCalc = function (bodyConfig, options = {}) {
   let { blockEnergyReq, blockPartsReq } = this.bodyBlockReq(bodyConfig);
   let blockEnergyReqExtra = 0, blockPartsReqExtra = 0;
   if (options.addBodyPart) { // Run bodyBlockReq on extra part and re-assign to Extra vars
-    ({ blockEnergyReq:blockEnergyReqExtra, blockPartsReq:blockPartsReqExtra } = this.bodyBlockReq(options.addBodyPart)); //var { name: nameA } = { name: "Bender" }; console.log(nameA) == "Bender"
+    ({ blockEnergyReq: blockEnergyReqExtra, blockPartsReq: blockPartsReqExtra } = this.bodyBlockReq(options.addBodyPart)); //var { name: nameA } = { name: "Bender" }; console.log(nameA) == "Bender"
   }
   let blockLimit = options.maxRatio ? options.maxRatio : Math.floor((50 - blockPartsReqExtra) / blockPartsReq); //Work out max bodypart ratio - addBodyPart
   let energyPool = options.forceSpawn ? Math.max(this.spawnGroup.currentSpawnEnergy, 300) : this.spawnGroup.maxSpawnEnergy; // if forceSpawn true then spawn with current energy or 300(incase total creep death?)
@@ -159,7 +159,7 @@ Mission.prototype.bodyBlockReq = function (bodyConfig) { // return object {block
     blockEnergyReq += BODYPART_COST[bodyPart.toLowerCase()] * bodyConfig[bodyPart];
     blockPartsReq += bodyConfig[bodyPart];
   }
-  return {blockEnergyReq:blockEnergyReq, blockPartsReq:blockPartsReq}
+  return { blockEnergyReq: blockEnergyReq, blockPartsReq: blockPartsReq }
 }
 
 /**
@@ -169,7 +169,7 @@ Mission.prototype.bodyBlockReq = function (bodyConfig) { // return object {block
 */
 Mission.prototype.findDistanceToSpawn = function (destination) { // pass a room position and find distance to spawn group
   if (!this.memory.distanceToSpawn) {
-    this.memory.distanceToSpawn = this.room.findPath(this.spawnGroup.pos, destination, {ignoreCreeps : true}).length - 1; //generates path from spawn to source -1 because creep doesnt stand ontop of source
+    this.memory.distanceToSpawn = this.room.findPath(this.spawnGroup.pos, destination, { ignoreCreeps: true }).length - 1; //generates path from spawn to source -1 because creep doesnt stand ontop of source
   }
   return this.memory.distanceToSpawn
 }
@@ -188,7 +188,7 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
   }
   if (this.memory.storageID) { // if storage in memory
     storage = Game.getObjectById(this.memory.storageID);
-    if (storage && storage.room.controller.level >=4) { //check still true
+    if (storage && storage.room.controller.level >= 4) { //check still true
       return storage
     }
     if (global.debug) console.log(`Error finding storage from memory, clearing - ${this.room} - ${this.opName} - ${this.name}`);
@@ -199,7 +199,7 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
     return
   }
 
-  if (this.spawnGroup.room.storage && this.spawnGroup.room.storage.my){ //if none in room find spawngroup room storage
+  if (this.spawnGroup.room.storage && this.spawnGroup.room.storage.my) { //if none in room find spawngroup room storage
     this.memory.storageID = this.spawnGroup.room.storage.id;
     if (global.debug) console.log(`Using spawnGroup Storage @ ${this.spawnGroup.room.name} for ${this.room} - ${this.opName} - ${this.name}`)
     return storage
@@ -224,18 +224,18 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
 * @param  {number} regen    [How much energy regens per tick]
 * @return {object}          [Return memory object containing regen, distance, body, haulersNeeded, carryCount]
 */
-Mission.prototype.analyzeHauler = function (distance, regen){
+Mission.prototype.analyzeHauler = function (distance, regen) {
   if (!this.memory.haulerAnalysis || regen !== this.memory.haulerAnalysis.regen) {
     // distance to travel * there and back (and a little extra) * regen per tick
-    let totalTickRegen = distance * 2.1 * regen ;
-    let bodyConfig = {carry: 2 , move: 1 };
+    let totalTickRegen = distance * 2.1 * regen;
+    let bodyConfig = { carry: 2, move: 1 };
     let creepBlockCapacity = 100 //(2 CARRY, 1 MOVE)
     let creepBlocksNeeded = Math.ceil(totalTickRegen / creepBlockCapacity);
     let maxBlocksPossible = this.bodyBlockCalc(bodyConfig);
     //let maxUnitsPossible = Math.min(Math.floor(this.spawnGroup.maxSpawnEnergy / blockEnergyReq) ,Math.floor(50 / blockPartsReq));
-    let haulersNeeded = Math.ceil(creepBlocksNeeded / maxBlocksPossible );
+    let haulersNeeded = Math.ceil(creepBlocksNeeded / maxBlocksPossible);
     let haulBlocksPerHauler = Math.ceil(creepBlocksNeeded / haulersNeeded);
-    let body = this.getBody(bodyConfig, {maxRatio: haulBlocksPerHauler }) //0, haulBlocksPerHauler * 2, haulBlocksPerHauler);
+    let body = this.getBody(bodyConfig, { maxRatio: haulBlocksPerHauler }) //0, haulBlocksPerHauler * 2, haulBlocksPerHauler);
     this.memory.haulerAnalysis = {
       regen: regen, // regen per tick
       distance: distance, // distance storage -> source

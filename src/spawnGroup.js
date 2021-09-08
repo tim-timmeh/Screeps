@@ -7,7 +7,7 @@ function SpawnGroup(room) { // Constructor, framework to build a SpawnGroup for 
   this.memory = this.room.memory.spawnMemory; //Memory.rooms[room].spawnMemory
   this.extensions = room.find(FIND_MY_STRUCTURES, {
     filter: { structureType: STRUCTURE_EXTENSION }
-});
+  });
   this.manageSpawnLog();
   this.availableSpawnCount = this.getSpawnAvailability();
   this.isAvailable = this.availableSpawnCount > 0;
@@ -22,7 +22,7 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
   this.isAvailable = this.availableSpawnCount > 0;
   //this.isAvailable = false;
   for (let spawn of this.spawns) {
-    if (spawn.spawning == null){
+    if (spawn.spawning == null) {
       spawnResults = spawn.spawnCreep(body, name, memory);
       console.log(`Spawn: ${spawn.name}, Spawning: ${name}, Body: ${body}\n Results: ${spawnResults}`);
       break;
@@ -33,7 +33,7 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
 
 
 SpawnGroup.prototype.manageSpawnLog = function () {
-  if (!this.memory.log) this.memory.log = {idleSpawns : 0, availability: 0, history: [], longHistory: []}; //Memory.rooms[room].spawnMemory.log
+  if (!this.memory.log) this.memory.log = { idleSpawns: 0, availability: 0, history: [], longHistory: [] }; //Memory.rooms[room].spawnMemory.log
   if (Game.time % 100 != 0) return; // early
   let log = this.memory.log;
   let average = log.availability / 100;

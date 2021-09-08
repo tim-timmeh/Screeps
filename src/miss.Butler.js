@@ -2,7 +2,7 @@
 const Mission = require('./Mission');
 
 function MissionButler(operation) { // constructor, how to build the object
-  Mission.call(this, operation,'butler')
+  Mission.call(this, operation, 'butler')
 }
 
 MissionButler.prototype = Object.create(Mission.prototype); // makes operationbase protos copy of operation protos
@@ -12,9 +12,9 @@ MissionButler.prototype.initMiss = function () { // Initialize / build objects r
 
 };
 MissionButler.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  this.butlers = this.creepRoleCall('butler', this.getBody({CARRY : 2, MOVE : 1},{addBodyPart: {WORK: 1}, removeBodyPart: 'CARRY'}), 2) //work, carry, move, {maxRatio, maxEnergyPercent}
+  this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY' }), 2) //work, carry, move, {maxRatio, maxEnergyPercent}
   if (!this.butlers) {
-    this.butlers = this.creepRoleCall('butler', this.getBody({CARRY : 2, MOVE : 1},{addBodyPart: {WORK: 1}, removeBodyPart: 'CARRY', forceSpawn: true}), 2) // if no butlers forceSpawn (total creep wipe)
+    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
 };
 MissionButler.prototype.actionMiss = function () { // perform actions / missions
@@ -28,7 +28,7 @@ MissionButler.prototype.finalizeMiss = function () { // finalize?
 
 // Additional methods/functions below
 
-MissionButler.prototype.butlerActions = function (creep){
+MissionButler.prototype.butlerActions = function (creep) {
   {
 
     if (creep.memory.building && creep.carry.energy == 0) {

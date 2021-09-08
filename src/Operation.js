@@ -20,8 +20,8 @@ function Operation(flag, flagName, flagType, king) {
   this.king = king
   /** @type {object | Memory} */
   this.memory = flag.memory
-  if (!this.missions) { 
-      this.missions = {}; 
+  if (!this.missions) {
+    this.missions = {};
   }
   if (this.flag.room) {
     this.hasVision = true; // is there vision in the room
@@ -33,36 +33,36 @@ function Operation(flag, flagName, flagType, king) {
 Operation.prototype.init = function () { // Initialize / build objects required
   myFunc.tryWrap(() => {
     this.initOp(); // instantiate all objects require for operation including missions
-  },`ERROR initOp ${this.name} ${this.type}`);
+  }, `ERROR initOp ${this.name} ${this.type}`);
   for (let missionName in this.missions) { // then instantiate objects required for missions and functions
     myFunc.tryWrap(() => {
       this.missions[missionName].initMiss();
-    },`ERROR initMiss ${missionName} , ${this.name}`);
+    }, `ERROR initMiss ${missionName} , ${this.name}`);
   }
 };
 Operation.prototype.roleCall = function () { // perform rolecall on required creeps spawn if needed
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].roleCallMiss();
-    },`ERROR roleCallMiss ${missionName} , ${this.name}`);
+    }, `ERROR roleCallMiss ${missionName} , ${this.name}`);
   }
 };
 Operation.prototype.action = function () { // perform actions / missions
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].actionMiss();
-    },`ERROR actionMiss ${missionName} , ${this.name}`);
+    }, `ERROR actionMiss ${missionName} , ${this.name}`);
   }
 };
 Operation.prototype.finalize = function () { // finalize?
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].finalizeMiss();
-    },`ERROR finalizeMiss ${missionName} , ${this.name}`);
+    }, `ERROR finalizeMiss ${missionName} , ${this.name}`);
   };
   myFunc.tryWrap(() => {
     this.finalizeOp();
-  },`ERROR finalizeOp ${this.name} ${this.type}`);
+  }, `ERROR finalizeOp ${this.name} ${this.type}`);
 };
 
 // Additional methods/functions below

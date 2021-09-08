@@ -1,12 +1,12 @@
 'use strict'
 const Mission = require('Mission');
 
-module.exports = {MissionMiner}
+module.exports = { MissionMiner }
 
 //** Set miner to check and spawn 2 miners and deposit into containers if (<= rcl2 || maxenergy < 800) move:1,work:2,carry:1 {forcespawn}
 
 function MissionMiner(operation, name, source) { // constructor, how to build the object
-  Mission.call(operation,name)
+  Mission.call(operation, name)
   this.source = source;
   this.memory.minerBootstrapTimer = this.memory.minerBootstrapTimer || 0; // memory to check for bootstrapping
 }
@@ -34,7 +34,7 @@ MissionMiner.prototype.init = function () { // Initialize / build objects requir
 
 
 MissionMiner.prototype.rolecall = function () { // perform rolecall on required creeps spawn if needed
-  this.miners = this.creepRoleCall('miner', this.getBody({work: 2, move: 1},{maxRatio: 3, addBodyPart: {carry: 1}}));
+  this.miners = this.creepRoleCall('miner', this.getBody({ work: 2, move: 1 }, { maxRatio: 3, addBodyPart: { carry: 1 } }));
   this.minerBootstrap() // checks for miners, if 300 ticks without will spawn emergency miner.
   //if this.memory.roadRepairIds spawn paver
 };
@@ -63,7 +63,7 @@ MissionMiner.prototype.placeMinerContainer = function () {
     startingObject = this.room.find(FIND_MY_SPAWNS)[0];
     if (!startingObject) return
   }
-  if (this.source.pos.findInRange(FIND_CONSTRUCTION_SITES,1).length > 0) return;//** NEEDS WORK use mem? like findStructureNearby proto?
+  if (this.source.pos.findInRange(FIND_CONSTRUCTION_SITES, 1).length > 0) return;//** NEEDS WORK use mem? like findStructureNearby proto?
   let ret = PathFinder.searchCustom(this.source.pos, startingObject.pos, 1) //? might need to switch ends?
   if (ret.incomplete || ret.path.length == 0) {
     console.log(`Pathing for miner container placement failed - ${this.opName} - ${this.room} - ${this.name}`);
@@ -77,13 +77,13 @@ MissionMiner.prototype.placeMinerContainer = function () {
 /**
  * [If 300 ticks no miners create miner]
  */
-MissionMiner.prototype.minerBootstrap = function (){
+MissionMiner.prototype.minerBootstrap = function () {
   if (!this.miners) {
     if (global.debug) console.log(`No miners found, tick ${this.memory.minerBootstrapTimer} - ${this.opName} - ${this.room} - ${this.name}`);
     this.memory.minerBootstrapTimer = this.memory.minerBootstrapTimer + 1 || 1; // failsafe
     if (this.memory.minerBootstrapTimer >= 300) { //** Move 300 to Constant in config?
       console.log(`No miners found, bootstrapping operation! - ${this.opName} - ${this.room} - ${this.name}`);
-      this.miners = this.creepRoleCall('miner', this.getBody({work: 2, move: 1},{forceSpawn: true, maxRatio: 3, addBodyPart: {carry: 1}}))
+      this.miners = this.creepRoleCall('miner', this.getBody({ work: 2, move: 1 }, { forceSpawn: true, maxRatio: 3, addBodyPart: { carry: 1 } }))
     }
   } else {
     this.memory.minerBootstrapTimer = 0;
@@ -95,7 +95,7 @@ MissionMiner.prototype.minerBootstrap = function (){
  */
 MissionMiner.prototype.runHaulerAnalysis = function () {
   if (!this.memory.distanceToStorage) {
-    let path = PathFinder.search(this.storage.pos, {pos: this.source.pos, range: 1}).path;
+    let path = PathFinder.search(this.storage.pos, { pos: this.source.pos, range: 1 }).path;
     this.memory.distanceToStorage = path.length;
   }
   let distance = this.memory.distanceToStorage;

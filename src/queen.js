@@ -17,22 +17,22 @@ const King = require('./king');
  * COLOR_WHITE: 10 )
  */
 const decode = {
-  55 : 'OpBase' // Green, Green
+  55: 'OpBase' // Green, Green
 }
 const operationTypes = {
-  OpBase : OperationBase, // Green, Green
+  OpBase: OperationBase, // Green, Green
 }
 
 // Functions for setting up Object heirachy
 module.exports = {
 
-  initKing : function () {
+  initKing: function () {
     let king = new King();
     king.init();
     return king;
   },
 
-  getOperations : function (king) {
+  getOperations: function (king) {
     let operationList = {};
     for (let flagName in Game.flags) { // iterate over all flags / designated operations
       let flagCode = `${Game.flags[flagName].color}${Game.flags[flagName].secondaryColor}`; // convert color to code
@@ -46,7 +46,7 @@ module.exports = {
           // First one will not change anything if failed, second one will return/change variable to undefined
           myFunc.tryWrap(() => { // try/catch wrapper function
             operation = new operationType(flag, flagName, flagType, king);
-          },'ERROR generating op from flag');
+          }, 'ERROR generating op from flag');
           //operation = myFunc.tryWrap(()=> new operationType(flag, flagName, opCode, king),'Error generating operation from flag')
           operationList[flagName] = operation;
           //global[flagName] = operation; // Add operation object to global?

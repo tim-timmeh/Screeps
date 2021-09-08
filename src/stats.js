@@ -1,5 +1,5 @@
 
-module.exports = function exportStats(globalResetTick) {
+const exportStats = function (globalResetTick) {
   // Reset/setup Memory Objects
 
   Memory.stats = {
@@ -37,9 +37,11 @@ module.exports = function exportStats(globalResetTick) {
   Memory.stats.cpu.LastGLobalReset = globalResetTick
   Memory.stats.cpu.bucket = Game.cpu.bucket;
   Memory.stats.cpu.limit = Game.cpu.limit;
-  Memory.stats.cpu.used  = Game.cpu.getUsed();
+  Memory.stats.cpu.used = Game.cpu.getUsed();
   // Collect Memory stats
-  Memory.stats.memory.used = RawMemory.get().length/1000;
+  Memory.stats.memory.used = RawMemory.get().length / 1000;
   Memory.stats.memory.limit = 2048;
 }
 //Memory.rooms[room].spawnMemory.log
+
+module.exports = exportStats;

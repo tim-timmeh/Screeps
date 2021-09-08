@@ -8,13 +8,13 @@ global.profilerGlobalResetSetTicks = 10; // Default 10
 //Constants Below
 const CONSTS = {
 
-  PRIORITY : {
-    EMERGENCY : 0,
-    CORE : 1,
-    HIGH : 2,
-    MED : 3,
-    LOW : 4,
-    VLOW : 5,
+  PRIORITY: {
+    EMERGENCY: 0,
+    CORE: 1,
+    HIGH: 2,
+    MED: 3,
+    LOW: 4,
+    VLOW: 5,
   },
 
 };

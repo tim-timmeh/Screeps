@@ -26,7 +26,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   //Room Layout?
 
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
-  if (!this.spawnGroup){console.log('no spawn group in room, create remote spawngroup code')} //get closest spawn group
+  if (!this.spawnGroup) { console.log('no spawn group in room, create remote spawngroup code') } //get closest spawn group
   this.addMission(new MissionButler(this));
 
   /*
