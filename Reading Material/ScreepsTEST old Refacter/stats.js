@@ -1,4 +1,4 @@
-'use strict'
+
 module.exports = function exportStats(globalResetTick) {
   // Reset/setup Memory Objects
 

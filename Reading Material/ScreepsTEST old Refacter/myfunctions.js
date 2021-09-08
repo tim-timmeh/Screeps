@@ -1,4 +1,3 @@
-'use strict'
 
 // Custom functions reusable in code
 module.exports = {
@@ -40,7 +39,8 @@ module.exports = {
     try {
       return fn(); // try to do function. (Not sure if to use return or not?)
     } catch (e) {
-      console.log(`${description} @ ${__file} : ${__line}\n${e.stack}`) // if error console log stack at error
+        console.log(`${description} @ ${e.stack}`) // if error console log stack at error
+      //console.log(`${description} @ ${__file} : ${__line}\n${e.stack}`) // if error console log stack at error
     }
   },
 

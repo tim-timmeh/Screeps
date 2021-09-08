@@ -1,11 +1,13 @@
-'use strict'
+
 
 function SpawnGroup(room) { // Constructor, framework to build a SpawnGroup for a given (room)
   this.room = room;
   this.spawns = room.find(FIND_MY_SPAWNS); // replace with _.filter for lower cpu?? FIND with no arguments is actualy cached so cheap?
   if (!this.room.memory.spawnMemory) this.room.memory.spawnMemory = {}; //Memory.rooms[room].spawnMemory = {}
   this.memory = this.room.memory.spawnMemory; //Memory.rooms[room].spawnMemory
-  this.extensions = room.findStructures(STRUCTURE_EXTENSION);
+  this.extensions = room.find(FIND_MY_STRUCTURES, {
+    filter: { structureType: STRUCTURE_EXTENSION }
+});
   this.manageSpawnLog();
   this.availableSpawnCount = this.getSpawnAvailability();
   this.isAvailable = this.availableSpawnCount > 0;

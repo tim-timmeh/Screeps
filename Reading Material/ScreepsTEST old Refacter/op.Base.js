@@ -1,9 +1,9 @@
-'use strict'
+
 
 const Operation = require('./Operation');
-require('./config');
-const MissionButler = require('./miss.Butler')
-const {PRIORITY} = require('./config'); 
+const PRIORITY = require('./config');
+const MissionButler = require('./miss.Butler');
+//const {PRIORITY} = require('./config'); 
 
 /**
  * General running of the base
@@ -27,7 +27,6 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
 
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
   if (!this.spawnGroup){console.log('no spawn group in room, create remote spawngroup code')} //get closest spawn group
-
   this.addMission(new MissionButler(this));
 
   /*
@@ -56,3 +55,4 @@ OperationBase.prototype.finalizeOp = function () { // finalize?
 };
 
 // Additional methods/functions below
+module.exports = OperationBase

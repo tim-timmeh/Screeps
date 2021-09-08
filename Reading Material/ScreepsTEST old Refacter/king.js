@@ -1,6 +1,6 @@
-'use strict'
 
-const SpawnGroup = require('./SpawnGroup');
+
+const SpawnGroup = require('./spawnGroup');
 
 /**
  * King is top level management. Manages nukes, terminal, trade etc
@@ -9,6 +9,7 @@ const SpawnGroup = require('./SpawnGroup');
 function King() { 
   if(!Memory.empire) Memory.empire = {};
   this.memory = Memory.empire;
+  this.SpawnGroups = {}
 }
 /**
  * Initialize / build objects required
@@ -49,3 +50,4 @@ King.prototype.getSpawnGroup = function (roomName) {
             }
         }
     }
+    module.exports = King;

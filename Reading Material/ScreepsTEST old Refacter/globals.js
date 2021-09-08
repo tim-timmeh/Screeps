@@ -1,4 +1,6 @@
-'use strict';
+
+//const { builtinModules } = require("module");
+
 // Globals not related to specific objects
 
 global.test1 = 'this is global.test1'; // Test global that works
@@ -78,36 +80,66 @@ global.profilerGlobalReset = {
 }
 
 /**
-* Posted 13 January 2018 by @knightshade
-*/
-Object.defineProperty(global, '__stack', {
-  get: function() {
-    var orig = Error.prepareStackTrace;
-    Error.prepareStackTrace = function(_, stack){
-      return stack;
-    };
-    var err = new Error;
-    Error.captureStackTrace(err, arguments.callee);
-    var stack = err.stack;
-    Error.prepareStackTrace = orig;
-    return stack;
-  }
+ * Posted 13 January 2018 by @knightshade
+ */
+/*Object.defineProperty(global, '__stack', {
+configurable: true,
+	get: function() {
+
+        var orig = Error.prepareStackTrace;
+
+        Error.prepareStackTrace = function(_, stack) {
+
+            return stack;
+
+        };
+
+        var err = new Error;
+
+       // Error.captureStackTrace(err, arguments.callee);
+
+        var stack = err.stack;
+
+        Error.prepareStackTrace = orig;
+
+        return stack;
+
+    }
+
 });
+
+
 
 Object.defineProperty(global, '__line', {
-  get: function() {
-    return __stack[1].getLineNumber();
-  }
+configurable: true,
+	get: function() {
+
+        return __stack[1].getLineNumber();
+
+    }
+
 });
 
+
+
 Object.defineProperty(global, '__function', {
-  get: function() {
-    return __stack[1].getFunctionName();
-  }
+configurable: true,
+	get: function() {
+
+        return __stack[1].getFunctionName();
+
+    }
+
 });
 
 Object.defineProperty(global, '__file', {
-  get: function() {
-    return __stack[1].getFileName();
-  }
-});
+configurable: true,
+	get: function() {
+
+        return __stack[1].getFileName();
+
+    }
+
+});*/
+
+module.exports = {}

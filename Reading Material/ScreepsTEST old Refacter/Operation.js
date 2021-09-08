@@ -1,4 +1,4 @@
-'use strict'
+
 const myFunc = require('./myFunctions');
 
 /**
@@ -20,6 +20,9 @@ function Operation(flag, flagName, flagType, king) {
   this.king = king
   /** @type {object | Memory} */
   this.memory = flag.memory
+  if (!this.missions) { 
+      this.missions = {}; 
+  }
   if (this.flag.room) {
     this.hasVision = true; // is there vision in the room
     this.sources = this.flag.room.sources //get sources via room prototype (via variable/memory)

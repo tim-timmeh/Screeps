@@ -1,6 +1,7 @@
-'use strict'
+
 var myFunc = require('./myFunctions');
 const OperationBase = require('./op.Base');
+const King = require('./king');
 
 /**
  * Flag Primary / Secondary Code. (

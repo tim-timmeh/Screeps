@@ -1,5 +1,5 @@
-'use strict'
-const myFunc = require('myfunctions');
+
+const myFunc = require('./myFunctions');
 // Giving an object not yet created a function to perform. Eg Certain creep/spawn/room to do something.
 
 StructureSpawn.prototype.spawnTest = function() { // Test function
@@ -138,7 +138,7 @@ RoomObject.prototype.findStructureNearby = function(structureType, range) { // s
  * @param  {Object} opts      [description]
  * @return {roomPosition[]}           [description]
  */
-PathFinder.prototype.searchCustom = function (origin, goal, range = 0, opts) {
+PathFinder.searchCustom = function (origin, goal, range = 0, opts) {
   let ret = PathFinder.search(origin, [{pos: goal, range: range}], { // ?Might need to do -  [{pos: this.source.pos, range:1}]
     plainCost: opts.plainCost || 2,
     swampCost: opts.swampCost || 3,

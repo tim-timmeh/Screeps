@@ -1,20 +1,21 @@
-'use strict'
-require('SpawnGroup')
+
+require('./spawnGroup')
 
 //** Set emergency room mode incase of wipe/fresh spawn.
 
 function Mission(operation, name) {
-  this.name = name
-  this.opName = operation.name
-  this.opType = operation.type
-  this.flag = operation.flag
-  this.room = operation.room
-  this.king = operation.king
-  this.spawnGroup = operation.spawnGroup
-  this.sources = operation.Sources
+  this.name = name;
+  this.opName = operation.name;
+  this.opType = operation.type;
+  this.flag = operation.flag;
+  this.room = operation.flag.room; // should change to operation.flag.pos.roomname incase no vision?
+  this.king = operation.king;
+  this.spawnGroup = operation.spawnGroup;
+  this.sources = operation.Sources;
   if (!operation.flag.memory[this.name]) operation.flag.memory[this.name] = {};
   this.memory = operation.flag.memory[this.name];
   if (this.room) this.hasVision = true;
+  if (!this.memory.spawn) this.memory.spawn = {};
 }
 
 Mission.prototype.init = function () { // Initialize / build objects required
@@ -65,10 +66,11 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
       Memory.creeps[creepName] = undefined;
       i--
     }
-  }
-  if (this.SpawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
-    let creepName = this.opName.substring(9,12) + '.' + this.roleName.substring(0,3) + '.' + (Game.time % 100);//add spawngroup # to name
-    if (this.SpawnGroup.spawn(creepBody, creepName, options.memory) == 0) {
+  };
+  if (this.spawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
+    let creepName = (this.opType.substring(2,5) + '.' + roleName.substring(0,3) + '.' + (Game.time % 100));//add this.spawnGroup.room.name
+    let spawnResult = this.spawnGroup.spawn(creepBody, creepName, options.memory);
+    if (spawnResult == 0) {
       this.memory.spawn[roleName].push(creepName);
     }
   }
@@ -101,23 +103,23 @@ Mission.prototype.getBody = function (bodyConfig, options = {}) { //, ,
   let creepBody = []
   if (options.keepFormat) { //To keep format eg [WORK, CARRY, MOVE, WORK, CARRY, MOVE]
     for (let bodyPart in bodyConfig) {
-      creepBody.push(bodyPart.toUpperCase())
+      creepBody.push(bodyPart.toLowerCase())
     }
     let arrays = Array.apply(null, new Array(blockMultiplier));// Create an array of size "n" with undefined values
     arrays = arrays.map(function() { return creepBody });// Replace each "undefined" with our array, resulting in an array of n copies of our array
     creepBody = [].concat.apply([], arrays) // Flatten our array of arrays and apply to creepBody
   } else { //Spreads Format eg [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
     for (let bodyPart in bodyConfig) {
-      creepBody = creepBody.concat(Array((bodyConfig[bodyPart] * blockMultiplier)).fill(bodyPart.toUpperCase()));
+      creepBody = creepBody.concat(Array((bodyConfig[bodyPart] * blockMultiplier)).fill(bodyPart.toLowerCase()));
     }
   }
   if (options.addBodyPart) { // add non multiplying body parts to end
     for (let bodyPart in options.addBodyPart) {
-      creepBody = creepBody.concat(Array((options.addBodyPart[bodyPart])).fill(bodyPart.toUpperCase()));
+      creepBody = creepBody.concat(Array((options.addBodyPart[bodyPart])).fill(bodyPart.toLowerCase()));
     }
   }
   if (options.removeBodyPart){
-    let partIndex = creepBody.findIndex((p) => p == options.removeBodyPart.toUpperCase())
+    let partIndex = creepBody.findIndex((p) => p == options.removeBodyPart.toLowerCase())
     if (partIndex > -1) {
       creepBody.splice(partIndex, 1);
     }
@@ -322,3 +324,5 @@ Mission.prototype.fixRoad = function (path) {
 // Mission.prototype.getBodyFighter = function (){
 //
 // }
+
+module.exports = Mission
