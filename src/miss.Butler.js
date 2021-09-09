@@ -17,6 +17,7 @@ MissionButler.prototype.roleCallMiss = function () { // perform rolecall on requ
     this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
 };
+
 MissionButler.prototype.actionMiss = function () { // perform actions / missions
   for (let butler of this.butlers) {
     this.butlerActions(butler)
@@ -26,8 +27,14 @@ MissionButler.prototype.finalizeMiss = function () { // finalize?
 
 };
 
+Mission.creepRoleCall()
+
 // Additional methods/functions below
 
+/**
+ * 
+ * @param {Creep} creep 
+ */
 MissionButler.prototype.butlerActions = function (creep) {
   {
 
@@ -56,13 +63,14 @@ MissionButler.prototype.butlerActions = function (creep) {
           creep.moveToModule(storageMy);
         }
         delete creep.memory.currentSource;
-      } else if (creep.memory.currentSource) {
-        creep.moveToModule(creep.memory.currentSource);
+      } else if (creep.memory.currentSource && creep.harvest(Game.getObjectById(creep.memory.currentSource)) == ERR_NOT_IN_RANGE) {
+        creep.moveToModule(Game.getObjectById(creep.memory.currentSource));
       } else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
         creep.moveToModule(sourceMy);
         creep.memory.currentSource = sourceMy;
       }
     } else {
+      /** @type {Structure | undefined} */
       let targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
@@ -74,7 +82,7 @@ MissionButler.prototype.butlerActions = function (creep) {
           return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
         }
       });*/
-      if (targets.length) {
+      if (Object.keys(targets).length) {
         if (creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targets);
         }
@@ -90,10 +98,15 @@ MissionButler.prototype.butlerActions = function (creep) {
   }
 };
 
+/**
+ * 
+ * @param {Creep} creep 
+ * @returns 
+ */
 function targetsTF(creep) { 
   let t = creep.room.find(FIND_STRUCTURES, {
     filter: (structure) => {
-      return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+      return (structure.structureType == STRUCTURE_TOWER) && structure.store[RESOURCE_ENERGY] < structure.store.getCapacity(RESOURCE_ENERGY);
     }
   });
 return t};

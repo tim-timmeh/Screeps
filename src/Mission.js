@@ -1,8 +1,14 @@
+const Operation = require('./Operation');
 
 require('./spawnGroup')
 
 //** Set emergency room mode incase of wipe/fresh spawn.
 
+/**
+ * 
+ * @param {Operation} operation 
+ * @param {string} name 
+ */
 function Mission(operation, name) {
   this.name = name;
   this.opName = operation.name;
@@ -34,14 +40,13 @@ Mission.prototype.finalize = function () { // finalize? Invalidate Cache's/Re-ca
 // Additional methods/functions below
 
 /**
-* [Role call creeps via mission.memory.spawn creep array, else spawn if needed]
-* @param  {String} roleName        [Creeps role title]
-* @param  {[creepBody]} creepBody        [Creep body to spawn, use this.getBody return to get dynamic size]
-* @param  {Number} [creepAmount=1] [How many creeps for role]
-* @param  {Object} [options={}]    [prespawn = ]
-*                                  []
-* @return {creep[]}                 [Array of Creeps matching roleName]
-*/
+ * Role call creeps via mission.memory.spawn creep array, else spawn if needed
+ * @param {string} roleName Creeps role title
+ * @param {Body} creepBody Creep body to spawn, use this.getBody return to get dynamic size
+ * @param {number} creepAmount How many creeps for role
+ * @param {*} options prespawn = 
+ * @returns Array of Creeps matching roleName
+ */
 Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1, options = {}) { // what mission needs. job name, what kinda body, how many, additional options (Pre-spawn, priority reservation etc)
   let creepArray = [];
   if (!this.memory.spawn[roleName]) {
