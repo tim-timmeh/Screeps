@@ -55,7 +55,7 @@ module.exports = {
 
         }
       } else {
-        console.log('Error in flag color classification')
+        console.log(`Error in flag color classification, ${flagName} - ${flagType} `)
       }
     }
     return _.sortBy(operationList, (op) => op.priority);

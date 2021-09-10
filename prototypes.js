@@ -119,7 +119,7 @@ RoomObject.prototype.findStructureNearby = function (structureType, range) { // 
  * @returns {PathFinderPath}
  */
 PathFinder.searchCustom = function (origin, goal, range = 0, opts) {
-  let ret = PathFinder.search(origin, {pos: goal, range: range}, { // ?Might need to do -  [{pos: this.source.pos, range:1}]
+  let ret = PathFinder.search(origin, { pos: goal, range: range }, { // ?Might need to do -  [{pos: this.source.pos, range:1}]
     plainCost: opts.plainCost || 2,
     swampCost: opts.swampCost || 3,
     roomCallback: function (roomName) {

@@ -37,32 +37,32 @@ Operation.prototype.init = function () { // Initialize / build objects required
   for (let missionName in this.missions) { // then instantiate objects required for missions and functions
     myFunc.tryWrap(() => {
       this.missions[missionName].initMiss();
-    }, `ERROR initMiss ${missionName} , ${this.name}`);
+    }, `ERROR initMiss ${this.name} (${this.type}) - ${missionName}`);
   }
 };
 Operation.prototype.roleCall = function () { // perform rolecall on required creeps spawn if needed
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].roleCallMiss();
-    }, `ERROR roleCallMiss ${missionName} , ${this.name}`);
+    }, `ERROR roleCallMiss ${this.name} (${this.type}) - ${missionName}`);
   }
 };
 Operation.prototype.action = function () { // perform actions / missions
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].actionMiss();
-    }, `ERROR actionMiss ${missionName} , ${this.name}`);
+    }, `ERROR actionMiss, ${this.name} (${this.type}) - ${missionName}`);
   }
 };
 Operation.prototype.finalize = function () { // finalize?
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].finalizeMiss();
-    }, `ERROR finalizeMiss ${missionName} , ${this.name}`);
+    }, `ERROR finalizeMiss ${this.name} (${this.type}) - ${missionName}`);
   };
   myFunc.tryWrap(() => {
     this.finalizeOp();
-  }, `ERROR finalizeOp ${this.name} ${this.type}`);
+  }, `ERROR finalizeOp ${this.name} (${this.type}) - ${Object.keys(this.missions)}`);
 };
 
 // Additional methods/functions below

@@ -1,3 +1,3 @@
-# Screeps
+# Screeps!
 
-Screeps, to learn & play with javascript/VSCode/git/github.
+Screeps to play with javascript/VSCode/git/github

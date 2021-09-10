@@ -1,5 +1,15 @@
+spam butlers, will need to also build extensions. these will then become base bitches. gcl 3 change to dedicated miners, builders, upgraders. need paver/repairer.
 
 
+
+
+
+
+
+
+
+--------------------------
+OLD
 
 state steps:
   build/init: Instantiate objects, setup the framework for everything, including operations and missions.

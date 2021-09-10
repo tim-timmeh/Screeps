@@ -3,6 +3,7 @@ require('./config'); // Custom config here
 require('./globals'); // Global Variables
 require('./prototypes'); // Modified Prototypes
 require('./king') // king constructor
+require('./moveToModule');
 const exportStats = require('./stats'); // stat function
 const queen = require('./queen'); // Import Functions
 const myFunc = require('./myFunctions'); // Import Functions

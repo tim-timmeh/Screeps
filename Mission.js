@@ -1,5 +1,5 @@
 const Operation = require('./Operation');
-const _ = require("lodash");
+//const _ = require("lodash");
 
 require('./spawnGroup')
 
@@ -18,7 +18,7 @@ function Mission(operation, name) {
   this.room = operation.flag.room; // should change to operation.flag.pos.roomname incase no vision?
   this.king = operation.king;
   this.spawnGroup = operation.spawnGroup;
-  this.sources = operation.Sources;
+  this.sources = operation.sources;
   if (!operation.flag.memory[this.name]) operation.flag.memory[this.name] = {};
   this.memory = operation.flag.memory[this.name];
   if (this.room) this.hasVision = true;
@@ -45,13 +45,14 @@ Mission.prototype.finalize = function () { // finalize? Invalidate Cache's/Re-ca
  * @param {string} roleName Creeps role title
  * @param {BodyPartConstant[]} creepBody Creep body to spawn, use this.getBody return to get dynamic size
  * @param {number} creepAmount How many creeps for role
- * @param {*} [options] prespawn = 
+ * @param {*} [options] .prespawn, .memory,
  * @returns Array of Creeps matching roleName
  */
 Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1, options = {}) { // what mission needs. job name, what kinda body, how many, additional options (Pre-spawn, priority reservation etc)
   let creepArray = [];
   if (!this.memory.spawn[roleName]) {
     this.memory.spawn[roleName] = this.getLostCreeps(roleName);
+    console.log("GETTING LOST CREEPS");
   };
   let creepCount = 0;
   for (let i = 0; i < this.memory.spawn[roleName].length; i++) {
@@ -101,7 +102,7 @@ Mission.prototype.getLostCreeps = function (roleName) {
 /**
  * Takes creep body and multiplies by max energy available, with options. Returns creep body array for spawning
  * @param {Object.<string,number>} bodyConfig Object containing bodypart as Key and amount as Value eg {move:3,attack:2}
- * @param {Object.<string,?>} [options] maxRatio = max block multiplier
+ * @param {Object.<string,?>} [options={}] maxRatio = max block multiplier
  *                        maxEnergyPercent = max spawn ratio eg ration energy use % below max
  *                        forceSpawn = spawn at available energy or 300
  *                        keepFormat = duplicates body structure instead of making it even
@@ -142,7 +143,7 @@ Mission.prototype.getBody = function (bodyConfig, options = {}) { //, ,
 /**
  * Calc Max/Req creep body block multiplier
  * @param {Object.<string,number>} bodyConfig Object containing bodypart as Key and amount as Value eg {move:3,attack:2}
- * @param {Object.<string,?>} [options] maxRatio = max block multiplier
+ * @param {Object.<string,?>} [options={}] maxRatio = max block multiplier
  *                                      maxEnergyPercent = max spawn ratio eg ration energy use % below max
  *                                      forceSpawn = spawn at available energy or 300
  *                                      addBodyPart = add non multiplying bodypart to bodyConfig

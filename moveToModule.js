@@ -28,7 +28,7 @@ Creep.prototype.moveToModule = function (destination, ignore = true, ticks = 2) 
     reusePath = 1;
   }
   let moveResult = ERR_TIRED
-  if (this.fatigue <= 0){
+  if (this.fatigue <= 0) {
     this.memory.position = this.pos;
     moveResult = this.moveTo(destination, {
       reusePath: reusePath,
@@ -36,7 +36,7 @@ Creep.prototype.moveToModule = function (destination, ignore = true, ticks = 2) 
       visualizePathStyle: { stroke: '#fff' },
     });
   }
-  (moveResult == ERR_TIRED) ? this.say("😰"):"";
-  return moveResult ;
+  (moveResult == ERR_TIRED) ? this.say("😰") : "";
+  return moveResult;
 };
 module.exports = Creep.prototype.moveToModule;
