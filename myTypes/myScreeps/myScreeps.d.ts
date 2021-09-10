@@ -13,7 +13,7 @@ interface Creep {
    * @param ticks Stuck count
    */
   moveToModule(
-    destination : object | {pos: RoomPosition} | {x:number,y:number},
+    destination : RoomObject | {pos: RoomPosition} | {x:number,y:number},
     ignore? : boolean,
     ticks? : number,
   ):CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;

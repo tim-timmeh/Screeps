@@ -1,5 +1,8 @@
 
-
+/**
+ * 
+ * @param {Room} room 
+ */
 function SpawnGroup(room) { // Constructor, framework to build a SpawnGroup for a given (room)
   this.room = room;
   this.spawns = room.find(FIND_MY_SPAWNS); // replace with _.filter for lower cpu?? FIND with no arguments is actualy cached so cheap?

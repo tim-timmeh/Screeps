@@ -1,12 +1,17 @@
 
 const Mission = require('./Mission');
+const Operation = require('./Operation');
 
+/**
+ * 
+ * @param {Operation} operation 
+ */
 function MissionButler(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'butler')
+  Mission.call(this, operation, 'butler') // .call sends this object and uses it on Mission constructer.
 }
 
-MissionButler.prototype = Object.create(Mission.prototype); // makes operationbase protos copy of operation protos
-MissionButler.prototype.constructor = MissionButler; // reset constructor to operationbase, or else constructor is operation
+MissionButler.prototype = Object.create(Mission.prototype); // makes MissionButler proto copy of Mission proto
+MissionButler.prototype.constructor = MissionButler; // reset constructor to MissionButler, or else constructor is Mission
 
 MissionButler.prototype.initMiss = function () { // Initialize / build objects required
 

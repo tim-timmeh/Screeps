@@ -76,32 +76,12 @@ Object.defineProperty(Room.prototype, 'sources', { // Get stored room sources, S
   configurable: true
 });
 
-Creep.prototype.moveToModule = function (destination, ignore = true, ticks = 2) { // Old moveToModule possibly needs rework.
-  let positionMem
-  let reusePath = 50;
-  if (!this.memory.stuckCount) {
-    this.memory.stuckCount = 0;
-  }
-  if (this.memory.position) {
-    positionMem = new RoomPosition(this.memory.position.x, this.memory.position.y, this.memory.position.roomName);
-    if (positionMem.toString() == this.pos.toString()) {
-      this.memory.stuckCount += 1;
-    } else {
-      this.memory.stuckCount = 0;
-    }
-  }
-  if (this.memory.stuckCount >= ticks) {
-    ignore = false;
-    reusePath = 1;
-  }
-  this.memory.position = this.pos;
-  this.moveTo(destination, {
-    reusePath: reusePath,
-    ignoreCreeps: ignore,
-    visualizePathStyle: { stroke: '#fff' },
-  });
-};
-
+/**
+ * //This is confusing and cannot find the source why i created this
+ * @param {*} structureType 
+ * @param {*} range 
+ * @returns 
+ */
 RoomObject.prototype.findStructureNearby = function (structureType, range) { // search for structuretype near this object ie container / link
   //if (!this.room.memory.structures[structureType]) this.room.memory.structures[structureType] = {};
   _.defaultsDeep(this.room.memory, { 'structures': { [structureType]: {} } })
@@ -130,9 +110,16 @@ RoomObject.prototype.findStructureNearby = function (structureType, range) { // 
   }
 }
 
-
+/**
+ * Custom Pathfinder // This is confusing and cannot find the source why i created this.
+ * @param {RoomPosition} origin 
+ * @param {RoomPosition} goal
+ * @param {number} [range=0] 
+ * @param {?} [opts] 
+ * @returns {PathFinderPath}
+ */
 PathFinder.searchCustom = function (origin, goal, range = 0, opts) {
-  let ret = PathFinder.search(origin, [{ pos: goal, range: range }], { // ?Might need to do -  [{pos: this.source.pos, range:1}]
+  let ret = PathFinder.search(origin, {pos: goal, range: range}, { // ?Might need to do -  [{pos: this.source.pos, range:1}]
     plainCost: opts.plainCost || 2,
     swampCost: opts.swampCost || 3,
     roomCallback: function (roomName) {
