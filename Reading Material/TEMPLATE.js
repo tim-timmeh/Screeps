@@ -1,9 +1,9 @@
 'use strict'
-const MainObj = require("MainObj")
+const MainObj = require("./MainObj")
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function SubObj() { // constructor, how to build the object
+function SubObj(...args) { // constructor, how to build the object
   MainObj.call(this, ...args); // uses params to pass object through parnt operation constructor first
   this.properties = "SubObj properties";
 }
@@ -19,7 +19,7 @@ SubObj.prototype.init = function () { // Initialize / build objects required
 
 };
 
-SubObj.prototype.rolecall = function () { // perform rolecall on required creeps spawn if needed
+SubObj.prototype.roleCall = function () { // perform rolecall on required creeps spawn if needed
 
 };
 

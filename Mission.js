@@ -23,6 +23,7 @@ function Mission(operation, name) {
   this.memory = operation.flag.memory[this.name];
   if (this.room) this.hasVision = true;
   if (!this.memory.spawn) this.memory.spawn = {};
+  this.missionLog = `${this.room} - ${this.opName} (${this.opType}) - ${this.name}`
 }
 
 Mission.prototype.init = function () { // Initialize / build objects required
@@ -207,17 +208,17 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
     if (storage && storage.room.controller.level >= 4) { //check still true
       return storage
     }
-    if (global.debug) console.log(`Error finding storage from memory, clearing - ${this.room} - ${this.opName} - ${this.name}`);
+    if (global.debug) console.log(`Error finding storage from memory, clearing - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
     this.memory.storageID = ""; //else reset memory
   }
   if (this.room.controller.my) { // added this part, dont want miners to take energy from room when bootstrapping?
-    if (global.debug) console.log(`Error finding storage, room looks to be in construction - ${this.room} - ${this.opName} - ${this.name}`)
+    if (global.debug) console.log(`Error finding storage, room looks to be in construction - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
     return
   }
 
   if (this.spawnGroup.room.storage && this.spawnGroup.room.storage.my) { //if none in room find spawngroup room storage
     this.memory.storageID = this.spawnGroup.room.storage.id;
-    if (global.debug) console.log(`Using spawnGroup Storage @ ${this.spawnGroup.room.name} for ${this.room} - ${this.opName} - ${this.name}`)
+    if (global.debug) console.log(`Using spawnGroup Storage @ ${this.spawnGroup.room.name} for ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
     return storage
   }
 
@@ -230,7 +231,7 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
     if (storages.length == 0) return;
     if (storages.length == 1) return storages[0]; // if only 1 return that one, (add check for distance by room maybe?)
     let sorted = _.sortBy(storages, (s) => Game.map.findRoute(s.pos.roomName, Game.rooms[position.roomName]).length); // else find closest. VERY EXPENSIVE? refactor better solution
-    if (global.debug) console.log(`Error finding storage, Searching all & finding closest - ${this.room} - ${this.opName} - ${this.name}\nFound ${sorted[0]}`);
+    if (global.debug) console.log(`Error finding storage, Searching all & finding closest - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}\nFound ${sorted[0]}`);
     return sorted[0];
   } catch (e) {
     console.log(`FORGOT TO ADD KING.STORAGES @ ${__file} : ${__line}\n${e.stack}`) // if error console log stack at error
@@ -276,7 +277,7 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
 Mission.prototype.paveRoad = function (startPos, dest, range) {
   if (Game.time - this.memory.paveTick < 1000) return;//needs short circuit
   let path = PathFinder.searchCustom(startPos.pos, dest.pos, 2)
-  if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.opName} - ${this.room.name} - ${this.name}`)
+  if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
   let newConSites = this.fixRoad(path)
   if (newConSites) {
     if ((Object.keys(Game.constructionSites).length + newConSites.length) < 60) {
@@ -286,7 +287,7 @@ Mission.prototype.paveRoad = function (startPos, dest, range) {
         if (global.debug) console.log(`Road result ${roadReturn} at X-${newConSite.x} Y-${newConSite.y} of ${newConSite.roomName}`);
       }
     } else {
-      console.log(`Too many constructionSites to place more ${this.opName} - ${this.room}`)
+      console.log(`Too many constructionSites to place more ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
     }
   }
   this.memory.paveTick = Game.time;
@@ -309,7 +310,7 @@ Mission.prototype.fixRoad = function (path) {
       roadRepairHP += road.hitsMax - road.hits;
       let limitRoadRepairHp = 1000000; // change to dyamic?
       if (!this.memory.roadRepairIds && (roadRepairHP > limitRoadRepairHp || road.hits < road.hitsMax * .25)) {
-        console.log(`Roadworks begun, spawning in ${this.opName} - ${this.room}`);
+        console.log(`Roadworks begun, spawning in ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
         this.memory.roadRepairIds = roadIds;
       }
       continue;

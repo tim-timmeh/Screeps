@@ -3,6 +3,7 @@
 const Operation = require('./Operation');
 const PRIORITY = require('./config');
 const MissionButler = require('./miss.Butler');
+const MissionMiner = require('./miss.Miner')
 //const {PRIORITY} = require('./config'); 
 
 /**
@@ -28,6 +29,11 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
   if (!this.spawnGroup) { console.log('no spawn group in room, create remote spawngroup code') } //get closest spawn group
   this.addMission(new MissionButler(this));
+  if (this.room.controller >=3){
+    for (let i = 0; i < this.room.sources.length; i++) {
+      this.addMission(new MissionMiner(this, `miner${i}`, this.room.sources[i]));
+    }
+  }
 
   /*
   this.addMission(new DefenceMission(this));

@@ -12,6 +12,8 @@ const myFunc = require('./myFunctions');
 function Operation(flag, flagName, flagType, king) {
   /** @type {Flag} */
   this.flag = flag;
+  /** @type {Room} */
+  this.room = this.flag.room;
   /** @type {string} */
   this.name = flagName
   /** @type {string} */

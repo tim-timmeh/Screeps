@@ -20,10 +20,15 @@ MissionButler.prototype.initMiss = function () { // Initialize / build objects r
  * Perform rolecall on required creeps, spawn if needed 
  */
 MissionButler.prototype.roleCallMiss = function () { // TODO: tweak RCL 2 & 3s transition to miners (Only 1 work plus goes to max 2 butlers). Also change removeBodyPart to object like addBodyParty.
-  let swarmQty = 6;
-  if (this.room.controller.level >= 3) swarmQty = 2;
-  this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY' }), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
-  if (!this.butlers) {
+  let swarmQty;
+  if (this.room.controller.level <= 2) {
+    swarmQty = 6
+    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 1, MOVE: 1 , WORK: 1},{ addBodyPart: { MOVE: 1, CARRY: 1 }}), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+  } else {
+    swarmQty = 2;
+    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY' }), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+  } if (!this.butlers) {
+    console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
     this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
 };
@@ -88,7 +93,7 @@ MissionButler.prototype.butlerActions = function (creep) {
     } else {
       /** @type {Structure | undefined} */
       let targets;
-      if (creep.memory.currentJob && (Game.getObjectById(creep.memory.currentJob).store.energy < Game.getObjectById(creep.memory.currentJob).store.getCapacity())) {
+      if (creep.memory.currentJob && (Game.getObjectById(creep.memory.currentJob)) && (Game.getObjectById(creep.memory.currentJob).store.energy < Game.getObjectById(creep.memory.currentJob).store.getCapacity())) {
         targets = Game.getObjectById(creep.memory.currentJob);
       } else {
         targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {

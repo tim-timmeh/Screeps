@@ -77,7 +77,7 @@ Object.defineProperty(Room.prototype, 'sources', { // Get stored room sources, S
 });
 
 /**
- * //This is confusing and cannot find the source why i created this
+ * //This is confusing and cannot find the source from where i created this
  * @param {*} structureType 
  * @param {*} range 
  * @returns 
@@ -142,6 +142,8 @@ PathFinder.searchCustom = function (origin, goal, range = 0, opts) {
       return costs;
     },
   });
-  if (!ret.incomplete) return ret.path;
-  console.log(`Error path incomplete from ${origin} to ${goal} - ${this.opName} - ${this.room.name} - ${this.name}`);
+  if (ret.incomplete) {
+    console.log(`Error path incomplete from ${origin} to ${goal}`);
+  }
+  return ret.path;
 }
