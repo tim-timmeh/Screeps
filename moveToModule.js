@@ -4,8 +4,8 @@ let positionMem;
 /**
  * Patches moveTo() function to include reset pathing on creep stuck count
  * @param {RoomObject | RoomPosition} destination 
- * @param {Boolean} [ignore] 
- * @param {number} [ticks]
+ * @param {Boolean} [ignore=true] ignore creeps during pathing
+ * @param {number} [ticks=2] how many ticks to check if stuck
  * @returns 
  */
 Creep.prototype.moveToModule = function (destination, ignore = true, ticks = 2) {

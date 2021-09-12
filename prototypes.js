@@ -77,7 +77,7 @@ Object.defineProperty(Room.prototype, 'sources', { // Get stored room sources, S
 });
 
 /**
- * //This is confusing and cannot find the source from where i created this
+ * //
  * @param {*} structureType 
  * @param {*} range 
  * @returns 
@@ -87,7 +87,7 @@ RoomObject.prototype.findStructureNearby = function (structureType, range) { // 
   _.defaultsDeep(this.room.memory, { 'structures': { [structureType]: {} } })
   let structureId = getKeyByValue(this.room.memory.structures[structureType], this.id);
   if (structureId) {
-    let structure = Game.getObjectById(structureId);
+    let structure = Game.getObjectById(this.room.memory.structures[structureType][structureId]);
     if (structure) {
       return structure //return object ie Container / Link
     } else {
@@ -96,8 +96,8 @@ RoomObject.prototype.findStructureNearby = function (structureType, range) { // 
       if (global.debug) console.log(`Structure not valid, erasing from memory ${structureId} @ ${this.room.name} for ${this.id}`)
     }
   }
-  if ((Game.time % 2 == 0) && (Math.random() < .2)) { // Every 2 ticks, 20% chance to go (1/10 ticks)
-    console.log(`Searching for ${structureType} in range at ${this.room.name} of ${this.id}`);
+  if ((Game.time % 2 == 0) && (Math.random() < .2)) { // Every 2 ticks, 20% chance to go (1/10 ticks) ?? Remove this?
+    console.log(`Searching for ${structureType} in range at ${this.room.name} of ${this.id}`); // Add search for CSite?
     let structures = _.filter(this.pos.findInRange(FIND_STRUCTURES, range), (s) => {
       return s.structureType == structureType;
     });
@@ -110,6 +110,10 @@ RoomObject.prototype.findStructureNearby = function (structureType, range) { // 
   }
 }
 
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
 /**
  * Custom Pathfinder // This is confusing and cannot find the source why i created this.
  * @param {RoomPosition} origin 
@@ -118,7 +122,7 @@ RoomObject.prototype.findStructureNearby = function (structureType, range) { // 
  * @param {?} [opts] 
  * @returns {PathFinderPath}
  */
-PathFinder.searchCustom = function (origin, goal, range = 0, opts) {
+PathFinder.searchCustom = function (origin, goal, range = 0, opts = {}) {
   let ret = PathFinder.search(origin, { pos: goal, range: range }, { // ?Might need to do -  [{pos: this.source.pos, range:1}]
     plainCost: opts.plainCost || 2,
     swampCost: opts.swampCost || 3,
@@ -145,5 +149,5 @@ PathFinder.searchCustom = function (origin, goal, range = 0, opts) {
   if (ret.incomplete) {
     console.log(`Error path incomplete from ${origin} to ${goal}`);
   }
-  return ret.path;
+  return ret;
 }

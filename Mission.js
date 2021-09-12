@@ -234,7 +234,7 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
     if (global.debug) console.log(`Error finding storage, Searching all & finding closest - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}\nFound ${sorted[0]}`);
     return sorted[0];
   } catch (e) {
-    console.log(`FORGOT TO ADD KING.STORAGES @ ${__file} : ${__line}\n${e.stack}`) // if error console log stack at error
+    console.log(`FORGOT TO ADD KING.STORAGES @ \n${e.stack}`) // if error console log stack at error
   }
 }
 
