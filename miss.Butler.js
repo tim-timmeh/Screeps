@@ -98,7 +98,8 @@ MissionButler.prototype.butlerActions = function (creep) {
       let targetsT; // tower
       let currentJob = creep.memory.currentJob || {};
       let {fill, build, tower} = currentJob;
-      if (fillEnergy(creep, fill)) return;
+      if (creep.doFillEnergy(fill)) return;
+      if (creep.doBuildCsite(build)) return;
 
        /*= creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
@@ -112,11 +113,6 @@ MissionButler.prototype.butlerActions = function (creep) {
         }
         return;
       };
-      targetB = creep.doBuildCsite; 
-      if (targetB) {
-        
-        return;
-      }
       if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
         creep.moveToModule(creep.room.controller);
       };
@@ -125,27 +121,7 @@ MissionButler.prototype.butlerActions = function (creep) {
   }
 };
 
-function fillEnergy (creep, fill) {
-  let targetF;
-  let f;
-  if (fill && (f = Game.getObjectById(fill)) && (f.store.energy < f.store.getCapacity())) {
-    targetF = f;
-  } else {
-    targetF = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
-          structure.energy < structure.energyCapacity;
-      }
-    });
-    if (targetF && Object.keys(targetF).length) creep.memory.currentJob = {fill:targetF.id};
-  } 
-  if (targetF && Object.keys(targetF).length) {
-    if (creep.transfer(targetF, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-      creep.moveToModule(targetF);
-    }
-    return true;
-  };
-}
+
 
 /**
  * 

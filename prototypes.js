@@ -164,19 +164,45 @@ Creep.prototype.doUpgradeController = function () {
 
 /**
  * Move to target CSite or search and move to closest CSite and build.
- * @param {ConstructionSite} [target] Optional CSite object to build 
- * @returns CSite Object
  */
-Creep.prototype.doBuildCsite = function (target) {
-  if (!target) {
+Creep.prototype.doBuildCsite = function (build) {
+  let targetB;
+  let b;
+  if (build && (b = Game.getObjectById(build))) {
+    targetB = b;
+  } else {
     let csites = this.room.find(FIND_CONSTRUCTION_SITES);
     if (csites.length) {
-      target = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES))
+      targetB = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES))
+    };
+    if (targetB && Object.keys(targetB).length) this.memory.currentJob = {build:targetB.id};
+  }
+  if (targetB && Object.keys(targetB).length) {
+    if (this.build(targetB) == ERR_NOT_IN_RANGE) {
+      this.moveToModule(targetB);
     }
+    return true;
   }
-  if (!target) return;
-  if (this.build(target) == ERR_NOT_IN_RANGE) {
-    this.moveToModule(target);
-  }
-  return target;
+}
+
+Creep.prototype.doFillEnergy = function(fill) {
+  let targetF;
+  let f;
+  if (fill && (f = Game.getObjectById(fill)) && (f.store.energy < f.store.getCapacity())) {
+    targetF = f;
+  } else {
+    targetF = this.pos.findClosestByPath(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+          structure.energy < structure.energyCapacity;
+      }
+    });
+    if (targetF && Object.keys(targetF).length) this.memory.currentJob = {fill:targetF.id};
+  } 
+  if (targetF && Object.keys(targetF).length) {
+    if (this.transfer(targetF, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      this.moveToModule(targetF);
+    }
+    return true;
+  };
 }
