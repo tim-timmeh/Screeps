@@ -91,41 +91,61 @@ MissionButler.prototype.butlerActions = function (creep) {
         delete creep.memory.currentSource;
       }
     } else {
-      /** @type {Structure | undefined} */
-      let targets;
-      if (creep.memory.currentJob && (Game.getObjectById(creep.memory.currentJob)) && (Game.getObjectById(creep.memory.currentJob).store.energy < Game.getObjectById(creep.memory.currentJob).store.getCapacity())) {
-        targets = Game.getObjectById(creep.memory.currentJob);
-      } else {
-        targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-          filter: (structure) => {
-            return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
-              structure.energy < structure.energyCapacity;
-          }
-        });
-        if (targets) creep.memory.currentJob = targets.id;
-      };
-      let targetsT; /*= creep.room.find(FIND_STRUCTURES, {
+      /** @type {Structure | unknown} */
+
+
+      let targetB; // build
+      let targetsT; // tower
+      let currentJob = creep.memory.currentJob || {};
+      let {fill, build, tower} = currentJob;
+      if (fillEnergy(creep, fill)) return;
+
+       /*= creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
         }
       });*/
-      if (targets && Object.keys(targets).length) {
-        if (creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveToModule(targets);
-        }
-      } else if ((targetsT = targetsTF(creep)).length) {
+      if ((targetsT = targetsTF(creep)).length) {
         targetsT.sort((a, b) => a.energy - b.energy);
         if (creep.transfer(targetsT[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(targetsT[0]);
         }
-      } else {
-        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-          creep.moveToModule(creep.room.controller);
-        }
+        return;
+      };
+      targetB = creep.doBuildCsite; 
+      if (targetB) {
+        
+        return;
       }
+      if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+        creep.moveToModule(creep.room.controller);
+      };
+      return;
     }
   }
 };
+
+function fillEnergy (creep, fill) {
+  let targetF;
+  let f;
+  if (fill && (f = Game.getObjectById(fill)) && (f.store.energy < f.store.getCapacity())) {
+    targetF = f;
+  } else {
+    targetF = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+          structure.energy < structure.energyCapacity;
+      }
+    });
+    if (targetF && Object.keys(targetF).length) creep.memory.currentJob = {fill:targetF.id};
+  } 
+  if (targetF && Object.keys(targetF).length) {
+    if (creep.transfer(targetF, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(targetF);
+    }
+    return true;
+  };
+}
 
 /**
  * 

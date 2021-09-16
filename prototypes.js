@@ -151,3 +151,32 @@ PathFinder.searchCustom = function (origin, goal, range = 0, opts = {}) {
   }
   return ret;
 }
+
+/**
+ * Move to room.controller and upgrade
+ */
+Creep.prototype.doUpgradeController = function () {
+  let controller = this.room.controller 
+  if (this.upgradeController(controller) == ERR_NOT_IN_RANGE) {
+    this.moveToModule(controller);
+  };
+}
+
+/**
+ * Move to target CSite or search and move to closest CSite and build.
+ * @param {ConstructionSite} [target] Optional CSite object to build 
+ * @returns CSite Object
+ */
+Creep.prototype.doBuildCsite = function (target) {
+  if (!target) {
+    let csites = this.room.find(FIND_CONSTRUCTION_SITES);
+    if (csites.length) {
+      target = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES))
+    }
+  }
+  if (!target) return;
+  if (this.build(target) == ERR_NOT_IN_RANGE) {
+    this.moveToModule(target);
+  }
+  return target;
+}

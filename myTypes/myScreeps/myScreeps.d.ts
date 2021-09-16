@@ -17,6 +17,14 @@ interface Creep {
     ignore? : boolean,
     ticks? : number,
   ):CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;
+  /**
+   * Move to room.controller and upgrade
+   */
+  doUpgradeController(): void;
+  /**
+   * Move to target CSite or search and move to closest CSite and build.
+   */
+  doBuildCsite(target?:ConstructionSite): ConstructionSite;
 }
 
 interface MissionButler {
@@ -26,4 +34,13 @@ interface MissionButler {
     creepAmount : number,
     options : any,
   ) : [Creep]
+}
+
+interface PathFinder {
+  searchCustom(
+    origin : RoomPosition,
+    goal : RoomPosition,
+    range? : Number = 0,
+    opts? : ?,
+  ) : PathFinderPath,
 }
