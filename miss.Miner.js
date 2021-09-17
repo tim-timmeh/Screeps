@@ -20,14 +20,14 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
   this.distanceToSpawn = this.findDistanceToSpawn(this.minerSource);
   this.container = this.minerSource.findStructureNearby(STRUCTURE_CONTAINER, 1);
   if (!this.container) {
-    this.placeMinerContainer();
+    this.placeMinerContainer(); //? Add logic that when no container but constructionsite go and mine/build
   }
 };
 /**
  * Perform rolecall on required creeps, spawn if needed 
  */
 MissionMiner.prototype.roleCallMiss = function () { // 
-  let body = this.getBody({ MOVE: 3, WORK: 5 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 });
+  let body = this.getBody({ MOVE: 3, WORK: 5 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 }); //? will spawn 1 carry parts if controller 3 but not enough energy
   this.miners = this.creepRoleCall(this.name, body, 1, { prespawn: this.memory.distanceToSpawn }); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
 };
 /**
@@ -76,7 +76,7 @@ MissionMiner.prototype.placeMinerContainer = function () {
   }
   if (this.minerSource.pos.findInRange(FIND_CONSTRUCTION_SITES, 1).length > 0) return;
   let ret = PathFinder.searchCustom(this.minerSource.pos, startingObject, 1); //? might need to switch ends?
-  console.log(ret);
+  console.log(ret.path);
   if (ret.incomplete || ret.path.length == 0) {
     console.log(`Pathing for miner container placement failed - ${this.missionLog}`);
     return;

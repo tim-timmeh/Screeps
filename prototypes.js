@@ -156,14 +156,16 @@ PathFinder.searchCustom = function (origin, goal, range = 0, opts = {}) {
  * Move to room.controller and upgrade
  */
 Creep.prototype.doUpgradeController = function () {
-  let controller = this.room.controller 
+  let controller = this.room.controller
   if (this.upgradeController(controller) == ERR_NOT_IN_RANGE) {
     this.moveToModule(controller);
   };
 }
 
 /**
- * Move to target CSite or search and move to closest CSite and build.
+ * 
+ * @param {Id<ConstructionSite>} build 
+ * @returns 
  */
 Creep.prototype.doBuildCsite = function (build) {
   let targetB;
@@ -173,9 +175,9 @@ Creep.prototype.doBuildCsite = function (build) {
   } else {
     let csites = this.room.find(FIND_CONSTRUCTION_SITES);
     if (csites.length) {
-      targetB = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES))
+      targetB = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES)
     };
-    if (targetB && Object.keys(targetB).length) this.memory.currentJob = {build:targetB.id};
+    if (targetB && Object.keys(targetB).length) this.memory.currentJob = { build: targetB.id };
   }
   if (targetB && Object.keys(targetB).length) {
     if (this.build(targetB) == ERR_NOT_IN_RANGE) {
@@ -185,10 +187,15 @@ Creep.prototype.doBuildCsite = function (build) {
   }
 }
 
-Creep.prototype.doFillEnergy = function(fill) {
+/**
+ * 
+ * @param {Id<StructureSpawn> | Id<StructureExtension>} fill 
+ * @returns 
+ */
+Creep.prototype.doFillEnergy = function (fill) {
   let targetF;
   let f;
-  if (fill && (f = Game.getObjectById(fill)) && (f.store.energy < f.store.getCapacity())) {
+  if (fill && (f = Game.getObjectById(fill)) && (f.store.energy < f.store.getCapacity(RESOURCE_ENERGY))) {
     targetF = f;
   } else {
     targetF = this.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -197,12 +204,42 @@ Creep.prototype.doFillEnergy = function(fill) {
           structure.energy < structure.energyCapacity;
       }
     });
-    if (targetF && Object.keys(targetF).length) this.memory.currentJob = {fill:targetF.id};
-  } 
+    if (targetF && Object.keys(targetF).length) this.memory.currentJob = { fill: targetF.id };
+  }
   if (targetF && Object.keys(targetF).length) {
     if (this.transfer(targetF, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       this.moveToModule(targetF);
     }
     return true;
   };
-}
+};
+
+/**
+ * 
+ * @param {Id<StructureTower>} tower 
+ * @returns 
+ */
+Creep.prototype.doFillTower = function (tower) {
+  /**
+   * @type {StructureTower[]}
+   */
+  let targetsT = [];
+  let t;
+  if (tower && (t = Game.getObjectById(tower)) && (t.store[RESOURCE_ENERGY] < t.store.getCapacity(RESOURCE_ENERGY))) {
+    targetsT[0] = t;
+  } else {
+    targetsT = this.room.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return (structure.structureType == STRUCTURE_TOWER) && structure.store[RESOURCE_ENERGY] < structure.store.getCapacity(RESOURCE_ENERGY);
+      }
+    });
+    if (targetsT[0]) this.memory.currentJob = { tower: targetsT[0].id };
+  };
+  if (targetsT[0]) {
+    targetsT.sort((a, b) => a.store.energy - b.store.energy);
+    if (this.transfer(targetsT[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      this.moveToModule(targetsT[0]);
+    }
+    return true;
+  }
+};

@@ -67,6 +67,7 @@ MissionButler.prototype.butlerActions = function (creep) {
     if (!creep.memory.building) {
       let sourceMy;
       let result;
+      let sourceMem;
       let storageMy = creep.room.storage;
       let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5); //change to inRangeTo (cheaper)
       if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
@@ -79,9 +80,8 @@ MissionButler.prototype.butlerActions = function (creep) {
         if (creep.withdraw(storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(storageMy);
         }
-        delete creep.memory.currentSource;
-      } else if (creep.memory.currentSource && creep.harvest(Game.getObjectById(creep.memory.currentSource)) == ERR_NOT_IN_RANGE) {
-        result = creep.moveToModule(Game.getObjectById(creep.memory.currentSource));
+      } else if (creep.memory.currentSource && creep.harvest(sourceMem = Game.getObjectById(creep.memory.currentSource)) == ERR_NOT_IN_RANGE) {
+        result = creep.moveToModule(sourceMem);
 
       } else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
         result = creep.moveToModule(sourceMy);
@@ -91,50 +91,15 @@ MissionButler.prototype.butlerActions = function (creep) {
         delete creep.memory.currentSource;
       }
     } else {
-      /** @type {Structure | unknown} */
-
-
-      let targetB; // build
-      let targetsT; // tower
       let currentJob = creep.memory.currentJob || {};
       let {fill, build, tower} = currentJob;
       if (creep.doFillEnergy(fill)) return;
       if (creep.doBuildCsite(build)) return;
-
-       /*= creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
-        }
-      });*/
-      if ((targetsT = targetsTF(creep)).length) {
-        targetsT.sort((a, b) => a.energy - b.energy);
-        if (creep.transfer(targetsT[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveToModule(targetsT[0]);
-        }
-        return;
-      };
-      if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-        creep.moveToModule(creep.room.controller);
-      };
-      return;
+      if (creep.doFillTower(tower)) return;
+      if (creep.doUpgradeController()) return;
+      console.log("No task, build standby task here");
     }
   }
-};
-
-
-
-/**
- * 
- * @param {Creep} creep 
- * @returns 
- */
-function targetsTF(creep) {
-  let t = creep.room.find(FIND_STRUCTURES, {
-    filter: (structure) => {
-      return (structure.structureType == STRUCTURE_TOWER) && structure.store[RESOURCE_ENERGY] < structure.store.getCapacity(RESOURCE_ENERGY);
-    }
-  });
-  return t
 };
 
 module.exports = MissionButler;
