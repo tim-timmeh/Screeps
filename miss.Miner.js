@@ -30,12 +30,12 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
     if (!this.containerCsite) {
       this.placeMinerContainer();
     }
-  } /*else {
-    this.paveRoad(this.container, this.room.storage || this.spawnGroup[0])// Check path from container to storage || spawnGroup[0].pos ?? should add bunker entry as priority?
+  } else {
+    this.paveRoad(this.container, this.room.storage || this.spawnGroup)// Check path from container to storage || spawnGroup[0].pos ?? should add bunker entry as priority?
   }
   if (this.room.storage) {
     this.memory.haulerAnalysis = this.analyzeHauler(this.distanceToSpawn, sourceRegen);
-  }*/
+  }
 };
 /**
  * Perform rolecall on required creeps, spawn if needed 

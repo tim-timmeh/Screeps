@@ -275,11 +275,11 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
  * @returns 
  */
 Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
-  if (Game.time - this.memory.paveTick < 1000) return;//needs short circuit
+  //if (Game.time - this.memory.paveTick < 1000) return;//needs short circuit
   let path = PathFinder.searchCustom(startPos.pos, dest.pos, range)
   if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
-  let newConSites = this.fixRoad(path)
-  if (newConSites) {
+  let newConSites = this.fixRoad(path.path)
+  if (newConSites.length) {
     if ((Object.keys(Game.constructionSites).length + newConSites.length) < 60) {
       if (global.debug) console.log(`Placing ${newConSites.length} roads for ${this.opName} in ${this.room}`);
       for (let newConSite of newConSites) {
@@ -304,7 +304,7 @@ Mission.prototype.fixRoad = function (path) {
   let newConSites = [];
   for (let position of path) {
     if (!Game.rooms[position.roomName]) return;
-    let road = position.lookFor(LOOK_STRUCTURES).find(struct => struct.structureType = STRUCTURE_ROAD);
+    let road = position.lookFor(LOOK_STRUCTURES).find(struct => struct.structureType == STRUCTURE_ROAD);
     if (road) {
       roadIds.push(road.id);
       roadRepairHP += road.hitsMax - road.hits;
@@ -315,7 +315,7 @@ Mission.prototype.fixRoad = function (path) {
       }
       continue;
     }
-    let conSite = position.lookFor(LOOK_CONSTRUCTION_SITES).find(struct => struct.structureType = STRUCTURE_ROAD);
+    let conSite = position.lookFor(LOOK_CONSTRUCTION_SITES).find(struct => struct.structureType == STRUCTURE_ROAD);
     if (conSite) continue;
     newConSites.push(position)
   }
