@@ -12,7 +12,7 @@ global.initRoomsMem = function () { // Ensure const room features of visable roo
   for (let visableRoomName in Game.rooms) { //Iterate over all visable rooms
     Game.rooms[visableRoomName].sources;//Get stored room sources, Set if none stored via Room Prototype
   }
-  //if (global.debug) console.log('#Visable Room Memory Check Complete.')
+  if (global.debug) console.log('#Visable Room Memory Check Complete.')
 }
 
 global.gcOwnedStructures = function () {

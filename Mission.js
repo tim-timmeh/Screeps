@@ -245,6 +245,7 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
  * @returns {{regen:number,distance:number,body:BodyPartConstant[],haulersNeeded:number,carryCount:number}} Return memory object containing regen, distance, body, haulersNeeded, carryCount
  */
 Mission.prototype.analyzeHauler = function (distance, regen) {
+  let haulerAnalysis;
   if (!this.memory.haulerAnalysis || regen !== this.memory.haulerAnalysis.regen) {
     // distance to travel * there and back (and a little extra) * regen per tick
     let totalTickRegen = distance * 2.1 * regen;
@@ -252,11 +253,10 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
     let creepBlockCapacity = 100 //(2 CARRY, 1 MOVE)
     let creepBlocksNeeded = Math.ceil(totalTickRegen / creepBlockCapacity);
     let maxBlocksPossible = this.bodyBlockCalc(bodyConfig);
-    //let maxUnitsPossible = Math.min(Math.floor(this.spawnGroup.maxSpawnEnergy / blockEnergyReq) ,Math.floor(50 / blockPartsReq));
     let haulersNeeded = Math.ceil(creepBlocksNeeded / maxBlocksPossible);
     let haulBlocksPerHauler = Math.ceil(creepBlocksNeeded / haulersNeeded);
     let body = this.getBody(bodyConfig, { maxRatio: haulBlocksPerHauler }) //0, haulBlocksPerHauler * 2, haulBlocksPerHauler);
-    this.memory.haulerAnalysis = {
+    haulerAnalysis = {
       regen, // regen per tick
       distance, // distance storage -> source
       body, // Body required per hauler
@@ -264,7 +264,7 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
       carryCount: haulBlocksPerHauler * bodyConfig.carry // How many carry Parts total
     };
   }
-  return this.memory.haulerAnalysis;
+  return haulerAnalysis || this.memory.haulerAnalysis;
 }
 
 /**
@@ -274,9 +274,9 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
  * @param {number} range 
  * @returns 
  */
-Mission.prototype.paveRoad = function (startPos, dest, range) {
+Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
   if (Game.time - this.memory.paveTick < 1000) return;//needs short circuit
-  let path = PathFinder.searchCustom(startPos.pos, dest.pos, 2)
+  let path = PathFinder.searchCustom(startPos.pos, dest.pos, range)
   if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
   let newConSites = this.fixRoad(path)
   if (newConSites) {

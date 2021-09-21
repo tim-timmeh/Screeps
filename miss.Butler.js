@@ -19,9 +19,9 @@ MissionButler.prototype.initMiss = function () { // Initialize / build objects r
 /**
  * Perform rolecall on required creeps, spawn if needed 
  */
-MissionButler.prototype.roleCallMiss = function () { // TODO: tweak RCL 2 & 3s transition to miners (Only 1 work plus goes to max 2 butlers). Also change removeBodyPart to object like addBodyParty.
+MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x and bigger and bigger, need alt plan in low spawning times to save energy. max size 300 carry (for Spawn)?
   let swarmQty;
-  if (this.room.controller.level <= 2) {
+  if (this.room.energyCapacityAvailable < 700 || !this.room.storage) { // 700 - min miner size
     swarmQty = 6
     this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 1, MOVE: 1 , WORK: 1},{ addBodyPart: { MOVE: 1, CARRY: 1 }}), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } else {
@@ -60,16 +60,18 @@ MissionButler.prototype.butlerActions = function (creep) {
     }
     if (!creep.memory.building && creep.store.energy == creep.store.getCapacity()) {
       creep.memory.building = true;
-      delete creep.memory.currentSource;
+      delete creep.memory.currentSourceId;
+      delete creep.memory.currentContainerId;
       creep.say("Urg");
     }
 
     if (!creep.memory.building) {
       let sourceMy;
-      let result;
+      let containerMy
+      let result = -2;
       let sourceMem;
       let storageMy = creep.room.storage;
-      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5); //change to inRangeTo (cheaper)
+      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1); //change to inRangeTo (cheaper) and managed by mission not creep logic?
       if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
         creep.moveTo(droppedSource[0], {
           visualizePathStyle: {
@@ -80,23 +82,41 @@ MissionButler.prototype.butlerActions = function (creep) {
         if (creep.withdraw(storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(storageMy);
         }
-      } else if (creep.memory.currentSource && creep.harvest(sourceMem = Game.getObjectById(creep.memory.currentSource)) == ERR_NOT_IN_RANGE) {
-        result = creep.moveToModule(sourceMem);
-
-      } else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
+      } else if (creep.memory.currentContainerId) {
+        sourceMem = Game.getObjectById(creep.memory.currentContainerId);
+        if (sourceMem && sourceMem.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && creep.withdraw(sourceMem, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          result = creep.moveToModule(sourceMem);
+        }
+      } else if (creep.memory.currentSourceId) {
+        sourceMem = Game.getObjectById(creep.memory.currentSourceId)
+        if (sourceMem && creep.harvest(sourceMem) == ERR_NOT_IN_RANGE) {
+          result = creep.moveToModule(sourceMem);
+        }
+      } else if (containerMy = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+          filter: (s)=> { 
+            return (s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY) > 0) 
+          }             
+        })) {
+        if (creep.withdraw(containerMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+          result = creep.moveToModule(sourceMy);
+          creep.memory.currentContainerId = containerMy.id;
+        }
+      }else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
         result = creep.moveToModule(sourceMy);
-        creep.memory.currentSource = sourceMy.id;
+        creep.memory.currentSourceId = sourceMy.id;
       }
       if (result === -2) {
-        delete creep.memory.currentSource;
+        delete creep.memory.currentSourceId;
+        delete creep.memory.currentContainerId;
+        if (global.debug) console.log(`ERR_NO_PATH, deleting currentSourceId from butler memory - ${this.missionLog}`)
       }
     } else {
       let currentJob = creep.memory.currentJob || {};
       let {fill, build, tower} = currentJob;
-      if (creep.doFillEnergy(fill)) return;
-      if (creep.doBuildCsite(build)) return;
-      if (creep.doFillTower(tower)) return;
-      if (creep.doUpgradeController()) return;
+      if (creep.memory.currentJob = creep.doFillEnergy(fill)) return;
+      if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
+      if (creep.memory.currentJob = creep.doFillTower(tower)) return;
+      if (creep.memory.currentJob = creep.doUpgradeController()) return;
       console.log("No task, build standby task here");
     }
   }

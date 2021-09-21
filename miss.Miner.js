@@ -17,17 +17,32 @@ MissionMiner.prototype = Object.create(Mission.prototype); // makes MissionMiner
 MissionMiner.prototype.constructor = MissionMiner; // reset constructor to MissionMiner, or else constructor is Mission
 
 MissionMiner.prototype.initMiss = function () { // Initialize / build objects required
+  let sourceRegen = this.room.controller.my ? 3000 : 1500; // 3000 owned, 1500 unreserved. Need to add 4000 for center rooms
   this.distanceToSpawn = this.findDistanceToSpawn(this.minerSource);
-  this.container = this.minerSource.findStructureNearby(STRUCTURE_CONTAINER, 1);
+  //this.container = this.minerSource.findStructureNearby(STRUCTURE_CONTAINER, 1);
+  this.container = this.minerSource.pos.findInRange(FIND_STRUCTURES, 1, {
+    filter: { structureType: STRUCTURE_CONTAINER }
+  })[0];
   if (!this.container) {
-    this.placeMinerContainer(); //? Add logic that when no container but constructionsite go and mine/build
+    this.containerCsite = this.minerSource.pos.findInRange(FIND_CONSTRUCTION_SITES, 1, {
+      filter: { structureType: STRUCTURE_CONTAINER }
+    })[0];
+    if (!this.containerCsite) {
+      this.placeMinerContainer();
+    }
+  } /*else {
+    this.paveRoad(this.container, this.room.storage || this.spawnGroup[0])// Check path from container to storage || spawnGroup[0].pos ?? should add bunker entry as priority?
   }
+  if (this.room.storage) {
+    this.memory.haulerAnalysis = this.analyzeHauler(this.distanceToSpawn, sourceRegen);
+  }*/
 };
 /**
  * Perform rolecall on required creeps, spawn if needed 
  */
-MissionMiner.prototype.roleCallMiss = function () { // 
-  let body = this.getBody({ MOVE: 3, WORK: 5 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 }); //? will spawn 1 carry parts if controller 3 but not enough energy
+MissionMiner.prototype.roleCallMiss = function () { // ?? creepRoleCall all pull from same pool?
+  if  (this.room.energyCapacityAvailable < 700) return; // min miner size
+  let body = this.getBody({ MOVE: 3, WORK: 5 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 }); 
   this.miners = this.creepRoleCall(this.name, body, 1, { prespawn: this.memory.distanceToSpawn }); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
 };
 /**
@@ -52,9 +67,15 @@ MissionMiner.prototype.finalizeMiss = function () { // finalize?
  * @param {Creep} creep 
  */
 MissionMiner.prototype.minerActions = function (creep) {
-  if (this.minerSource && creep.harvest(this.minerSource) == ERR_NOT_IN_RANGE) {
-    let dest = this.container || this.minerSource;
-    result = creep.moveToModule(dest, true, 1000);
+  let result;
+  if (this.containerCsite && creep.store.getUsedCapacity(RESOURCE_ENERGY) >= 25) {
+    creep.doBuildCsite(this.containerCsite.id);
+    return
+  }
+  result = creep.harvest(this.minerSource)
+  if (result == ERR_NOT_IN_RANGE) {
+    let dest = this.container || this.containerCsite;
+    creep.moveToModule(dest, true, 1000);
   }
 };
 
@@ -74,7 +95,11 @@ MissionMiner.prototype.placeMinerContainer = function () {
       return
     };
   }
-  if (this.minerSource.pos.findInRange(FIND_CONSTRUCTION_SITES, 1).length > 0) return;
+  if (this.minerSource.pos.findInRange(FIND_CONSTRUCTION_SITES, 1).length) {
+    console.log("FOUND CONSTRUCTION SITE ABORTING");
+    return;
+  }
+  console.log("NO FOUND CONSTRUCTION SITE, FINDING LOCATION TO BUILD AT");
   let ret = PathFinder.searchCustom(this.minerSource.pos, startingObject, 1); //? might need to switch ends?
   console.log(ret.path);
   if (ret.incomplete || ret.path.length == 0) {

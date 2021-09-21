@@ -97,16 +97,16 @@ RoomObject.prototype.findStructureNearby = function (structureType, range) { // 
     }
   }
   if ((Game.time % 2 == 0) && (Math.random() < .2)) { // Every 2 ticks, 20% chance to go (1/10 ticks) ?? Remove this?
-    console.log(`Searching for ${structureType} in range at ${this.room.name} of ${this.id}`); // Add search for CSite?
-    let structures = _.filter(this.pos.findInRange(FIND_STRUCTURES, range), (s) => {
-      return s.structureType == structureType;
-    });
+    if (global.debug) console.log(`Searching for ${structureType} in range at ${this.room.name} of ${this.id}`); // Add search for CSite?
+    let structures = _.filter(this.pos.findInRange(FIND_STRUCTURES, range, {
+      filter: { structureType: structureType }
+    }));
     if (structures.length > 0) {
-      console.log(`Found ${structures[0].id}`)
+      if (global.debug) console.log(`Found ${structures[0].id}`)
       this.room.memory.structures[structureType][structures[0].id] = this.id;
       return structures[0]
     }
-    console.log('Could not find...');
+    if (global.debug) console.log('Could not find...');
   }
 }
 
@@ -157,9 +157,11 @@ PathFinder.searchCustom = function (origin, goal, range = 0, opts = {}) {
  */
 Creep.prototype.doUpgradeController = function () {
   let controller = this.room.controller
+  if (!controller) return;
   if (this.upgradeController(controller) == ERR_NOT_IN_RANGE) {
     this.moveToModule(controller);
   };
+  return true;
 }
 
 /**
@@ -177,13 +179,13 @@ Creep.prototype.doBuildCsite = function (build) {
     if (csites.length) {
       targetB = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES)
     };
-    if (targetB && Object.keys(targetB).length) this.memory.currentJob = { build: targetB.id };
+    //if (targetB && Object.keys(targetB).length) this.memory.currentJob = { build: targetB.id };
   }
   if (targetB && Object.keys(targetB).length) {
     if (this.build(targetB) == ERR_NOT_IN_RANGE) {
       this.moveToModule(targetB);
     }
-    return true;
+    return { build: targetB.id };
   }
 }
 
@@ -204,13 +206,13 @@ Creep.prototype.doFillEnergy = function (fill) {
           structure.energy < structure.energyCapacity;
       }
     });
-    if (targetF && Object.keys(targetF).length) this.memory.currentJob = { fill: targetF.id };
+    //if (targetF && Object.keys(targetF).length) this.memory.currentJob = { fill: targetF.id };
   }
   if (targetF && Object.keys(targetF).length) {
     if (this.transfer(targetF, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       this.moveToModule(targetF);
     }
-    return true;
+    return { fill: targetF.id };
   };
 };
 
@@ -233,13 +235,13 @@ Creep.prototype.doFillTower = function (tower) {
         return (structure.structureType == STRUCTURE_TOWER) && structure.store[RESOURCE_ENERGY] < structure.store.getCapacity(RESOURCE_ENERGY);
       }
     });
-    if (targetsT[0]) this.memory.currentJob = { tower: targetsT[0].id };
+    //if (targetsT[0]) this.memory.currentJob = { tower: targetsT[0].id };
   };
   if (targetsT[0]) {
     targetsT.sort((a, b) => a.store.energy - b.store.energy);
     if (this.transfer(targetsT[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       this.moveToModule(targetsT[0]);
     }
-    return true;
+    return { tower: targetsT[0].id };
   }
 };
