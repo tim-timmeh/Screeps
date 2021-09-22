@@ -76,7 +76,7 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
     }
   };
   if (this.spawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
-    let creepName = (this.opType.substring(2, 5) + '.' + roleName.substring(0, 3) + '.' + (Game.time % 100));//add this.spawnGroup.room.name
+    let creepName = (this.opType.substring(2, 5) + '.' + roleName + '.' + (Game.time % 100));//add this.spawnGroup.room.name
     let spawnResult = this.spawnGroup.spawn(creepBody, creepName, options.memory);
     if (spawnResult == 0) {
       this.memory.spawn[roleName].push(creepName);
@@ -181,9 +181,9 @@ Mission.prototype.bodyBlockReq = function (bodyConfig) { // return object {block
  * @param {RoomPosition} destination 
  * @returns {number} Distance to spawn
  */
-Mission.prototype.findDistanceToSpawn = function (destination) { // pass a room position and find distance to spawn group
+Mission.prototype.findDistanceToSpawn = function (destination, range = 1) { // pass a room position and find distance to spawn group
   if (!this.memory.distanceToSpawn) {
-    this.memory.distanceToSpawn = this.room.findPath(this.spawnGroup.pos, destination, { ignoreCreeps: true }).length - 1; //generates path from spawn to source -1 because creep doesnt stand ontop of source
+    this.memory.distanceToSpawn = this.room.findPath(this.spawnGroup.pos, destination, { ignoreCreeps: true }).length - range; //generates path from spawn to source -1 because creep doesnt stand ontop of source
   }
   return this.memory.distanceToSpawn
 }

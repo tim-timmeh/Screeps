@@ -94,7 +94,7 @@ MissionButler.prototype.butlerActions = function (creep) {
         }
       } else if (containerMy = creep.pos.findClosestByPath(FIND_STRUCTURES, {
           filter: (s)=> { 
-            return (s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY) > 0) 
+            return (s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY) > 100) 
           }             
         })) {
         if (creep.withdraw(containerMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
