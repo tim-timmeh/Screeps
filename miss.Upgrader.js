@@ -1,5 +1,5 @@
-'use strict'
-const Mission = require("./Mission")
+'use strict';
+const Mission = require("./Mission");
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
@@ -16,24 +16,53 @@ MissionUpgrader.prototype.constructor = MissionUpgrader; // reset constructor to
 
 //-- Creates methods for prototype
 
-MissionUpgrader.prototype.init = function () { // Initialize / build objects required
-  this.distanceToContoller = this.findDistanceToSpawn(this.controller, 3);
-  this.storagePercent = this.storage
+MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects required
+  this.distanceToController = this.findDistanceToSpawn(this.controller, 3);
+  this.storagePercent = this.storage.store.getUsedCapacity() / this.storage.store.getCapacity();
+  this.paveRoad(this.storage, this.controller, 3);
 };
 
-MissionUpgrader.prototype.roleCall = function () { // perform rolecall on required creeps spawn if needed
-  let body = this.getBody({ CARRY: 1, MOVE: 1 , WORK: 1},{ addBodyPart: { MOVE: 1, CARRY: 1 }}, {options:{maxEnergyPercent:this.storagePercent}});
-  this.upgraders = this.creepRoleCall('upgrader', body, 1);
+MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
+  let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { maxEnergyPercent: this.storagePercent } );
+  if (!body.length) {
+    body = ['carry','move','work']; // add this to getBody?, as if maxEnergyPercent too low will not spawn
+  }
+  this.upgraders = this.creepRoleCall('upgrader', body, 1, { prespawn: this.distanceToController });
 };
 
-MissionUpgrader.prototype.action = function () { // perform actions / missions
-
+MissionUpgrader.prototype.actionMiss = function () { // perform actions / missions
+  for (let upgrader of this.upgraders) {
+    this.upgraderActions(upgrader);
+  }
 };
 
-MissionUpgrader.prototype.finalize = function () { // finalize?
+MissionUpgrader.prototype.finalizeMiss = function () { // finalize?
 
 };
 
 // Additional methods/functions below
+/**
+ * 
+ * @param {Creep} creep 
+ */
+MissionUpgrader.prototype.upgraderActions = function (creep) {
+  if (creep.memory.building && creep.store.energy == 0) {
+    creep.memory.building = false;
+    creep.say("Hmm");
+  }
+  if (!creep.memory.building && creep.store.energy == creep.store.getCapacity()) {
+    creep.memory.building = true;
+    creep.say("Urg");
+  }
+  if (!creep.memory.building) {
+    if (creep.withdraw(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(this.room.storage);
+    }
+  } else {
+    if (creep.upgradeController(this.controller) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(this.controller);
+    }
+  }
+};
 
-
+module.exports = MissionUpgrader;

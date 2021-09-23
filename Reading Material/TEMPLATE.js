@@ -36,3 +36,5 @@ SubObj.prototype.finalize = function () { // finalize?
 function helperFunction() {
   console.log("scope helper function")
 }
+
+module.exports = SubObj;

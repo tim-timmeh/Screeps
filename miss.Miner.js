@@ -10,7 +10,7 @@ const Operation = require('./Operation');
 function MissionMiner(operation, name, source) { // constructor, how to build the object
   Mission.call(this, operation, name); // .call sends this object and uses it on Mission constructer.
   this.minerSource = source;
-  this.haulerAnalysis = {}
+  this.haulerAnalysis = {};
 
 }
 
@@ -32,9 +32,9 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
       this.placeMinerContainer();
     }
   } else {
-    this.paveRoad(this.container, this.room.storage || this.spawnGroup)// Check path from container to storage || spawnGroup[0].pos ?? should add bunker entry as priority?
+    this.paveRoad(this.container, this.room.storage || this.spawnGroup);// Check path from container to storage || spawnGroup[0].pos ?? should add bunker entry as priority?
   }
-  if (this.room.storage) {
+  if (this.container && this.room.storage) {
     this.haulerAnalysis = this.analyzeHauler(this.distanceToSpawn, sourceRegen);
   }
 };
@@ -42,12 +42,12 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
  * Perform rolecall on required creeps, spawn if needed 
  */
 MissionMiner.prototype.roleCallMiss = function () { // ?? creepRoleCall all pull from same pool?
-  if  (this.room.energyCapacityAvailable < 700) return; // min miner size
-  let body = this.getBody({ MOVE: 3, WORK: 5 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 }); 
+  if (this.room.energyCapacityAvailable < 700) return; // min miner size
+  let body = this.getBody({ MOVE: 3, WORK: 5 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 });
   this.miners = this.creepRoleCall(this.name, body, 1, { prespawn: this.memory.distanceToSpawn }); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
-  if (Object.keys(this.haulerAnalysis).length){
-    let {distance,body,haulersNeeded} = this.haulerAnalysis;
-    this.haulers = this.creepRoleCall(this.name + ".hauler", body, haulersNeeded, {prespawn:distance});
+  if (Object.keys(this.haulerAnalysis).length) {
+    let { distance, body, haulersNeeded } = this.haulerAnalysis;
+    this.haulers = this.creepRoleCall(this.name + ".hauler", body, haulersNeeded, { prespawn: distance });
   }
 };
 /**
@@ -58,7 +58,7 @@ MissionMiner.prototype.actionMiss = function () {
     this.minerActions(miner);
   }
   if (this.haulers) {
-    for (let hauler of this.haulers){
+    for (let hauler of this.haulers) {
       this.haulerActions(hauler);
     }
   }
@@ -80,9 +80,9 @@ MissionMiner.prototype.minerActions = function (creep) {
   let result;
   if (this.containerCsite && creep.store.getUsedCapacity(RESOURCE_ENERGY) >= 25) {
     creep.doBuildCsite(this.containerCsite.id);
-    return
+    return;
   }
-  result = creep.harvest(this.minerSource)
+  result = creep.harvest(this.minerSource);
   if (result == ERR_NOT_IN_RANGE) {
     let dest = this.container || this.containerCsite;
     creep.moveToModule(dest, true, 5);
@@ -102,7 +102,7 @@ MissionMiner.prototype.placeMinerContainer = function () {
     startingObject = this.spawnGroup.pos;
     if (!startingObject) {
       console.log(`Error finding container start of path - ${this.missionLog}`);
-      return
+      return;
     };
   }
   if (this.minerSource.pos.findInRange(FIND_CONSTRUCTION_SITES, 1).length) {
@@ -132,14 +132,14 @@ MissionMiner.prototype.haulerActions = function (creep) {
     creep.say("Urg");
   }
   if (!creep.memory.building) {
-    if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+    if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.container);
     }
   } else {
-    if (creep.transfer(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+    if (creep.transfer(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.room.storage);
     }
   }
-}
+};
 
 module.exports = MissionMiner;

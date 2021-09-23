@@ -1,7 +1,7 @@
 const Operation = require('./Operation');
 //const _ = require("lodash");
 
-require('./spawnGroup')
+require('./spawnGroup');
 
 //** Set emergency room mode incase of wipe/fresh spawn.
 
@@ -23,7 +23,7 @@ function Mission(operation, name) {
   this.memory = operation.flag.memory[this.name];
   if (this.room) this.hasVision = true;
   if (!this.memory.spawn) this.memory.spawn = {};
-  this.missionLog = `${this.room} - ${this.opName} (${this.opType}) - ${this.name}`
+  this.missionLog = `${this.room} - ${this.opName} (${this.opType}) - ${this.name}`;
 }
 
 Mission.prototype.init = function () { // Initialize / build objects required
@@ -72,7 +72,7 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
     } else {
       this.memory.spawn[roleName].splice(i, 1);
       Memory.creeps[creepName] = undefined;
-      i--
+      i--;
     }
   };
   if (this.spawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
@@ -98,7 +98,7 @@ Mission.prototype.getLostCreeps = function (roleName) {
     }
   }
   return creepNames;
-}
+};
 
 /**
  * Takes creep body and multiplies by max energy available, with options. Returns creep body array for spawning
@@ -113,14 +113,14 @@ Mission.prototype.getLostCreeps = function (roleName) {
  */
 Mission.prototype.getBody = function (bodyConfig, options = {}) { //, ,
   let blockMultiplier = this.bodyBlockCalc(bodyConfig, options); // Calc max multiplier of bodyConfig
-  let creepBody = []
+  let creepBody = [];
   if (options.keepFormat) { //To keep format eg [WORK, CARRY, MOVE, WORK, CARRY, MOVE]
     for (let bodyPart in bodyConfig) {
-      creepBody.push(bodyPart.toLowerCase())
+      creepBody.push(bodyPart.toLowerCase());
     }
     let arrays = Array.apply(null, new Array(blockMultiplier));// Create an array of size "n" with undefined values
-    arrays = arrays.map(function () { return creepBody });// Replace each "undefined" with our array, resulting in an array of n copies of our array
-    creepBody = [].concat.apply([], arrays) // Flatten our array of arrays and apply to creepBody
+    arrays = arrays.map(function () { return creepBody; });// Replace each "undefined" with our array, resulting in an array of n copies of our array
+    creepBody = [].concat.apply([], arrays); // Flatten our array of arrays and apply to creepBody
   } else { //Spreads Format eg [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
 
     for (let bodyPart in bodyConfig) {
@@ -133,13 +133,13 @@ Mission.prototype.getBody = function (bodyConfig, options = {}) { //, ,
     }
   }
   if (options.removeBodyPart) {
-    let partIndex = creepBody.findIndex((p) => p == options.removeBodyPart.toLowerCase())
+    let partIndex = creepBody.findIndex((p) => p == options.removeBodyPart.toLowerCase());
     if (partIndex > -1) {
       creepBody.splice(partIndex, 1);
     }
   }
-  return creepBody
-}
+  return creepBody;
+};
 
 /**
  * Calc Max/Req creep body block multiplier
@@ -158,8 +158,8 @@ Mission.prototype.bodyBlockCalc = function (bodyConfig, options = {}) {
   }
   let blockLimit = options.maxRatio ? options.maxRatio : Math.floor((50 - blockPartsReqExtra) / blockPartsReq); //Work out max bodypart ratio - addBodyPart
   let energyPool = options.forceSpawn ? Math.max(this.spawnGroup.currentSpawnEnergy, 300) : this.spawnGroup.maxSpawnEnergy; // if forceSpawn true then spawn with current energy or 300(incase total creep death?)
-  return Math.min(Math.floor((energyPool - blockEnergyReqExtra) * (options.maxEnergyPercent / 100 || 1) / blockEnergyReq), blockLimit); // works out available block multipler (maxratio vs max energy available), minus addBodyPart
-}
+  return Math.min(Math.floor((energyPool - blockEnergyReqExtra) * (options.maxEnergyPercent || 1) / blockEnergyReq), blockLimit); // works out available block multipler (maxratio vs max energy available), minus addBodyPart
+};
 
 /**
  * Calc Energy cost & Parts count
@@ -167,14 +167,14 @@ Mission.prototype.bodyBlockCalc = function (bodyConfig, options = {}) {
  * @returns {Object.<string,number>} 
  */
 Mission.prototype.bodyBlockReq = function (bodyConfig) { // return object {blockEnergyReq:0,blockPartsReq:0}
-  let blockEnergyReq = 0
-  let blockPartsReq = 0
+  let blockEnergyReq = 0;
+  let blockPartsReq = 0;
   for (let bodyPart in bodyConfig) { // bodypart = object key
     blockEnergyReq += BODYPART_COST[bodyPart.toLowerCase()] * bodyConfig[bodyPart];
     blockPartsReq += bodyConfig[bodyPart];
   }
-  return { blockEnergyReq: blockEnergyReq, blockPartsReq: blockPartsReq }
-}
+  return { blockEnergyReq: blockEnergyReq, blockPartsReq: blockPartsReq };
+};
 
 /**
  * Pass a room position and find distance to spawn group
@@ -185,8 +185,8 @@ Mission.prototype.findDistanceToSpawn = function (destination, range = 1) { // p
   if (!this.memory.distanceToSpawn) {
     this.memory.distanceToSpawn = this.room.findPath(this.spawnGroup.pos, destination, { ignoreCreeps: true }).length - range; //generates path from spawn to source -1 because creep doesnt stand ontop of source
   }
-  return this.memory.distanceToSpawn
-}
+  return this.memory.distanceToSpawn;
+};
 
 /**
  * 
@@ -197,29 +197,29 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
   /**
    * @type {StructureStorage}
    */
-  let storage
+  let storage;
   if (this.room.storage && this.room.storage.my) { //if no mem find storage in room
     //this.memory.storageID = this.room.storage.id;
     storage = this.room.storage;
-    return storage
+    return storage;
   }
   if (this.memory.storageID) { // if storage in memory
     storage = Game.getObjectById(this.memory.storageID);
     if (storage && storage.room.controller.level >= 4) { //check still true
-      return storage
+      return storage;
     }
     if (global.debug) console.log(`Error finding storage from memory, clearing - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
     this.memory.storageID = ""; //else reset memory
   }
   if (this.room.controller.my) { // added this part, dont want miners to take energy from room when bootstrapping?
-    if (global.debug) console.log(`Error finding storage, room looks to be in construction - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
-    return
+    if (global.debug) console.log(`Error finding storage, room looks to be in construction - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
+    return;
   }
 
   if (this.spawnGroup.room.storage && this.spawnGroup.room.storage.my) { //if none in room find spawngroup room storage
     this.memory.storageID = this.spawnGroup.room.storage.id;
-    if (global.debug) console.log(`Using spawnGroup Storage @ ${this.spawnGroup.room.name} for ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
-    return storage
+    if (global.debug) console.log(`Using spawnGroup Storage @ ${this.spawnGroup.room.name} for ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
+    return storage;
   }
 
   // ADD KING STORAGES?
@@ -234,9 +234,9 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
     if (global.debug) console.log(`Error finding storage, Searching all & finding closest - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}\nFound ${sorted[0]}`);
     return sorted[0];
   } catch (e) {
-    console.log(`FORGOT TO ADD KING.STORAGES @ \n${e.stack}`) // if error console log stack at error
+    console.log(`FORGOT TO ADD KING.STORAGES @ \n${e.stack}`); // if error console log stack at error
   }
-}
+};
 
 /**
  * Pass a distance and source regen/tick to calc dynamic hauler size and qty based on spawnGroup max Energy
@@ -250,12 +250,12 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
     // distance to travel * there and back (and a little extra) * regen per tick
     let totalTickRegen = distance * 2.1 * regen;
     let bodyConfig = { carry: 2, move: 1 };
-    let creepBlockCapacity = 100 //(2 CARRY, 1 MOVE)
+    let creepBlockCapacity = 100; //(2 CARRY, 1 MOVE)
     let creepBlocksNeeded = Math.ceil(totalTickRegen / creepBlockCapacity);
     let maxBlocksPossible = this.bodyBlockCalc(bodyConfig);
     let haulersNeeded = Math.ceil(creepBlocksNeeded / maxBlocksPossible);
     let haulBlocksPerHauler = Math.ceil(creepBlocksNeeded / haulersNeeded);
-    let body = this.getBody(bodyConfig, { maxRatio: haulBlocksPerHauler }) //0, haulBlocksPerHauler * 2, haulBlocksPerHauler);
+    let body = this.getBody(bodyConfig, { maxRatio: haulBlocksPerHauler }); //0, haulBlocksPerHauler * 2, haulBlocksPerHauler);
     haulerAnalysis = {
       regen, // regen per tick
       distance, // distance storage -> source
@@ -265,7 +265,7 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
     };
   }
   return haulerAnalysis || this.memory.haulerAnalysis;
-}
+};
 
 /**
  * 
@@ -276,9 +276,9 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
  */
 Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
   if (Game.time - this.memory.paveTick < 1000) return;//needs short circuit
-  let path = PathFinder.searchCustom(startPos.pos, dest.pos, range)
-  if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
-  let newConSites = this.fixRoad(path.path)
+  let path = PathFinder.searchCustom(startPos.pos, dest.pos, range);
+  if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
+  let newConSites = this.fixRoad(path.path);
   if (newConSites.length) {
     if ((Object.keys(Game.constructionSites).length + newConSites.length) < 60) {
       if (global.debug) console.log(`Placing ${newConSites.length} roads for ${this.opName} in ${this.room}`);
@@ -287,11 +287,11 @@ Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
         if (global.debug) console.log(`Road result ${roadReturn} at X-${newConSite.x} Y-${newConSite.y} of ${newConSite.roomName}`);
       }
     } else {
-      console.log(`Too many constructionSites to place more ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
+      console.log(`Too many constructionSites to place more ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
     }
   }
   this.memory.paveTick = Game.time;
-}
+};
 
 /**
  * Takes a path and checks road hp, will set this.memory.roadRepairIds to summon repairer. will return list of construction sites if no road found
@@ -300,7 +300,7 @@ Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
  */
 Mission.prototype.fixRoad = function (path) {
   let roadIds = [];
-  let roadRepairHP = 0
+  let roadRepairHP = 0;
   let newConSites = [];
   for (let position of path) {
     if (!Game.rooms[position.roomName]) return;
@@ -317,10 +317,10 @@ Mission.prototype.fixRoad = function (path) {
     }
     let conSite = position.lookFor(LOOK_CONSTRUCTION_SITES).find(struct => struct.structureType == STRUCTURE_ROAD);
     if (conSite) continue;
-    newConSites.push(position)
+    newConSites.push(position);
   }
-  return newConSites
-}
+  return newConSites;
+};
 
 // Mission.prototype.getBodyWorker = function (work, carry, move, options = {} ) {//maxRatio, maxEnergyPercent, forceSpawn keepFormat) { // Ratio of work/carry/move parts, max spawn ratio eg, ration energy use % below max
 //   let blockEnergyReq = work * 100 + carry * 50 + move * 50; // get energy per creep block
@@ -345,4 +345,4 @@ Mission.prototype.fixRoad = function (path) {
 //
 // }
 
-module.exports = Mission
+module.exports = Mission;
