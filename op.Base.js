@@ -5,6 +5,7 @@ const PRIORITY = require('./config');
 const MissionButler = require('./miss.Butler');
 const MissionMiner = require('./miss.Miner');
 const MissionUpgrader = require('./miss.Upgrader');
+const MissionBuilder = require('./miss.Builder');
 //const {PRIORITY} = require('./config'); 
 
 /**
@@ -37,6 +38,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   }
   if (this.room.storage) {
     this.addMission(new MissionUpgrader(this));
+    this.addMission(new MissionBuilder(this));
   }
 
   /*
