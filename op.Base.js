@@ -41,20 +41,6 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     this.addMission(new MissionBuilder(this));
   }
 
-  /*
-  this.addMission(new DefenceMission(this));
-
-  //base commander mission?
-  for (let i = 0; i < this.sources.length; i++) {
-    let source = sources[i];
-    //if rcl 8 do link mining
-    this.addMission(new MiningMission(this, 'Mission Miner' + i, source));
-  }
-
-  //building missions
-  //
-  //upgrader missions
-  //*/
 };
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 

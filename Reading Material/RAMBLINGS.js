@@ -1,4 +1,4 @@
-spam butlers, will need to also build extensions. these will then become base bitches. gcl 3 change to dedicated miners, builders, upgraders. need paver/repairer.
+/*
 
 
 
@@ -6,8 +6,7 @@ spam butlers, will need to also build extensions. these will then become base bi
 
 
 
-
-
+*/
 --------------------------
 OLD
 
