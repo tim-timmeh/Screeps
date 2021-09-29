@@ -2,10 +2,11 @@
 const Mission = require("./Mission");
 const bunkerLayout = require('./bunkerLayout');
 
+
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
 function MissionPlanner(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'upgader'); // uses params to pass object through parnt operation constructor first
+  Mission.call(this, operation, 'planner'); // uses params to pass object through parnt operation constructor first
   this.spawnAnchorPos = this.spawnGroup.pos;
   this.rcl = this.room.controller.level;
 }
@@ -35,7 +36,7 @@ MissionPlanner.prototype.finalizeMiss = function () { // finalize?
 
 // Additional methods/functions below
 MissionPlanner.prototype.checkBase = function (spawnAnchorPos) {
-  if (!this.room.controller.my || !spawnAnchorPos || (Game.time - this.memory.baseTick < 1000)) return;
+  if (!this.room.controller.my || !spawnAnchorPos || ((Game.time - this.memory.baseTick) < 1000)) return;
   let anchorOffset = { "x": 5, "y": 3 };
   let anchorPos = this.minusPosition(anchorOffset, spawnAnchorPos)
   let bunkerCurrentReq = {};

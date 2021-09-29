@@ -1,6 +1,7 @@
 let profiler = {
   start(identifier) {
     this.cpu = Game.cpu.getUsed();
+    if (!Memory.profiler) Memory.profiler = {};
     if (!Memory.profiler[identifier]) Memory.profiler[identifier] = {
       tickBegin: Game.time,
       lastTickTracked: undefined,

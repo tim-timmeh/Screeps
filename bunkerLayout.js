@@ -85,10 +85,9 @@ for (let letter in layoutMappingForward) {
 * @return {{x:Number,y:Number,stuctureType?:String,level?:Number}[]} array of coordinate+type?+level? objects
 */
 
-function getLayout(layout, params) {
+function getLayout(layout, params = {}) {
   const height = layout.length;
   const width = layout[0].length;
-  params ||= {};
   if (typeof (params.structureType) == "string") params.structureType = [params.structureType];
   // convert [road,container,extension] into {.:road,C:container,E:extension}
   const structureTypesMap = new Map((params.structureType || []).map((s) => [layoutMappingReverse[s], s]));
@@ -103,11 +102,11 @@ function getLayout(layout, params) {
       if (structureType) {
         const pos = { x: x, y: y };
         if (structureTypesMap.size == 0 || structureTypesMap.get(structureChar)) {
-          (results.buildings[structureType] ||= { pos: [] }).pos.push(pos);
+          (results.buildings[structureType] = results.buildings[structureType] || { pos: [] }).pos.push(pos);
         }
         if (layoutChar != structureChar && (structureTypesMap.size == 0 || structureTypesMap.get('.'))) {
           // emit a road if the character was the wrong case and we're doing roads or everything
-          (results.buildings[STRUCTURE_ROAD] ||= { pos: [] }).pos.push(pos);
+          (results.buildings[STRUCTURE_ROAD] = results.buildings[STRUCTURE_ROAD] || { pos: [] }).pos.push(pos);
         }
       }
     }
