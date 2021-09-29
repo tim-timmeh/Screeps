@@ -1,6 +1,6 @@
 
 // Custom functions reusable in code
-module.exports = {
+const myFunc = {
 
   convertArrayToObject: function (array, key) { // Converts an array to object with key as the key
     const initialValue = {};
@@ -120,3 +120,5 @@ module.exports = {
 //   if (rest.length == 0 && obj.hasOwnProperty(level)) return true
 //   return checkNested(obj[level], ...rest)
 // }
+
+module.exports = myFunc;

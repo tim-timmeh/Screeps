@@ -1,5 +1,3 @@
-
-
 const SpawnGroup = require('./spawnGroup');
 
 /**

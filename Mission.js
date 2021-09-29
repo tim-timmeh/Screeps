@@ -1,8 +1,6 @@
 const Operation = require('./Operation');
 //const _ = require("lodash");
 
-require('./spawnGroup');
-
 //** Set emergency room mode incase of wipe/fresh spawn.
 
 /**

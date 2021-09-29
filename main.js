@@ -1,13 +1,9 @@
 
-require('./config'); // Custom config here
-require('./globals'); // Global Variables
-require('./prototypes'); // Modified Prototypes
-require('./king') // king constructor
-require('./moveToModule');
+require('./require'); // load globals / prototypes
 const exportStats = require('./stats'); // stat function
 const queen = require('./queen'); // Import Functions
 const myFunc = require('./myFunctions'); // Import Functions
-const profiler = require('./screeps-profiler');
+const profilerBonzAI = require('./profilerBonzAI');
 
 //profiler.enable();
 
@@ -32,33 +28,39 @@ module.exports.loop = function () {
   }
 
   // Init Phase
-
+  profilerBonzAI.start('init');
   let king = queen.initKing() // Creates king Object
   let operations = queen.getOperations(king) // Instantiate list of Operation Flags
   for (let operation of operations) { // Loop through all Operation Objects
 
     operation.init() // Instantiate all of operations missions
   }
+  profilerBonzAI.end('init');
 
   // Rolecall Phase
-
+  profilerBonzAI.start('roleCall');
   for (let operation of operations) { // Loop through all Operation Objects
     operation.roleCall() // Instantiate all of operations missions
   }
+  profilerBonzAI.end('roleCall');
 
   // Action Phase
-
+  profilerBonzAI.start('action');
   for (let operation of operations) { // Loop through all Operation Objects
     operation.action() // Instantiate all of operations missions
   }
+  profilerBonzAI.end('action');
 
   // Finalize Phase
-
+  profilerBonzAI.start('finalize');
   for (let operation of operations) { // Loop through all Operation Objects
     operation.finalize() // Instantiate all of operations missions
   }
+  profilerBonzAI.end('finalize');
 
   // Post Analasis / Utility
+  profilerBonzAI.start('post');
   exportStats(globalResetTick) // Graphina
+  profilerBonzAI.end('post');
   //});
 };
