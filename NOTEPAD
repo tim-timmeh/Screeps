@@ -1,0 +1,37 @@
+TODO
+
+calculate creep vs tower repairing
+Spawn repairers for mining roads?
+Spawn repairers for base buildings?
+Refilling of towers (Butler?)
+Manager sits at base?
+Tower Code (Attack, Heal, Repair)
+Defence Code
+Safe Mode
+Base setup / placement (Distance Transform & Min Cut or custom pathfinding that prefer walls and avoid base area in CM?)
+
+Profiler setup (and stats)
+Optimize global & Memory usage (Caching Cost Matrixs)
+Optimize butlers to spawn extension clumps.
+Renew creeps when returning to base (Saves spawn time)
+Recycle creeps (Builders / Repairers etc)
+Excuse me nudging
+Alternative Bunker (Mini bunker / ext / lab stamps)
+link mining (build ext aswell?)
+Pickup resources from ground/tombstones
+Mineral mining
+Terminal Sell Excess resources
+
+Remote mining
+Scouting
+Auto Expansion
+
+Combat code (Evaluating attackers, Healers, Longbowmen, Drainers, Raiders, Maulers etc)
+
+Lab Logic
+Highway room logic / Power harvesting
+SK Room logic / Farming
+
+Powercreep
+Factorys
+
