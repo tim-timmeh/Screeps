@@ -19,7 +19,7 @@ MissionMiner.prototype.constructor = MissionMiner; // reset constructor to Missi
 
 MissionMiner.prototype.initMiss = function () { // Initialize / build objects required
   let sourceRegen = Math.max(this.minerSource.energyCapacity, SOURCE_ENERGY_CAPACITY) / ENERGY_REGEN_TIME; // 3000 owned, 1500 unreserved. Need to add 4000 for center rooms
-  this.distanceToSpawn = this.findDistanceToSpawn(this.minerSource);
+  this.distanceToSpawn = this.findDistanceToSpawn(this.minerSource.pos);
   //this.container = this.minerSource.findStructureNearby(STRUCTURE_CONTAINER, 1);
   this.container = this.minerSource.pos.findInRange(FIND_STRUCTURES, 1, {
     filter: { structureType: STRUCTURE_CONTAINER }

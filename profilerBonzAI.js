@@ -1,8 +1,8 @@
-let profiler = {
+let profilerBonzAI = {
   start(identifier) {
     this.cpu = Game.cpu.getUsed();
-    if (!Memory.profiler) Memory.profiler = {};
-    if (!Memory.profiler[identifier]) Memory.profiler[identifier] = {
+    if (!Memory.profilerBonzAI) Memory.profilerBonzAI = {};
+    if (!Memory.profilerBonzAI[identifier]) Memory.profilerBonzAI[identifier] = {
       tickBegin: Game.time,
       lastTickTracked: undefined,
       total: 0,
@@ -11,11 +11,11 @@ let profiler = {
       costPerTick: undefined,
       callsPerTick: undefined,
     };
-    Memory.profiler[identifier].lastTickTracked = Game.time;
+    Memory.profilerBonzAI[identifier].lastTickTracked = Game.time;
   },
 
   end(identifier, period = 10) {
-    let profile = Memory.profiler[identifier];
+    let profile = Memory.profilerBonzAI[identifier];
     profile.total += Game.cpu.getUsed() - this.cpu;
     profile.count++;
 
@@ -31,4 +31,4 @@ let profiler = {
   }
 }
 
-module.exports = profiler;
+module.exports = profilerBonzAI;
