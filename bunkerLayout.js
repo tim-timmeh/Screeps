@@ -36,18 +36,18 @@ let bunkerFort = [
   '  ... ...  ',
 
 ];
-let bunkerLevels = [
-  '  333 ...  ',
-  ' 33443OLL. ',
-  '333223LLLL.',
-  '33223T3LLL.',
-  '332313N3LA.',
-  ' 3344 MT3. ',
-  '.443FPK3EE.',
-  '.4443T3EEE.',
-  '.EE443EEEE.',
-  ' .EE4.EEE. ',
-  '  ... ...  ',
+let bunkerFortLevels = [
+  '  333 777  ',
+  ' 334438787 ',
+  '33322368787',
+  '33223836877',
+  '33231383677',
+  ' 3374 6835 ',
+  '44437863565',
+  '44443535565',
+  '45544355665',
+  ' 455445665 ',
+  '  444 555  ',
 ];
 
 // A similar structure might describe rampart locations and levels
@@ -141,8 +141,8 @@ const BunkerLayout = {
   layoutMappingForward: layoutMappingForward,
   layoutMappingReverse: layoutMappingReverse,
   getLayout: getLayout,
-  baseLayout: bunkerStructures,
-  baseLevels: bunkerLevels,
+  baseLayout: bunkerFort,
+  baseLevels: bunkerFortLevels,
 }
 
 module.exports = BunkerLayout;
