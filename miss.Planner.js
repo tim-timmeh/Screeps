@@ -55,14 +55,18 @@ MissionPlanner.prototype.checkBase = function (spawnAnchorPos) {
       if (conSite) continue;
       newConSites.push(positionObj);
     }
-    for (let newConSite of newConSites) {
-      let buildingReturn
-      if (buildingName == 'spawn') {
-        buildingReturn = newConSite.createConstructionSite(buildingName, `mySpawn${Game.time}`);
-      } else {
-        buildingReturn = newConSite.createConstructionSite(buildingName);
+    if ((Object.keys(Game.constructionSites).length + newConSites.length) < 60) {
+      for (let newConSite of newConSites) {
+        let buildingReturn
+        if (buildingName == 'spawn') {
+          buildingReturn = newConSite.createConstructionSite(buildingName, `mySpawn${Game.time}`);
+        } else {
+          buildingReturn = newConSite.createConstructionSite(buildingName);
+        }
+        if (global.debug) console.log(`Building result ${buildingReturn} at X-${newConSite.x} Y-${newConSite.y} of ${newConSite.roomName}`);
       }
-      if (global.debug) console.log(`Building result ${buildingReturn} at X-${newConSite.x} Y-${newConSite.y} of ${newConSite.roomName}`);
+    } else {
+      console.log(`Too many constructionSites to place more ${this.missionLog}`);
     }
   }
   this.memory.baseTick = Game.time;
