@@ -4,6 +4,7 @@ const exportStats = require('./stats'); // stat function
 const queen = require('./queen'); // Import Functions
 const myFunc = require('./myFunctions'); // Import Functions
 const profilerBonzAI = require('./profilerBonzAI');
+const profiler = require('./screeps-profiler');
 
 //profiler.enable();
 

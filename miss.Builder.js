@@ -17,13 +17,16 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
-  if (this.room.find(FIND_CONSTRUCTION_SITES).length) {
-    this.buildersReq = 1;
+  let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES).length;
+  if (csitesQty > 10) {
+    this.buildersReq = 2;
+  } else if (csitesQty) {
+    this.buildersReq = 1
   }
 };
 
 MissionBuilder.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 });
+  let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 });
   this.builders = this.creepRoleCall('builder', body, this.buildersReq);
 };
 
