@@ -43,7 +43,7 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
  */
 MissionMiner.prototype.roleCallMiss = function () { // ?? creepRoleCall all pull from same pool?
   if (this.room.energyCapacityAvailable < 700) return; // min miner size
-  let body = this.getBody({ MOVE: 3, WORK: 5 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 });
+  let body = this.getBody({ MOVE: 3, WORK: 6 }, { addBodyPart: { CARRY: 1 }, maxRatio: 1 });
   this.miners = this.creepRoleCall(this.name, body, 1, { prespawn: this.memory.distanceToSpawn }); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   if (Object.keys(this.haulerAnalysis).length) {
     let { distance, body, haulersNeeded } = this.haulerAnalysis;
@@ -87,6 +87,8 @@ MissionMiner.prototype.minerActions = function (creep) {
     let dest = this.container || this.containerCsite;
     creep.moveToModule(dest, { ticks: 10, range: 0 });
 
+  } else if (result == ERR_NOT_ENOUGH_RESOURCES) {
+    creep.repair(this.container)
   }
 };
 
