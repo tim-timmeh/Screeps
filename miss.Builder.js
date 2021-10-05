@@ -18,7 +18,7 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
   let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES).length;
-  if (csitesQty > 10) {
+  if (csitesQty > 10 && this.storage.store.energy > (this.storage.store.getCapacity * 0.3)) {
     this.buildersReq = 2;
   } else if (csitesQty) {
     this.buildersReq = 1

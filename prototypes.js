@@ -177,7 +177,10 @@ Creep.prototype.doBuildCsite = function (build) {
   } else {
     let csites = this.room.find(FIND_CONSTRUCTION_SITES);
     if (csites.length) {
-      targetB = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES)
+      targetB = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      if (!targetB) {
+        targetB = this.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+      }
     };
     //if (targetB && Object.keys(targetB).length) this.memory.currentJob = { build: targetB.id };
   }

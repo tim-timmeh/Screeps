@@ -23,12 +23,14 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
   let swarmQty;
   if (this.room.energyCapacityAvailable < 700 || !this.room.storage) { // 700 - min miner size
     swarmQty = 6
-    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 } }), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+    let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 } });
+    this.butlers = this.creepRoleCall('butler', body, swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } else {
-    swarmQty = this.spawnGroup.spawns.length;
-    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', maxRatio: 12}), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+    swarmQty = 1; //this.spawnGroup.spawns.length;
+    let body = this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', maxRatio: 12});
+    this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 10 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } if (!this.butlers) {
-    console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`)
+    console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
     this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
 };
@@ -71,7 +73,7 @@ MissionButler.prototype.butlerActions = function (creep) {
       let result = -2;
       let sourceMem;
       let storageMy = creep.room.storage;
-      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2); //change to inRangeTo (cheaper) and managed by mission not creep logic?
       if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
         creep.moveTo(droppedSource[0], {
           visualizePathStyle: {

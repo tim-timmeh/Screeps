@@ -25,7 +25,7 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent });
   if (!body.length) {
-    body = ['carry', 'move', 'move', 'work', 'work', 'work']; // add this to getBody?, as if maxEnergyPercent too low will not spawn
+    body = ['carry', 'move', 'work']; // add this to getBody?, as if maxEnergyPercent too low will not spawn
   }
   this.upgraders = this.creepRoleCall('upgrader', body, 1, { prespawn: this.distanceToController });
 };
