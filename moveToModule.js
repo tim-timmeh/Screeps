@@ -4,11 +4,16 @@ let positionMem;
 /**
  * Patches moveTo() function to include reset pathing on creep stuck count
  * @param {RoomObject | RoomPosition} destination 
- * @param {Boolean} [ignore=true] ignore creeps during pathing
- * @param {number} [ticks=2] how many ticks to check if stuck
+ * @param {object} [options.ignore=true] ignore creeps during pathing
+ *                 [options.ticks=2] how many ticks to check if stuck
+ *                 [options.range] range of moveTo
+ * 
  * @returns 
  */
-Creep.prototype.moveToModule = function (destination, ignore = true, ticks = 2) {
+Creep.prototype.moveToModule = function (destination, options = {}) {
+  let ignore = options.ignore || true;
+  let ticks = options.ticks ||  2;
+  let range = options.range ||  1;
   let reusePath = 50;
   if (!this.memory.stuckCount) {
     this.memory.stuckCount = 0;
@@ -33,6 +38,7 @@ Creep.prototype.moveToModule = function (destination, ignore = true, ticks = 2) 
     moveResult = this.moveTo(destination, {
       reusePath: reusePath,
       ignoreCreeps: ignore,
+      range:range,
       visualizePathStyle: { stroke: '#fff' },
     });
   }

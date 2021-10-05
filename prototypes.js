@@ -159,7 +159,7 @@ Creep.prototype.doUpgradeController = function () {
   let controller = this.room.controller
   if (!controller) return;
   if (this.upgradeController(controller) == ERR_NOT_IN_RANGE) {
-    this.moveToModule(controller);
+    this.moveToModule(controller, {range:3});
   };
   return true;
 }
@@ -183,7 +183,7 @@ Creep.prototype.doBuildCsite = function (build) {
   }
   if (targetB && Object.keys(targetB).length) {
     if (this.build(targetB) == ERR_NOT_IN_RANGE) {
-      this.moveToModule(targetB);
+      this.moveToModule(targetB, {range:3});
     }
     return { build: targetB.id };
   }

@@ -4,7 +4,7 @@ const Mission = require("./Mission");
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
 function MissionUpgrader(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'upgader'); // uses params to pass object through parnt operation constructor first
+  Mission.call(this, operation, 'upgrader'); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
   this.storage = this.room.storage;
 }
@@ -60,7 +60,7 @@ MissionUpgrader.prototype.upgraderActions = function (creep) {
     }
   } else {
     if (creep.upgradeController(this.controller) == ERR_NOT_IN_RANGE) {
-      creep.moveToModule(this.controller);
+      creep.moveToModule(this.controller, {range:3});
     }
   }
 };
