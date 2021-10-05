@@ -26,7 +26,7 @@ MissionBuilder.prototype.initMiss = function () { // Initialize / build objects 
 };
 
 MissionBuilder.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 });
+  let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 });
   this.builders = this.creepRoleCall('builder', body, this.buildersReq);
 };
 
