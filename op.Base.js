@@ -7,6 +7,8 @@ const MissionMiner = require('./miss.Miner');
 const MissionUpgrader = require('./miss.Upgrader');
 const MissionBuilder = require('./miss.Builder');
 const MissionPlanner = require('./miss.Planner');
+const MissionTower = require('./miss.Tower');
+const MissionDefender = require('./miss.Defender')
 //const {PRIORITY} = require('./config'); 
 
 /**
@@ -37,11 +39,13 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
       this.addMission(new MissionMiner(this, `miner${i}`, this.room.sources[i]));
     }
   }
-  this.addMission(new MissionPlanner(this));
+  this.addMission(new MissionTower(this));
+  this.addMission(new MissionDefender(this))
   if (this.room.storage) {
     this.addMission(new MissionUpgrader(this));
     this.addMission(new MissionBuilder(this));
   }
+  this.addMission(new MissionPlanner(this));
 };
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 

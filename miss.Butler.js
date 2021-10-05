@@ -23,7 +23,7 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
   let swarmQty;
   if (this.room.energyCapacityAvailable < 700 || !this.room.storage) { // 700 - min miner size
     swarmQty = 6
-    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 1, MOVE: 1 , WORK: 1},{ addBodyPart: { MOVE: 1, CARRY: 1 }}), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 } }), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } else {
     swarmQty = 2;
     this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY' }), swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
@@ -93,15 +93,15 @@ MissionButler.prototype.butlerActions = function (creep) {
           result = creep.moveToModule(sourceMem);
         }
       } else if (containerMy = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-          filter: (s)=> { 
-            return (s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY) > 100) 
-          }             
-        })) {
-        if (creep.withdraw(containerMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+        filter: (s) => {
+          return (s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY) > 100)
+        }
+      })) {
+        if (creep.withdraw(containerMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           result = creep.moveToModule(sourceMy);
           creep.memory.currentContainerId = containerMy.id;
         }
-      }else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
+      } else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
         result = creep.moveToModule(sourceMy);
         creep.memory.currentSourceId = sourceMy.id;
       }
@@ -112,10 +112,10 @@ MissionButler.prototype.butlerActions = function (creep) {
       }
     } else {
       let currentJob = creep.memory.currentJob || {};
-      let {fill, build, tower} = currentJob;
+      let { fill, build, tower } = currentJob;
       if (creep.memory.currentJob = creep.doFillEnergy(fill)) return;
-      if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
       if (creep.memory.currentJob = creep.doFillTower(tower)) return;
+      if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
       if (creep.memory.currentJob = creep.doUpgradeController()) return;
       console.log("No task, build standby task here");
     }

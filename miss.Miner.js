@@ -85,7 +85,8 @@ MissionMiner.prototype.minerActions = function (creep) {
   result = creep.harvest(this.minerSource);
   if (result == ERR_NOT_IN_RANGE) {
     let dest = this.container || this.containerCsite;
-    creep.moveToModule(dest, {ticks:5});
+    creep.moveToModule(dest, { ticks: 10, range: 0 });
+
   }
 };
 

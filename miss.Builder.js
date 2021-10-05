@@ -4,7 +4,7 @@ const Mission = require("./Mission");
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
 function MissionBuilder(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'upgader'); // uses params to pass object through parnt operation constructor first
+  Mission.call(this, operation, 'builder'); // uses params to pass object through parnt operation constructor first
   this.storage = this.room.storage;
 }
 
@@ -17,7 +17,7 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
-  if (this.room.find(FIND_CONSTRUCTION_SITES).length){
+  if (this.room.find(FIND_CONSTRUCTION_SITES).length) {
     this.buildersReq = 1;
   }
 };
@@ -53,18 +53,18 @@ MissionBuilder.prototype.builderActions = function (creep) {
   }
   if (!creep.memory.building) {
     let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1); //change to inRangeTo (cheaper) and managed by mission not creep logic?
-      if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(droppedSource[0], {
-          visualizePathStyle: {
-            stroke: '#fa0'
-          }
-        });
-      } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+      creep.moveTo(droppedSource[0], {
+        visualizePathStyle: {
+          stroke: '#fa0'
+        }
+      });
+    } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.storage);
     }
   } else {
     let currentJob = creep.memory.currentJob || {};
-    let {fill, build, tower} = currentJob;
+    let { fill, build, tower } = currentJob;
     if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
     if (this.spawnGroup.spawns[0].recycleCreep(creep) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.spawnGroup.spawns[0]);

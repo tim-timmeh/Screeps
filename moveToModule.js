@@ -12,8 +12,8 @@ let positionMem;
  */
 Creep.prototype.moveToModule = function (destination, options = {}) {
   let ignore = options.ignore || true;
-  let ticks = options.ticks ||  2;
-  let range = options.range ||  1;
+  let ticks = options.ticks || 2;
+  let range = typeof options.range === 'number' ? options.range : 1;
   let reusePath = 50;
   if (!this.memory.stuckCount) {
     this.memory.stuckCount = 0;
@@ -38,7 +38,7 @@ Creep.prototype.moveToModule = function (destination, options = {}) {
     moveResult = this.moveTo(destination, {
       reusePath: reusePath,
       ignoreCreeps: ignore,
-      range:range,
+      range: range,
       visualizePathStyle: { stroke: '#fff' },
     });
   }

@@ -3,9 +3,9 @@ const MainObj = require("./MainObj")
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function SubObj(...args) { // constructor, how to build the object
-  MainObj.call(this, ...args); // uses params to pass object through parnt operation constructor first
-  this.properties = "SubObj properties";
+function SubObj(operation) { // constructor, how to build the object
+  MainObj.call(this, operation, 'Obj'); // uses params to pass object through parnt operation constructor first
+  this.properties = "example";
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -33,8 +33,8 @@ SubObj.prototype.finalize = function () { // finalize?
 
 // Additional methods/functions below
 
-function helperFunction() {
-  console.log("scope helper function")
+SubObj.prototype.ObjAction = function () {
+  console.log("SubObj action function")
 }
 
 module.exports = SubObj;
