@@ -27,9 +27,9 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
     this.butlers = this.creepRoleCall('butler', body, swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } else {
     swarmQty = 1; //this.spawnGroup.spawns.length;
-    let body = this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', maxRatio: 12});
-    this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 10 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
-  } if (!this.butlers) {
+    let body = this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', maxRatio: 12 });
+    this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 50 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+  } if (!this.butlers || !this.butlers.length) {
     console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
     this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
@@ -73,13 +73,15 @@ MissionButler.prototype.butlerActions = function (creep) {
       let result = -2;
       let sourceMem;
       let storageMy = creep.room.storage;
-      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2); //change to inRangeTo (cheaper) and managed by mission not creep logic?
-      if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(droppedSource[0], {
-          visualizePathStyle: {
-            stroke: '#fa0'
-          }
-        });
+      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+      if (droppedSource.length) {
+        if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(droppedSource[0], {
+            visualizePathStyle: {
+              stroke: '#fa0'
+            }
+          });
+        }
       } else if (storageMy && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
         if (creep.withdraw(storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(storageMy);

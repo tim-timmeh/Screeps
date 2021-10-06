@@ -180,7 +180,7 @@ Mission.prototype.bodyBlockReq = function (bodyConfig) { // return object {block
  * @returns {number} Distance to spawn
  */
 Mission.prototype.findDistanceToSpawn = function (destination, range = 1) { // pass a room position and find distance to spawn group
-  if (!this.memory.distanceToSpawn) {
+  if (!this.memory.distanceToSpawn || (Game.time % 50000 == 0)) {
     this.memory.distanceToSpawn = this.room.findPath(this.spawnGroup.pos, destination, { ignoreCreeps: true }).length - range; //generates path from spawn to source -1 because creep doesnt stand ontop of source
   }
   return this.memory.distanceToSpawn;

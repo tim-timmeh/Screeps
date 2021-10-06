@@ -17,6 +17,7 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
+  this.storagePercent = Math.max(0, (this.storage.store.getUsedCapacity() / this.storage.store.getCapacity())).toFixed(3);
   let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES).length;
   if (csitesQty > 10 && this.storage.store.energy > (this.storage.store.getCapacity * 0.3)) {
     this.buildersReq = 2;
@@ -26,7 +27,10 @@ MissionBuilder.prototype.initMiss = function () { // Initialize / build objects 
 };
 
 MissionBuilder.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 });
+  let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { maxEnergyPercent: this.storagePercent });
+  if (!body.length){
+    body = ['carry', 'move', 'work']
+  }
   this.builders = this.creepRoleCall('builder', body, this.buildersReq);
 };
 
@@ -55,13 +59,15 @@ MissionBuilder.prototype.builderActions = function (creep) {
     creep.say("Urg");
   }
   if (!creep.memory.building) {
-    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1); //change to inRangeTo (cheaper) and managed by mission not creep logic?
-    if (droppedSource.length && creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-      creep.moveTo(droppedSource[0], {
-        visualizePathStyle: {
-          stroke: '#fa0'
-        }
-      });
+    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    if (droppedSource.length) {
+      if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(droppedSource[0], {
+          visualizePathStyle: {
+            stroke: '#fa0'
+          }
+        });
+      }
     } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.storage);
     }

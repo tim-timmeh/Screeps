@@ -32,7 +32,7 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
       this.placeMinerContainer();
     }
   } else {
-    this.paveRoad(this.container, this.room.storage || this.spawnGroup);// Check path from container to storage || spawnGroup[0].pos ?? should add bunker entry as priority?
+    this.paveRoad(this.container, this.room.storage || this.spawnGroup);// Check path from container to storage || spawnGroup.spawns[0].pos ?? should add bunker entry as priority?
   }
   if (this.container && this.room.storage) {
     this.haulerAnalysis = this.analyzeHauler(this.distanceToSpawn, sourceRegen);
@@ -135,7 +135,16 @@ MissionMiner.prototype.haulerActions = function (creep) {
     creep.say("Urg");
   }
   if (!creep.memory.building) {
-    if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    if (droppedSource.length) {
+      if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(droppedSource[0], {
+          visualizePathStyle: {
+            stroke: '#fa0'
+          }
+        });
+      }
+    } else if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.container);
     }
   } else {
