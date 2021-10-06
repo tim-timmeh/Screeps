@@ -273,7 +273,10 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
  * @returns 
  */
 Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
-  if (Game.time - this.memory.paveTick < 1000) return;//needs short circuit
+  if (Game.time % 10000 == 0) { 
+    this.memory.roadRepairIds = []; //?? rush implementation to avoid memory overload
+  }
+  if (Game.time - this.memory.paveTick < 500) return;// short circuit to run only x ticks
   let path = PathFinder.searchCustom(startPos.pos, dest.pos, range);
   if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
   let newConSites = this.fixRoad(path.path);
