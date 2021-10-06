@@ -135,7 +135,7 @@ MissionMiner.prototype.haulerActions = function (creep) {
     creep.say("Urg");
   }
   if (!creep.memory.building) {
-    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2); //change to inRangeTo (cheaper) and managed by mission not creep logic?
     if (droppedSource.length) {
       if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
         creep.moveTo(droppedSource[0], {

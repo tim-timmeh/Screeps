@@ -7,9 +7,9 @@ const exportStats = function (globalResetTick) {
     rooms: {},
     cpu: {},
     memory: {},
-
+    time: Game.time,
   }
-  Memory.stats.time = Game.time;
+
   // Collect room stats
   for (let roomName in Game.rooms) {
     let spawnLog
@@ -24,6 +24,7 @@ const exportStats = function (globalResetTick) {
       roomStats.controllerProgress = room.controller.progress;
       roomStats.controllerProgressTotal = room.controller.progressTotal;
       roomStats.controllerLevel = room.controller.level;
+      roomStats.spawnLog = Memory.rooms[roomName].spawnMemory.log // Copy room spawn log to stats
       if ((spawnLog = Memory[`.rooms.${roomName}.spawnMemory.log.idleSpawns`])) { // if room has spawn group memory log
         roomStats.idleSpawns = spawnLog // add it too stats
       }
@@ -34,7 +35,7 @@ const exportStats = function (globalResetTick) {
   Memory.stats.gcl.progressTotal = Game.gcl.progressTotal;
   Memory.stats.gcl.level = Game.gcl.level;
   // Collect CPU stats
-  Memory.stats.cpu.LastGLobalReset = globalResetTick
+  Memory.stats.cpu.lastGLobalReset = globalResetTick
   Memory.stats.cpu.bucket = Game.cpu.bucket;
   Memory.stats.cpu.limit = Game.cpu.limit;
   Memory.stats.cpu.used = Game.cpu.getUsed();

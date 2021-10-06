@@ -17,6 +17,7 @@ function Mission(operation, name) {
   this.king = operation.king;
   this.spawnGroup = operation.spawnGroup;
   this.sources = operation.sources;
+  this.nameTemplate = this.opType.substring(2, 5) + this.opName.split("g")[1] + '.';
   if (!operation.flag.memory[this.name]) operation.flag.memory[this.name] = {};
   this.memory = operation.flag.memory[this.name];
   if (this.room) this.hasVision = true;
@@ -74,10 +75,10 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
     }
   };
   if (this.spawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
-    let creepName = (this.opType.substring(2, 5) + '.' + roleName + '.' + (Game.time % 100));//add this.spawnGroup.room.name
-    let spawnResult = this.spawnGroup.spawn(creepBody, creepName, options.memory);
-    if (spawnResult == 0) {
-      this.memory.spawn[roleName].push(creepName);
+    let creepName = (this.nameTemplate + roleName + '.' + (Game.time % 100));//add this.spawnGroup.room.name
+    let result = this.spawnGroup.spawn(creepBody, creepName, options.memory);
+    if (result.spawnResults == 0) {
+      this.memory.spawn[roleName].push(result.creepName);
     }
   }
   return creepArray;
@@ -91,7 +92,7 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
 Mission.prototype.getLostCreeps = function (roleName) {
   let creepNames = [];
   for (let creepName in Game.creeps) {
-    if (creepName.indexOf(this.opName.substring(9, 12) + '.' + roleName.substring(0, 3) + '.') > -1) {
+    if (creepName.indexOf(this.nameTemplate + roleName + '.') > -1) {
       creepNames.push(creepName);
     }
   }
@@ -273,7 +274,10 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
  * @returns 
  */
 Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
-  if (Game.time - this.memory.paveTick < 1000) return;//needs short circuit
+  if (Game.time % 10000 == 0) { 
+    this.memory.roadRepairIds = []; //?? rush implementation to avoid memory overload
+  }
+  if (Game.time - this.memory.paveTick < 500) return;// short circuit to run only x ticks
   let path = PathFinder.searchCustom(startPos.pos, dest.pos, range);
   if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
   let newConSites = this.fixRoad(path.path);

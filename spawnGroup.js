@@ -21,20 +21,22 @@ function SpawnGroup(room) { // Constructor, framework to build a SpawnGroup for 
 // Additional methods/functions below
 SpawnGroup.prototype.spawn = function (body, name, memory) {
   let spawnResults;
+  let creepName = name;
   this.availableSpawnCount -= 1;
   this.isAvailable = this.availableSpawnCount > 0;
   //this.isAvailable = false;
   for (let spawn of this.spawns) {
     if (spawn.spawning == null) {
-      spawnResults = spawn.spawnCreep(body, name, memory);
-      if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning: ${name}, Body: [${body}]\n Result: ${spawnResults}`);
+      creepName += spawn.name.split("n")[1];
+      spawnResults = spawn.spawnCreep(body, creepName, memory);
+      if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning: ${creepName}, Body: [${body}]\n Result: ${spawnResults}`);
       if (spawnResults == 0) {
-        console.log(`${spawn.name}(${this.room.name}) Spawning: ${name}, Body: [${body}]\n Result: ${spawnResults}`);
+        console.log(`${spawn.name}(${this.room.name}) Spawning: ${creepName}, Body: [${body}]\n Result: ${spawnResults}`);
       }
       break;
     }
   }
-  return spawnResults;
+  return {spawnResults:spawnResults,creepName:creepName};
 }
 
 
