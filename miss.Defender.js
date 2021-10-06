@@ -55,7 +55,6 @@ MissionDefender.prototype.defenderActions = function (creep) {
   let enemyCreep;
   let enemyStructure;
   creep.memory.idleCount = creep.memory.idleCount || 0;
-  console.log(creep.memoy.idleCount);
   defenderFlag = _.filter(Game.flags, f => f.name == "defenderFlag");
   if (defenderFlag[0] && creep.pos.roomName != defenderFlag[0].pos.roomName) {
     creep.moveToModule(defenderFlag[0].pos);
@@ -102,9 +101,10 @@ MissionDefender.prototype.defenderActions = function (creep) {
     };
     if (!enemyRanged && !enemyTower && !enemyCreep && !enemyStructure && creep.hits < creep.hitsMax) {
       creep.heal(creep);
+
     } else {
       creep.memory.idleCount += 1
-      if (creep.memory.idleCount == 10 && this.spawnGroup.spawns[0].recycleCreep(creep) == ERR_NOT_IN_RANGE) {
+      if (creep.memory.idleCount >= 10 && this.spawnGroup.spawns[0].recycleCreep(creep) == ERR_NOT_IN_RANGE) {
         creep.moveToModule(this.spawnGroup.spawns[0]);
       }
     }

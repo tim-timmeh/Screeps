@@ -245,7 +245,7 @@ Mission.prototype.findStorage = function (position) { // pass a room position an
  */
 Mission.prototype.analyzeHauler = function (distance, regen) {
   let haulerAnalysis;
-  if (!this.memory.haulerAnalysis || regen !== this.memory.haulerAnalysis.regen) {
+  if (!this.memory.haulerAnalysis || regen !== this.memory.haulerAnalysis.regen || (Game.time % 10000 == 0)) {
     // distance to travel * there and back (and a little extra) * regen per tick
     let totalTickRegen = distance * 2.1 * regen;
     let bodyConfig = { carry: 2, move: 1 };
