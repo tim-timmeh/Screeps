@@ -29,9 +29,9 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
     if (spawn.spawning == null) {
       creepName += spawn.name.split("n")[1];
       spawnResults = spawn.spawnCreep(body, creepName, memory);
-      if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning: ${creepName}, Body: [${body}]\n Result: ${spawnResults}`);
+      if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]Result: ${spawnResults}`);
       if (spawnResults == 0) {
-        console.log(`${spawn.name}(${this.room.name}) Spawning: ${creepName}, Body: [${body}]\n Result: ${spawnResults}`);
+        console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]`);
       }
       break;
     }

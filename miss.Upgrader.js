@@ -18,16 +18,17 @@ MissionUpgrader.prototype.constructor = MissionUpgrader; // reset constructor to
 
 MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects required
   this.distanceToController = this.findDistanceToSpawn(this.controller.pos, 3);
-  this.storagePercent = Math.max(0, (this.storage.store.getUsedCapacity() - this.storage.store.getCapacity() / 3) / this.storage.store.getCapacity()).toFixed(3);
-  this.paveRoad(this.storage, this.controller, 3);
+  this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - this.storage.store.getCapacity() / 3) / (this.storage.store.getCapacity() - (this.storage.store.getCapacity() / 3))).toFixed(3));
+    this.paveRoad(this.storage, this.controller, 3);
 };
 
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
+  let creepCount = this.storagePercent == 1 ? 2 : 1;
   let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent });
   if (!body.length) {
     body = ['carry', 'move', 'work']; // add this to getBody?, as if maxEnergyPercent too low will not spawn
   }
-  this.upgraders = this.creepRoleCall('upgrader', body, 1, { prespawn: this.distanceToController });
+  this.upgraders = this.creepRoleCall('upgrader', body, creepCount, { prespawn: this.distanceToController });
 };
 
 MissionUpgrader.prototype.actionMiss = function () { // perform actions / missions
