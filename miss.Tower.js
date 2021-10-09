@@ -23,7 +23,7 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
       structureType: STRUCTURE_TOWER
     }
   });
-  if (!this.targetAttack) {
+  if (!this.targetAttack && this.towers[0]) {
     this.targetAttack = this.towers[0].pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if (!this.targetAttack && !this.targetHeal) {
       this.targetHeal = this.room.find(FIND_MY_CREEPS, {

@@ -61,6 +61,9 @@ module.exports.loop = function () {
 
   // Post Analasis / Utility
   profilerBonzAI.start('post');
+  if (Game.cpu.bucket == 10000 && Game.cpu.generatePixel){
+      Game.cpu.generatePixel()
+  }
   exportStats(globalResetTick) // Graphina
   profilerBonzAI.end('post');
   //});

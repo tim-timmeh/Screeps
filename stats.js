@@ -24,7 +24,9 @@ const exportStats = function (globalResetTick) {
       roomStats.controllerProgress = room.controller.progress;
       roomStats.controllerProgressTotal = room.controller.progressTotal;
       roomStats.controllerLevel = room.controller.level;
-      roomStats.spawnLog = Memory.rooms[roomName].spawnMemory.log // Copy room spawn log to stats
+      if (Memory[`.rooms.${roomName}.spawnMemory`]) {
+        roomStats.spawnLog = Memory.rooms[roomName].spawnMemory.log // Copy room spawn log to stats
+      };
       if ((spawnLog = Memory[`.rooms.${roomName}.spawnMemory.log.idleSpawns`])) { // if room has spawn group memory log
         roomStats.idleSpawns = spawnLog // add it too stats
       }
