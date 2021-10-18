@@ -1,3 +1,14 @@
+/**
+ * Quick fix to stop creeps getting stuck in managers spot middle of bunker
+ */
+const spawnDirections = [TOP,
+  TOP_RIGHT,
+  RIGHT,
+  BOTTOM,
+  BOTTOM_LEFT,
+  LEFT,
+  TOP_LEFT,
+]
 
 /**
  * 
@@ -28,7 +39,7 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
   for (let spawn of this.spawns) {
     if (spawn.spawning == null) {
       creepName += spawn.name.split("n")[1];
-      spawnResults = spawn.spawnCreep(body, creepName, memory);
+      spawnResults = spawn.spawnCreep(body, creepName, {memory:memory, directions:spawnDirections});
       if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]Result: ${spawnResults}`);
       if (spawnResults == 0) {
         console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]`);

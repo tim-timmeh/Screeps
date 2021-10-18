@@ -7,6 +7,7 @@ function MissionUpgrader(operation) { // constructor, how to build the object
   Mission.call(this, operation, 'upgrader'); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
   this.storage = this.room.storage;
+  this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined ; // Max 15w per tick on RCL8
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -24,7 +25,7 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
 
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let creepCount = this.storagePercent == 1 ? 2 : 1;
-  let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent });
+  let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent, maxRatio: this.upgraderCap });
   if (!body.length) {
     body = ['carry', 'move', 'work']; // add this to getBody?, as if maxEnergyPercent too low will not spawn
   }
