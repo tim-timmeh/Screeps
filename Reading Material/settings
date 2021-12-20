@@ -1,0 +1,31 @@
+
+"39078118+tim-timmeh@users.noreply.github.com"
+
+{
+    "js/ts.implicitProjectConfig.checkJs": true,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2,
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    // Sets internal git
+    "git.path": "C:\\Users\\Timmeh\\Desktop\\Programs\\VScode\\data\\user-data\\User\\user-tools\\Git\\bin\\git.exe",
+    // Sets integrated terminal and Bash to default
+    "terminal.integrated.profiles.windows": {
+      "PowerShell": {
+        "source": "PowerShell",
+        "icon": "terminal-powershell"
+      },
+      "Command Prompt": {
+        "path": [
+          "${env:windir}\\Sysnative\\cmd.exe",
+          "${env:windir}\\System32\\cmd.exe"
+        ],
+        "args": [],
+        "icon": "terminal-cmd"
+      },
+      "GitBash": {
+        "path": ["C:\\Users\\Timmeh\\Desktop\\Programs\\VScode\\data\\user-data\\User\\user-tools\\Git\\bin\\bash.exe"],
+        "icon": "terminal-bash"
+      }
+    },
+    "terminal.integrated.defaultProfile.windows": "GitBash"
+}

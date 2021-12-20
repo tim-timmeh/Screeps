@@ -1,0 +1,34 @@
+let profilerBonzAI = {
+  start(identifier) {
+    this.cpu = Game.cpu.getUsed();
+    if (!Memory.profilerBonzAI) Memory.profilerBonzAI = {};
+    if (!Memory.profilerBonzAI[identifier]) Memory.profilerBonzAI[identifier] = {
+      tickBegin: Game.time,
+      lastTickTracked: undefined,
+      total: 0,
+      count: 0,
+      costPerCall: undefined,
+      costPerTick: undefined,
+      callsPerTick: undefined,
+    };
+    Memory.profilerBonzAI[identifier].lastTickTracked = Game.time;
+  },
+
+  end(identifier, period = 10) {
+    let profile = Memory.profilerBonzAI[identifier];
+    profile.total += Game.cpu.getUsed() - this.cpu;
+    profile.count++;
+
+    if (Game.time - profile.tickBegin >= period - 1) {
+      profile.costPerCall = _.round(profile.total / profile.count, 2);
+      profile.costPerTick = _.round(profile.total / period, 2);
+      profile.callsPerTick = _.round(profile.count / period, 2);
+      if (global.debug) console.log("PROFILER:", identifier, "perTick:", profile.costPerTick, "perCall:", profile.costPerCall, "calls per tick:", profile.callsPerTick);
+      profile.tickBegin = Game.time + 1;
+      profile.total = 0;
+      profile.count = 0;
+    }
+  }
+}
+
+module.exports = profilerBonzAI;
