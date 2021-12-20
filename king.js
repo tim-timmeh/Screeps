@@ -66,7 +66,7 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount) {
   let bestOrder;
   let highestGain = 0;
   for (let order of orders) {
-      if (order.remainingAmount < 100) continue;
+      if (order.remainingAmount < 1001) continue;
       // TODO: If .username == an enemy then skip order
       let gain = order.price;
       let transferCost = Game.market.calcTransactionCost(100, room.name, order.roomName) / 100;
