@@ -147,10 +147,14 @@ MissionMiner.prototype.haulerActions = function (creep) {
     } else if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.container);
     }
-  } else {
+  } else if (this.room.storage && (this.room.storage.store.getFreeCapacity() > 0)) {
     if (creep.transfer(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.room.storage);
     }
+  } else if (this.room.terminal) {
+     if (creep.transfer(this.room.terminal, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(this.room.terminal);
+    } 
   }
 };
 

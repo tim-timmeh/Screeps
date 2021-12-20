@@ -393,12 +393,14 @@
          let cpu=Game.cpu.getUsed();
          // Rectangle Array, the Rectangles will be protected by the returned tiles
          let rect_array=[];
-         rect_array.push({x1: 30, y1: 30, x2:41, y2: 41});
-         rect_array.push({x1: 32, y1: 2, x2:35, y2: 3});
+         rect_array.push({x1: 17, y1: 20, x2:25, y2: 28});
+         rect_array.push({x1: 27, y1: 36, x2:29, y2: 38});
+         rect_array.push({x1: 27, y1: 44, x2:28, y2: 45});
+         rect_array.push({x1: 20, y1: 36, x2:21, y2: 37});
          // Boundary Array for Maximum Range
          let bounds={x1: 0, y1: 0, x2:49, y2: 49};
          // Get Min cut
-         let positions=util_mincut.GetCutTiles(roomname,rect_array,bounds); // Positions is an array where to build walls/ramparts
+         let positions=util_mincut.GetCutTiles(roomname,rect_array,bounds,true); // Positions is an array where to build walls/ramparts
          // Test output
          console.log('Positions returned',positions.length);
          cpu=Game.cpu.getUsed()-cpu;

@@ -8,7 +8,7 @@ const profiler = require('./screeps-profiler');
 
 //profiler.enable();
 
-if (global.debug) console.log(`#Global has been reset!\n#Overhead reset CPU: ${Game.cpu.getUsed().toFixed(2)} (${(Game.cpu.getUsed() / Game.cpu.limit * 100).toFixed(2) || '(sim)'}%), Memory: ${global.memorySize / 1000} KB(${(global.memorySize / 2048000 * 100).toFixed(2)}%)`);
+console.log(`#Global has been reset!\n#Overhead reset CPU: ${Game.cpu.getUsed().toFixed(2)} (${(Game.cpu.getUsed() / Game.cpu.limit * 100).toFixed(2) || '(sim)'}%), Memory: ${global.memorySize / 1000} KB(${(global.memorySize / 2048000 * 100).toFixed(2)}%)`);
 const globalResetTick = Game.time;
 global.initRoomsMem(); // Ensure constant room features of visable rooms are in memory and structured eg. Sources
 global.gcOwnedStructures() // Garbage Cleanup old ownedStructures
@@ -24,7 +24,7 @@ module.exports.loop = function () {
   for (var name in Memory.creeps) {
     if (!Game.creeps[name]) {
       delete Memory.creeps[name];
-      console.log("Clearing non-existing creep memory: ", name);
+      if (global.debug) console.log("Clearing non-existing creep memory:", name);
     }
   }
 

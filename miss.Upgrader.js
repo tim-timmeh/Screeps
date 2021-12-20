@@ -7,7 +7,6 @@ function MissionUpgrader(operation) { // constructor, how to build the object
   Mission.call(this, operation, 'upgrader'); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
   this.storage = this.room.storage;
-  this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined ; // Max 15w per tick on RCL8
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -19,12 +18,17 @@ MissionUpgrader.prototype.constructor = MissionUpgrader; // reset constructor to
 
 MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects required
   this.distanceToController = this.findDistanceToSpawn(this.controller.pos, 3);
-  this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - this.storage.store.getCapacity() / 3) / (this.storage.store.getCapacity() - (this.storage.store.getCapacity() / 3))).toFixed(3));
-    this.paveRoad(this.storage, this.controller, 3);
+  this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - this.storage.store.getCapacity() / 3) / (this.storage.store.getCapacity() - (this.storage.store.getCapacity() / 3))).toFixed(3)); // % of used storage
+  this.paveRoad(this.storage, this.controller, 3);
+  this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined ; // Max 15w per tick on RCL8
+
 };
 
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  let creepCount = this.storagePercent == 1 ? 2 : 1;
+  let creepCount = 1;
+  if (this.storagePercent == 1 && this.controller.level != 8) {
+    creepCount = 2
+  }
   let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent, maxRatio: this.upgraderCap });
   if (!body.length) {
     body = ['carry', 'move', 'work']; // add this to getBody?, as if maxEnergyPercent too low will not spawn

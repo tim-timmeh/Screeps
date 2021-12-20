@@ -8,7 +8,8 @@ const MissionUpgrader = require('./miss.Upgrader');
 const MissionBuilder = require('./miss.Builder');
 const MissionPlanner = require('./miss.Planner');
 const MissionTower = require('./miss.Tower');
-const MissionDefender = require('./miss.Defender')
+const MissionDefender = require('./miss.Defender');
+const MissionTerminal = require('./miss.Terminal');
 //const {PRIORITY} = require('./config'); 
 
 /**
@@ -46,6 +47,9 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     this.addMission(new MissionBuilder(this));
   }
   this.addMission(new MissionPlanner(this));
+  if (this.room.terminal && this.room.storage) {
+    this.addMission(new MissionTerminal(this));
+  }
 };
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 
