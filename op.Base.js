@@ -1,7 +1,7 @@
 
 
 const Operation = require('./Operation');
-const PRIORITY = require('./config');
+const PRIORITY = require('./util.config');
 const MissionButler = require('./miss.Butler');
 const MissionMiner = require('./miss.Miner');
 const MissionUpgrader = require('./miss.Upgrader');
