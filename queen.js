@@ -1,5 +1,5 @@
 
-var myFunc = require('./myFunctions');
+var myFunc = require('./util.myFunctions');
 const OperationBase = require('./op.Base');
 const King = require('./king');
 

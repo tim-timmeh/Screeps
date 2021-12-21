@@ -65,6 +65,7 @@ module.exports.loop = function () {
       Game.cpu.generatePixel()
   }
   exportStats(globalResetTick) // Graphina
+  global.excuseMe.clearNudges()
   profilerBonzAI.end('post');
   //});
 };

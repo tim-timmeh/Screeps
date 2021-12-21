@@ -73,7 +73,7 @@ MissionUpgrader.prototype.upgraderActions = function (creep) {
     } else if (creep.withdraw(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.room.storage);
     } else {
-      creep.giveWay()
+      //creep.giveWay()
     }
   } else {
     creep.doUpgradeController()

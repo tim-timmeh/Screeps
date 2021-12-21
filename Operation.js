@@ -1,5 +1,5 @@
 
-const myFunc = require('./myFunctions');
+const myFunc = require('./util.myFunctions');
 
 /**
  * Top level operation constructor

@@ -96,7 +96,7 @@ MissionButler.prototype.butlerActions = function (creep) {
         if (sourceMem && creep.harvest(sourceMem) == ERR_NOT_IN_RANGE) {
           result = creep.moveToModule(sourceMem);
         } else {
-          creep.giveWay({pos: sourceMem.pos, range: 3 })
+          //creep.giveWay({pos: sourceMem.pos, range: 3 })
         }
       } else if (containerMy = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (s) => {
@@ -111,7 +111,7 @@ MissionButler.prototype.butlerActions = function (creep) {
         result = creep.moveToModule(sourceMy);
         creep.memory.currentSourceId = sourceMy.id;
       } else {
-        creep.giveWay({pos: sourceMy.pos, range: 1 })
+        //creep.giveWay({pos: sourceMy.pos, range: 1 })
       }
       if (result === -2) {
         delete creep.memory.currentSourceId;

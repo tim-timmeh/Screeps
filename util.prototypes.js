@@ -1,5 +1,5 @@
 
-const myFunc = require('./myFunctions');
+const myFunc = require('./util.myFunctions');
 // Giving an object not yet created a function to perform. Eg Certain creep/spawn/room to do something.
 
 StructureSpawn.prototype.spawnTest = function () { // Test function
@@ -160,7 +160,7 @@ Creep.prototype.doUpgradeController = function (controller = this.room.controlle
   if (this.upgradeController(controller) == ERR_NOT_IN_RANGE) {
     this.moveToModule(controller, { range: 3 });
   } else {
-    this.giveWay({pos: controller.pos, range: 3 })
+    //this.giveWay({pos: controller.pos, range: 3 })
   };
   return true;
 }
@@ -189,7 +189,7 @@ Creep.prototype.doBuildCsite = function (build) {
     if (this.build(targetB) == ERR_NOT_IN_RANGE) {
       this.moveToModule(targetB, { range: 3 });
     } else {
-      this.giveWay({pos: targetB.pos, range: 3 })
+      //this.giveWay({pos: targetB.pos, range: 3 })
     }
     return { build: targetB.id };
   }
