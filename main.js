@@ -1,8 +1,8 @@
 
-require('./require'); // load globals / prototypes
-const exportStats = require('./stats'); // stat function
+require('./util.require'); // load globals / prototypes
+const exportStats = require('./util.stats'); // stat function
 const queen = require('./queen'); // Import Functions
-const myFunc = require('./myFunctions'); // Import Functions
+const myFunc = require('./util.myFunctions'); // Import Functions
 const profilerBonzAI = require('./profilerBonzAI');
 const profiler = require('./screeps-profiler');
 

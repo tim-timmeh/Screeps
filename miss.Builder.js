@@ -70,6 +70,8 @@ MissionBuilder.prototype.builderActions = function (creep) {
       }
     } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.storage);
+    } else {
+      creep.giveWay();
     }
   } else {
     let currentJob = creep.memory.currentJob || {};
