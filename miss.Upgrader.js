@@ -20,7 +20,7 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
   this.distanceToController = this.findDistanceToSpawn(this.controller.pos, 3);
   this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - this.storage.store.getCapacity() / 3) / (this.storage.store.getCapacity() - (this.storage.store.getCapacity() / 3))).toFixed(3)); // % of used storage
   this.paveRoad(this.storage, this.controller, 3);
-  this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined ; // Max 15w per tick on RCL8
+  this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined; // Max 15w per tick on RCL8
 
 };
 
@@ -73,7 +73,7 @@ MissionUpgrader.prototype.upgraderActions = function (creep) {
     } else if (creep.withdraw(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.room.storage);
     } else {
-      //creep.giveWay()
+      creep.giveWay()
     }
   } else {
     creep.doUpgradeController()

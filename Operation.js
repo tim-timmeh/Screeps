@@ -22,6 +22,7 @@ function Operation(flag, flagName, flagType, king) {
   this.king = king
   /** @type {object | Memory} */
   this.memory = flag.memory
+  //this.nameTemplate = this.type.substring(2, 5) + this.name.split("g")[1];
   if (!this.missions) {
     this.missions = {};
   }

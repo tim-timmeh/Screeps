@@ -175,10 +175,10 @@ function giveWay(creep, arg) {
       creep.move(getNudgeDirection_Random(creep.pos), true);
   }
 }
-Creep.prototype.giveWay = function(arg) {
+Creep.prototype.giveWay = function (arg) {
   giveWay(this, arg);
 };
-PowerCreep.prototype.giveWay = function(arg) {
+PowerCreep.prototype.giveWay = function (arg) {
   giveWay(this, arg);
 };
 
@@ -204,5 +204,5 @@ function clearNudges() {
 }
 
 module.exports = {
-	clearNudges: clearNudges
+  clearNudges: clearNudges
 };

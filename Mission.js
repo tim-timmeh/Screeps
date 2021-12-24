@@ -274,7 +274,7 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
  * @returns 
  */
 Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
-  if (Game.time % 10000 == 0) { 
+  if (Game.time % 10000 == 0) {
     this.memory.roadRepairIds = []; //?? rush implementation to avoid memory overload
   }
   if (Game.time - this.memory.paveTick < 500) return;// short circuit to run only x ticks

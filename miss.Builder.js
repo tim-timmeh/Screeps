@@ -28,7 +28,7 @@ MissionBuilder.prototype.initMiss = function () { // Initialize / build objects 
 
 MissionBuilder.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { maxEnergyPercent: this.storagePercent });
-  if (!body.length){
+  if (!body.length) {
     body = ['carry', 'move', 'work']
   }
   this.builders = this.creepRoleCall('builder', body, this.buildersReq);
@@ -71,7 +71,7 @@ MissionBuilder.prototype.builderActions = function (creep) {
     } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.storage);
     } else {
-      //creep.giveWay();
+      creep.giveWay();
     }
   } else {
     let currentJob = creep.memory.currentJob || {};

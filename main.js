@@ -18,6 +18,7 @@ module.exports.loop = function () {
   //profiler.wrap(function () {
   //global.profilerGlobalReset.run() // runs profiler if .set > 0
 
+  profilerBonzAI.start('pre')
   /**
    * Clear memory of old creeps.
    */
@@ -27,8 +28,10 @@ module.exports.loop = function () {
       if (global.debug) console.log("Clearing non-existing creep memory:", name);
     }
   }
+  global.excuseMe.clearNudges()
+  profilerBonzAI.end('pre')
 
-   // Init Phase
+  // Init Phase
   profilerBonzAI.start('init');
   let king = queen.initKing() // Creates king Object
   let operations = queen.getOperations(king) // Instantiate list of Operation Flags
@@ -61,11 +64,10 @@ module.exports.loop = function () {
 
   // Post Analasis / Utility
   profilerBonzAI.start('post');
-  if (Game.cpu.bucket == 10000 && Game.cpu.generatePixel){
-      Game.cpu.generatePixel()
+  if (Game.cpu.bucket == 10000 && Game.cpu.generatePixel) {
+    Game.cpu.generatePixel()
   }
   exportStats(globalResetTick) // Graphina
-  global.excuseMe.clearNudges()
   profilerBonzAI.end('post');
   //});
 };

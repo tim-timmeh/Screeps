@@ -5,7 +5,7 @@ const Operation = require('./Operation');
 
 function MissionTerminal(operation) { // constructor, how to build the object
   Mission.call(this, operation, 'terminal'); // uses params to pass object through parnt operation constructor first
-  
+
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -44,8 +44,8 @@ MissionTerminal.prototype.sellOverstock = function () {
       }
   }*/
   if (_.sum(this.terminal.store) >= 20000) {
-      console.log("TERMINAL: have too much energy in", this.terminal.room,"@", this.terminal.store.energy);
-      this.king.sellExcess(this.room, RESOURCE_ENERGY, 5000);
+    console.log("TERMINAL: have too much energy in", this.terminal.room, "@", this.terminal.store.energy);
+    this.king.sellExcess(this.room, RESOURCE_ENERGY, 5000);
   }
   if (global.debug) console.log("Terminal Analysis Complete", this.terminal.room)
 }

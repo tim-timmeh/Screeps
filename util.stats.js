@@ -2,13 +2,14 @@
 const exportStats = function (globalResetTick) {
   // Reset/setup Memory Objects
 
-  Memory.stats = {
+  const clearStats = {
     gcl: {},
     rooms: {},
     cpu: {},
     memory: {},
     time: Game.time,
   }
+  Object.assign(Memory.stats, clearStats);
 
   // Collect room stats
   for (let roomName in Game.rooms) {
@@ -24,12 +25,15 @@ const exportStats = function (globalResetTick) {
       roomStats.controllerProgress = room.controller.progress;
       roomStats.controllerProgressTotal = room.controller.progressTotal;
       roomStats.controllerLevel = room.controller.level;
-      if (Memory[`.rooms.${roomName}.spawnMemory`]) {
+      if (_.get(Memory, `rooms.${roomName}.spawnMemory`, false)) {
         roomStats.spawnLog = Memory.rooms[roomName].spawnMemory.log // Copy room spawn log to stats
       };
-      if ((spawnLog = Memory[`.rooms.${roomName}.spawnMemory.log.idleSpawns`])) { // if room has spawn group memory log
+      /*if (Memory[`rooms.${roomName}.spawnMemory`]) { // OLD STAT CODE CHECK STATS AND DELETE
+        roomStats.spawnLog = Memory.rooms[roomName].spawnMemory.log // Copy room spawn log to stats
+      };
+      if ((spawnLog = Memory[`rooms.${roomName}.spawnMemory.log.idleSpawns`])) { // if room has spawn group memory log
         roomStats.idleSpawns = spawnLog // add it too stats
-      }
+      }*/
     }
   }
   // Collect GCL stats
@@ -45,6 +49,5 @@ const exportStats = function (globalResetTick) {
   Memory.stats.memory.used = RawMemory.get().length / 1000;
   Memory.stats.memory.limit = 2048;
 }
-//Memory.rooms[room].spawnMemory.log
 
 module.exports = exportStats;

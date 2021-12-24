@@ -39,7 +39,7 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
   for (let spawn of this.spawns) {
     if (spawn.spawning == null) {
       creepName += spawn.name.split("n")[1];
-      spawnResults = spawn.spawnCreep(body, creepName, {memory:memory, directions:spawnDirections});
+      spawnResults = spawn.spawnCreep(body, creepName, { memory: memory, directions: spawnDirections });
       if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]Result: ${spawnResults}`);
       if (spawnResults == 0) {
         console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]`);
@@ -47,7 +47,7 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
       break;
     }
   }
-  return {spawnResults:spawnResults,creepName:creepName};
+  return { spawnResults: spawnResults, creepName: creepName };
 }
 
 
