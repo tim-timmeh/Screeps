@@ -76,6 +76,7 @@ SpawnGroup.prototype.getSpawnAvailability = function () {
   }
   this.memory.log.availability += count;
   this.memory.log.idleSpawns = count;
+  this.memory.log.spawnCount = this.spawns.length
   //Memory.stats["SpawnGroups." + this.room.name + ".idleSpawns"] = count;
   return count;
 }
