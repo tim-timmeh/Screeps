@@ -42,7 +42,7 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
       spawnResults = spawn.spawnCreep(body, creepName, { memory: memory, directions: spawnDirections });
       if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]Result: ${spawnResults}`);
       if (spawnResults == 0) {
-        console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]`);
+        console.log(`${spawn.name}(${this.room.name}): Spawning : ${creepName} - [${body}]`);
       }
       break;
     }

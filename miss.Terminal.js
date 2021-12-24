@@ -43,9 +43,9 @@ MissionTerminal.prototype.sellOverstock = function () {
           this.king.sellExcess(this.room, mineralType, RESERVE_AMOUNT);
       }
   }*/
-  if (_.sum(this.terminal.store) >= 20000) {
+  if (_.sum(this.terminal.store) >= 100000) {
     console.log("TERMINAL: have too much energy in", this.terminal.room, "@", this.terminal.store.energy);
-    this.king.sellExcess(this.room, RESOURCE_ENERGY, 5000);
+    this.king.sellExcess(this.room, RESOURCE_ENERGY, 10000);
   }
   if (global.debug) console.log("Terminal Analysis Complete", this.terminal.room)
 }
