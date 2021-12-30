@@ -74,11 +74,13 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
       i--;
     }
   };
-  if (this.spawnGroup.isAvailable && (creepCount < creepAmount) && this.hasVision) {
+  if (this.spawnGroup.isAvailable && (creepCount < creepAmount) /*&& this.hasVision*/) {
     let creepName = (this.nameTemplate + roleName + '.' + (Game.time % 100));//add this.spawnGroup.room.name
     let result = this.spawnGroup.spawn(creepBody, creepName, options.memory);
     if (result.spawnResults == 0) {
       this.memory.spawn[roleName].push(result.creepName);
+    } else {
+      console.log(result.spawnResults)
     }
   }
   return creepArray;

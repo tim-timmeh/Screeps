@@ -18,7 +18,7 @@ const RESOURCE_VALUE = {
 function King() {
   if (!Memory.empire) Memory.empire = {};
   this.memory = Memory.empire;
-  this.SpawnGroups = {}
+  this.spawnGroups = {}
 }
 /**
  * Initialize / build objects required
@@ -48,19 +48,38 @@ King.prototype.finalize = function () {
 // Additional methods/functions below
 
 King.prototype.getSpawnGroup = function (roomName) {
-  if (this.SpawnGroups[roomName]) {
-    return this.SpawnGroups[roomName];
+  if (this.spawnGroups[roomName]) {
+    return this.spawnGroups[roomName];
   }
   else {
     let room = Game.rooms[roomName];
     if (room && room.find(FIND_MY_SPAWNS).length > 0) {
-      this.SpawnGroups[roomName] = new SpawnGroup(room);
-      return this.SpawnGroups[roomName];
+      this.spawnGroups[roomName] = new SpawnGroup(room);
+      return this.spawnGroups[roomName];
     }
   }
 }
 
-King.prototype.sellExcess = function (room, resourceType, dealAmount) {
+King.prototype.closestSpawnGroup = function (targetRoomName) {
+  let closest;
+  let bestDistance = 20;
+  for (let roomName in this.spawnGroups) {
+    let distance = Game.map.getRoomLinearDistance(targetRoomName,roomName);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      closest = this.spawnGroups[roomName];
+    }
+  }
+  if (closest) { //&& (closest.isAvailable)) {
+    return closest
+  }
+  console.log(`NO CLOSE SPAWN FOUND FOR ${targetRoomName}`)
+}
+
+King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell = false) {
+  let resourcePriceAvg = Game.market.getHistory(resourceType)[0].avgPrice;
+  let resourcePercentCutoff = 80;
+  let resourcePriceCutoff = parseFloat(((resourcePercentCutoff / 100) * resourcePriceAvg).toFixed(3));
   let orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: resourceType });
   this.removeOrders(ORDER_BUY, resourceType);
   let bestOrder;
@@ -79,17 +98,21 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount) {
   }
 
   if (bestOrder) {
+    if (bestOrder.price < resourcePriceCutoff && !forceSell) {
+      console.log(`BELOW ${resourcePercentCutoff}% AVERAGE FOR ${resourceType}. Current: ${bestOrder.price}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
+      return;
+    }
     let amount = Math.min(bestOrder.remainingAmount, dealAmount);
     let outcome = Game.market.deal(bestOrder.id, amount, room.name);
 
     let notYetSelling = this.orderCount(ORDER_SELL, resourceType, bestOrder.price) === 0;
     if (notYetSelling) {
-      Game.market.createOrder({ type: ORDER_SELL, resourceType, price: bestOrder.price, totalAmount: dealAmount * 2, roomName: room.name });
+      Game.market.createOrder({ type: ORDER_SELL, resourceType, price: bestOrder.price, totalAmount: dealAmount, roomName: room.name });
       console.log("Placed ORDER_SELL for", resourceType, "at", bestOrder.price, "Cr, to be sent from", room.name);
     }
 
     if (outcome === OK) {
-      console.log("Sold", amount, resourceType, "to", bestOrder.roomName);
+      console.log("Sold", amount, resourceType, "to", bestOrder.roomName, "for", bestOrder.price, ` Cr (${(bestOrder.price/resourcePriceAvg*100).toFixed(3)}%)`);
 
     }
     else if (outcome === ERR_INVALID_ARGS) {

@@ -71,4 +71,8 @@ MissionTower.prototype.towerActions = function (tower) {
   }*/
 }
 
+MissionTower.prototype.towerRepair = function () {
+  
+}
+
 module.exports = MissionTower;

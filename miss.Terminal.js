@@ -1,3 +1,9 @@
+const MINERALS_SELL = ["silicon",]
+const MINERAL_STORAGE_TARGET = {
+  silicon : 0,
+}
+const RESERVE_AMOUNT = 0;
+
 const Mission = require('./Mission');
 const Operation = require('./Operation');
 
@@ -35,17 +41,21 @@ MissionTerminal.prototype.finalizeMiss = function () { // finalize?
 // Additional methods/functions below
 
 MissionTerminal.prototype.sellOverstock = function () {
+  let forceSell = false;
   if (Game.time % 100 !== 1) return;
-  /*for (let mineralType of MINERALS_RAW) {
+  if (this.terminal.store.getFreeCapacity() <= 10000) {
+    forceSell = true;
+  }
+  for (let mineralType of MINERALS_SELL) {
       if (this.storage.store[mineralType] >= MINERAL_STORAGE_TARGET[mineralType]
-          && this.storage.room.terminal.store[mineralType] >= RESERVE_AMOUNT) {
+          && this.storage.room.terminal.store[mineralType] > RESERVE_AMOUNT) {
           console.log("TRADE: have too much", mineralType, "in", this.storage.room, this.storage.store[mineralType]);
-          this.king.sellExcess(this.room, mineralType, RESERVE_AMOUNT);
+          this.king.sellExcess(this.room, mineralType, RESERVE_AMOUNT || this.storage.room.terminal.store[mineralType], forceSell);
       }
-  }*/
-  if (_.sum(this.terminal.store) >= 100000) {
+  }
+  if (this.terminal.store.energy >= 100000) {
     console.log("TERMINAL: have too much energy in", this.terminal.room, "@", this.terminal.store.energy);
-    this.king.sellExcess(this.room, RESOURCE_ENERGY, 10000);
+    this.king.sellExcess(this.room, RESOURCE_ENERGY, 10000, forceSell);
   }
   if (global.debug) console.log("Terminal Analysis Complete", this.terminal.room)
 }
