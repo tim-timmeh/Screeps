@@ -22,7 +22,7 @@ MissionLoot.prototype.initMiss = function () { // Initialize / build objects req
 
 MissionLoot.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let body = this.getBody({ MOVE: 1, CARRY: 1 });
-  this.looters = this.creepRoleCall(this.name, body, 1); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+  this.looters = this.creepRoleCall(this.name, body, 2); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
 };
 
 MissionLoot.prototype.actionMiss = function () { // perform actions / missions

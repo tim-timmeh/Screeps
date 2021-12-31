@@ -93,13 +93,13 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
     if (gain > highestGain) {
       highestGain = gain;
       bestOrder = order;
-      if (global.debug) console.log("I could sell it to", order.roomName, "for", order.price, "(+" + transferCost + ")");
+      if (global.debug) console.log(" I could sell it to", order.roomName, "for", order.price, "(+" + transferCost + ")");
     }
   }
 
   if (bestOrder) {
     if (bestOrder.price < resourcePriceCutoff && !forceSell) {
-      console.log(`BELOW ${resourcePercentCutoff}% AVERAGE FOR ${resourceType}. Current: ${bestOrder.price}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
+      console.log(` Failed. Below ${resourcePercentCutoff}% Avg For ${resourceType}. Current: ${bestOrder.price}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
       return;
     }
     let amount = Math.min(bestOrder.remainingAmount, dealAmount);
@@ -108,18 +108,18 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
     let notYetSelling = this.orderCount(ORDER_SELL, resourceType, bestOrder.price) === 0;
     if (notYetSelling) {
       Game.market.createOrder({ type: ORDER_SELL, resourceType, price: bestOrder.price, totalAmount: dealAmount, roomName: room.name });
-      console.log("Placed ORDER_SELL for", resourceType, "at", bestOrder.price, "Cr, to be sent from", room.name);
+      console.log(" Placed ORDER_SELL for", resourceType, "at", bestOrder.price, "Cr, to be sent from", room.name);
     }
 
     if (outcome === OK) {
-      console.log("Sold", amount, resourceType, "to", bestOrder.roomName, "for", bestOrder.price, ` Cr (${(bestOrder.price/resourcePriceAvg*100).toFixed(3)}%)`);
+      console.log(" Sold", amount, resourceType, "to", bestOrder.roomName, "for", bestOrder.price, ` Cr (${(bestOrder.price/resourcePriceAvg*100).toFixed(3)}%)`);
 
     }
     else if (outcome === ERR_INVALID_ARGS) {
-      console.log("invalid deal args:", bestOrder.id, amount, room.name);
+      console.log(" invalid deal args:", bestOrder.id, amount, room.name);
     }
     else {
-      console.log("there was a problem trying to deal:", outcome);
+      console.log(" there was a problem trying to deal:", outcome);
     }
   }
 }

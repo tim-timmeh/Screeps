@@ -1,5 +1,5 @@
 const Operation = require('./Operation');
-const PRIORITY = require('./util.config');
+const CONST = require('./util.config');
 const MissionLoot = require('./miss.Loot');
 
 /*
@@ -25,7 +25,7 @@ remove flag
  */
 function OperationBase(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
-  this.priority = PRIORITY.MED;
+  this.priority = CONST.PRIORITY.MED;
 }
 
 OperationBase.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos

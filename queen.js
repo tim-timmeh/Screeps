@@ -61,7 +61,9 @@ let queen = {
         console.log(`Error in flag color classification, ${flagName} - ${flagType} `)
       }
     }
-    return _.sortBy(operationList, (op) => op.priority);
+    let sortedList = _.sortBy(operationList, (op) => op.priority);
+    //console.log((sortedList[0].priority));
+    return sortedList;
   },
 };
 module.exports = queen

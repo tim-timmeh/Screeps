@@ -1,7 +1,7 @@
 
 
 const Operation = require('./Operation');
-const PRIORITY = require('./util.config');
+const CONST = require('./util.config');
 const MissionButler = require('./miss.Butler');
 const MissionMiner = require('./miss.Miner');
 const MissionUpgrader = require('./miss.Upgrader');
@@ -22,7 +22,7 @@ const MissionTerminal = require('./miss.Terminal');
  */
 function OperationBase(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
-  this.priority = PRIORITY.CORE;
+  this.priority = CONST.PRIORITY.CORE;
   //this.memory.bootstrapTimer = this.memory.bootstrapTimer || 280 // may or may not need?
 }
 
