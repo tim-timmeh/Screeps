@@ -102,6 +102,9 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
       console.log(` Failed. Below ${resourcePercentCutoff}% Avg For ${resourceType}. Current: ${bestOrder.price}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
       return;
     }
+    if (forceSell) {
+      console.log(" FORCE SELLING")
+    }
     let amount = Math.min(bestOrder.remainingAmount, dealAmount);
     let outcome = Game.market.deal(bestOrder.id, amount, room.name);
 
