@@ -85,7 +85,7 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
   let bestOrder;
   let highestGain = 0;
   for (let order of orders) {
-    if (order.remainingAmount < 1001) continue;
+    if (order.remainingAmount < 101) continue;
     // TODO: If .username == an enemy then skip order
     let gain = order.price;
     let transferCost = Game.market.calcTransactionCost(100, room.name, order.roomName) / 100;
@@ -116,12 +116,9 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
 
     if (outcome === OK) {
       console.log(" Sold", amount, resourceType, "to", bestOrder.roomName, "for", bestOrder.price, ` Cr (${(bestOrder.price/resourcePriceAvg*100).toFixed(3)}%)`);
-
-    }
-    else if (outcome === ERR_INVALID_ARGS) {
+    } else if (outcome === ERR_INVALID_ARGS) {
       console.log(" invalid deal args:", bestOrder.id, amount, room.name);
-    }
-    else {
+    } else {
       console.log(" there was a problem trying to deal:", outcome);
     }
   }
