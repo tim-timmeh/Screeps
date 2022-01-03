@@ -1,4 +1,3 @@
-'use strict'
 const Mission = require("./Mission")
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
@@ -8,6 +7,7 @@ function MissionTower(operation, target = {}) { // constructor, how to build the
   this.targetAttack = target.attack;
   this.targetHeal = target.heal;
   this.targetRepair = target.repair;
+  this.memoryOp = operation.flag.memory
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -29,10 +29,20 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
       this.targetHeal = this.room.find(FIND_MY_CREEPS, {
         filter: (creep) => creep.room.name == this.room.name && creep.hits < creep.hitsMax
       });
-      if (!this.targetHeal && !this.targetRepair) {
-        //Implement repair targeting here? 
-        //this.targetRepair = tower.room.find(FIND_MY_STRUCTURES, { filter: (hp) => hp.hits < (hp.hitsMax - 800) && hp.hits < 200000 });
-        //this.targetRepair.sort((a, b) => a.hits - b.hits);
+      if (!this.targetHeal.length && !this.targetRepair && this.memoryOp.roadRepairIds) {
+        for (let i = this.memoryOp.roadRepairIds.length - 1; i >= 0 ; i--) {
+          this.targetRepair = Game.getObjectById(this.memoryOp.roadRepairIds[i]);
+          if (!this.targetRepair) {
+            this.memoryOp.roadRepairIds.pop();
+            continue;
+          }
+          this.targetRepairHits = this.targetRepair.hitsMax - this.targetRepair.hits;
+          if (this.targetRepairHits == 0 || this.targetRepair.hits > 25000) {
+            this.memoryOp.roadRepairIds.pop()
+            continue
+          }
+          break;
+        }
       }
     }
   }
@@ -44,6 +54,9 @@ MissionTower.prototype.roleCallMiss = function () { // perform rolecall on requi
 };
 
 MissionTower.prototype.actionMiss = function () { // perform actions / missions
+  if (this.targetAttack) {
+    console.log("Enemy Found, \ud83d\udd2b " + this.targetAttack)
+  }
   for (let tower of this.towers) {
     this.towerActions(tower);
   }
@@ -58,21 +71,25 @@ MissionTower.prototype.finalizeMiss = function () { // finalize?
 MissionTower.prototype.towerActions = function (tower) {
   let enemy = this.targetAttack;
   let targetsHeal = this.targetHeal;
-  //let targetRepair = this.targetRepair
-  //console.log(tower.store.energy + " " + tower.store.getCapacity())
-  if (enemy && tower.store.energy > (tower.store.getCapacity() * 0.20)) {
-    console.log("Enemy Found, \ud83d\udd2b Attacking " + enemy);
+  let targetRepair = this.targetRepair
+  if (enemy && tower.store.energy > (tower.store.getCapacity('energy') * 0.20)) {
+    if (global.debug) console.log(`Firing at Enemy ${enemy} (Tower: ${tower.id})`);
     tower.attack(enemy);
-  } else if (targetsHeal && tower.store.energy > (tower.store.getCapacity() * 0.40)) {     // Heal creeps while above 25% energy
+  } else if (targetsHeal.length && tower.store.energy > (tower.store.getCapacity() * 0.40)) {     // Heal creeps while above 25% energy
+    if (global.debug) console.log(`Healing ${targetsHeal[0]} (Tower: ${tower.id})`);
     tower.heal(targetsHeal[0]);
+  } else if (targetRepair && (this.targetRepairHits > 0) && tower.store.energy > (tower.store.getCapacity('energy') * 0.60)) { // Repair my structures while above 50% energy
+    if (global.debug) console.log(`Repairing ${targetRepair} (Tower: ${tower.id})`);
+    if (tower.repair(targetRepair) == OK) {
+      this.targetRepairHits - 200
+    }
   }
-  /*else if (targetsRepair != "" && targetsRepair[0].hits < 100000 && tower.store.energy > (tower.store.getCapacity * 0.60)) { // Repair my structures while above 50% energy
-    tower.repair(targetsRepair[0]);
-  }*/
 }
 
 MissionTower.prototype.towerRepair = function () {
-  
+  if (this.memoryOp.roadRepairIds && tower.store.energy > (tower.store.getCapacity() * 0.20)) {
+    
+  }
 }
 
 module.exports = MissionTower;

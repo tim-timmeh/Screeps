@@ -6,6 +6,19 @@ const Mission = require("./Mission");
 function MissionBuilder(operation) { // constructor, how to build the object
   Mission.call(this, operation, 'builder'); // uses params to pass object through parnt operation constructor first
   this.storage = this.room.storage;
+  this.memoryOp = operation.flag.memory;
+  if (this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {
+    this.repairTarget = this.memoryOp.roadRepairIds[this.memoryOp.roadRepairIds.length - 1];
+    this.repairTargetObj = Game.getObjectById(this.repairTarget);
+    if (!this.repairTargetObj) {
+      this.memoryOp.roadRepairIds.pop();
+    } else {
+      this.targetRepairHits = this.repairTargetObj.hitsMax - this.repairTargetObj.hits;
+      if (this.targetRepairHits == 0 || this.repairTargetObj.hits > 25000) {
+        this.memoryOp.roadRepairIds.pop()
+      }
+    }
+  } 
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -75,11 +88,15 @@ MissionBuilder.prototype.builderActions = function (creep) {
     }
   } else {
     let currentJob = creep.memory.currentJob || {};
-    let { fill, build, tower } = currentJob;
+    let { fill, build, tower, repair} = currentJob;
+    if (!repair) repair = this.repairTarget;
     if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
+    if ((creep.memory.currentJob = creep.doRepair(repair)) || this.repairTarget) return;
     if (this.spawnGroup.spawns[0].recycleCreep(creep) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.spawnGroup.spawns[0]);
+      console.log("SUICIDING")
     }
+
   }
 };
 

@@ -50,6 +50,34 @@ let bunkerFortLevels = [
   '  444 555  ',
 ];
 
+let bunkerRampart = [
+  '  RRR RRR  ',
+  ' RRRRRRRRR ',
+  'RRRRRRRRRRR',
+  'RRRRRRRRRRR',
+  'RRRRRRRRRRR',
+  ' RRRR RRRR ',
+  'RRRRRRRRRRR',
+  'RRRRRRRRRRR',
+  'RRRRRRRRRRR',
+  ' RRRRRRRRR ',
+  '  RRR RRR  ',
+
+];
+let bunkerRampartLevels = [
+  '  555 555  ',
+  ' 556555655 ',
+  '55666666655',
+  '56666666665',
+  '55666666655',
+  ' 5666 6665 ',
+  '55666666655',
+  '56666666665',
+  '55666666655',
+  ' 556555655 ',
+  '  555 555  ',
+];
+
 // A similar structure might describe rampart locations and levels
 
 // example usage:
@@ -143,6 +171,8 @@ const BunkerLayout = {
   getLayout: getLayout,
   baseLayout: bunkerFort,
   baseLevels: bunkerFortLevels,
+  baseRampart: bunkerRampart,
+  baseRampartLevels: bunkerRampartLevels,
 }
 
 module.exports = BunkerLayout;

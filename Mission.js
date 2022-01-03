@@ -20,6 +20,7 @@ function Mission(operation, name) {
   this.nameTemplate = this.opType.substring(2, 5) + this.opName.split("g")[1] + '.';
   if (!operation.flag.memory[this.name]) operation.flag.memory[this.name] = {};
   this.memory = operation.flag.memory[this.name];
+  this.memoryOp = operation.flag.memory;
   if (this.room) this.hasVision = true;
   if (!this.memory.spawn) this.memory.spawn = {};
   this.missionLog = `${this.room} - ${this.opName} (${this.opType}) - ${this.name}`;
@@ -312,10 +313,10 @@ Mission.prototype.fixRoad = function (path) {
     if (road) {
       roadIds.push(road.id);
       roadRepairHP += road.hitsMax - road.hits;
-      let limitRoadRepairHp = 1000000; // change to dyamic?
-      if (!this.memory.roadRepairIds && (roadRepairHP > limitRoadRepairHp || road.hits < road.hitsMax * .25)) {
-        console.log(`Roadworks begun, spawning in ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
-        this.memory.roadRepairIds = roadIds;
+      let limitRoadRepairHp = 100000; // change to dyamic?
+      if (!this.memoryOp.roadRepairIds || !this.memoryOp.roadRepairIds.length && roadRepairHP > limitRoadRepairHp || road.hits < road.hitsMax * .25) {
+        console.log(`Roadworks begun, fixing in ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
+        this.memoryOp.roadRepairIds = roadIds;
       }
       continue;
     }
