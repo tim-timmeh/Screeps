@@ -1,37 +1,48 @@
+ISSUES
+
+Bunker placement is duplicate of base placement, includes health check (25t) so as to not let ramparts die. high mem/cpu spike usage.
+Once rampart/wall built not added to repair que, builder will leave.
+MoveTo only paths in current room, then exit to exit of other rooms. Use pathfinder (If walled, will room hop instead of pathing around to open side)
+
 TODO
 
-calculate creep vs tower repairing
-Spawn repairers for mining roads?
-Spawn repairers for base buildings?
-Refilling of towers (Butler?)
-Manager sits at base?
-Tower Code (Attack, Heal, Repair)
-Defence Code
-Safe Mode
+
+
+OVERVIEW TODO
+
+Builders to have dynamic Size to amount of hits to build (Currently 50w builder for 1 site)
+Spawn repairers for repair roads (Foreman to build ramparts & walls)
+calculate creep repair and only tower repair as backup? (Creeps are cheaper, maybe base can be managed by tower?(Repair	800 range ≤5 to 200 range ≥20))
+//Refilling of towers (Butler?)
+Manager sits at base (manages core buildings, terminal, link, nuke etc)
+//Tower Code (Attack, Heal, Repair)
+Safe Mode (if lose rampart)
 Base setup / placement (Distance Transform & Min Cut or custom pathfinding that prefer walls and avoid base area in CM?)
 
-Profiler setup (and stats)
+Profiler setup (and finish stats)
+Advanced Tower/Defence Code (check for heal output, damage output, DEFCON status)
+DEFCON Status (stop remote missions, log enemy, )
 Optimize global & Memory usage (Caching Cost Matrixs)
-Optimize butlers to spawn extension clumps.
+Optimize butlers & spawn to extension clumps.
 Renew creeps when returning to base (Saves spawn time)
-Recycle creeps (Builders / Repairers etc)
-Excuse me nudging
+//Recycle creeps (Builders / Repairers etc)
+//Excuse me nudging
 Alternative Bunker (Mini bunker / ext / lab stamps)
 link mining (build ext aswell?)
-Pickup resources from ground/tombstones
-Mineral mining
-Terminal Sell Excess resources
+Locate / Pickup resources from ground/tombstones
+Mineral Mining
+Terminal Management (Buy minerals, Transfer Minerals/Energy to other rooms)
 
 Remote mining
 Scouting
 Auto Expansion
 
-Combat code (Evaluating attackers, Healers, Longbowmen, Drainers, Raiders, Maulers etc)
+Combat/Attack code (Evaluating attackers, Healers, Longbowmen, Drainers, Raiders, Maulers etc)
 
 Lab Logic
+Factorys
+
 Highway room logic / Power harvesting
 SK Room logic / Farming
-
 Powercreep
-Factorys
 
