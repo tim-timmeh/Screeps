@@ -31,7 +31,11 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
   this.storagePercent = Math.max(0, (this.storage.store.getUsedCapacity() / this.storage.store.getCapacity())).toFixed(3);
-  let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES).length;
+  let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES, {
+    filter : (c) => {
+      return (c.progressTotal > 1)
+    }
+  }).length;
   if (csitesQty > 10 && this.storage.store.energy > (this.storage.store.getCapacity * 0.3)) {
     this.buildersReq = 2;
   } else if (csitesQty) {
@@ -94,7 +98,7 @@ MissionBuilder.prototype.builderActions = function (creep) {
     if ((creep.memory.currentJob = creep.doRepair(repair)) || this.repairTarget) return;
     if (this.spawnGroup.spawns[0].recycleCreep(creep) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.spawnGroup.spawns[0]);
-      console.log("SUICIDING")
+      //console.log("SUICIDING")
     }
 
   }

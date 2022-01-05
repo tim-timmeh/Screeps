@@ -233,12 +233,12 @@ Creep.prototype.doFillTower = function (tower) {
    */
   let targetsT = [];
   let t;
-  if (tower && (t = Game.getObjectById(tower)) && (t.store[RESOURCE_ENERGY] < t.store.getCapacity(RESOURCE_ENERGY))) {
+  if (tower && (t = Game.getObjectById(tower)) && (t.store[RESOURCE_ENERGY] + 300 < t.store.getCapacity(RESOURCE_ENERGY))) {
     targetsT[0] = t;
   } else {
     targetsT = this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
-        return (structure.structureType == STRUCTURE_TOWER) && structure.store[RESOURCE_ENERGY] < structure.store.getCapacity(RESOURCE_ENERGY);
+        return (structure.structureType == STRUCTURE_TOWER) && structure.store[RESOURCE_ENERGY] + 300 < structure.store.getCapacity(RESOURCE_ENERGY);
       }
     });
     //if (targetsT[0]) this.memory.currentJob = { tower: targetsT[0].id };

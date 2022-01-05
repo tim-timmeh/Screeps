@@ -33,22 +33,27 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   //Room Layout?
 
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
-  if (!this.spawnGroup) { console.log('no spawn group in room, create remote spawngroup code'); } //get closest spawn group
+  if (!this.spawnGroup) { 
+    this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
+    if (global.debug) console.log(`No spawn group in room, setting spawn group to ${this.spawnGroup.room}`);
+  }
   this.addMission(new MissionButler(this));
-  if (this.room.energyCapacityAvailable >= 700) { // min miner size
-    for (let i = 0; i < this.room.sources.length; i++) {
-      this.addMission(new MissionMiner(this, `miner${i}`, this.room.sources[i]));
+  if (this.room) {
+    if (this.room.energyCapacityAvailable >= 700) { // min miner size
+      for (let i = 0; i < this.room.sources.length; i++) {
+        this.addMission(new MissionMiner(this, `miner${i}`, this.room.sources[i]));
+      }
     }
-  }
-  this.addMission(new MissionTower(this));
-  this.addMission(new MissionDefender(this))
-  if (this.room.storage) {
-    this.addMission(new MissionUpgrader(this));
-    this.addMission(new MissionBuilder(this));
-  }
-  this.addMission(new MissionPlanner(this));
-  if (this.room.terminal && this.room.storage) {
-    this.addMission(new MissionTerminal(this));
+    this.addMission(new MissionTower(this));
+    this.addMission(new MissionDefender(this))
+    if (this.room.storage && this.room.storage.my) {
+      this.addMission(new MissionUpgrader(this));
+      this.addMission(new MissionBuilder(this));
+    }
+    this.addMission(new MissionPlanner(this));
+    if (this.room.terminal && this.room.storage) {
+      this.addMission(new MissionTerminal(this));
+    }
   }
 };
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed

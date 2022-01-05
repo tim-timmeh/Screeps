@@ -21,7 +21,7 @@ MissionButler.prototype.initMiss = function () { // Initialize / build objects r
  */
 MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x and bigger and bigger, need alt plan in low spawning times to save energy. max size 300 carry (for Spawn)?
   let swarmQty;
-  if (this.room.energyCapacityAvailable < 700 || !this.room.storage) { // 700 - min miner size
+  if (this.spawnGroup.room.energyCapacityAvailable < 700 || !this.spawnGroup.room.storage) { // 700 - min miner size
     swarmQty = 6
     let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, maxRatio: 12 });
     this.butlers = this.creepRoleCall('butler', body, swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
@@ -29,9 +29,9 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
     swarmQty = 1; //this.spawnGroup.spawns.length;
     let body = this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', maxRatio: 12 });
     this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 50 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
-  } if (!this.butlers || !this.butlers.length) {
-    console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
-    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
+  } if (!this.butlers || !this.butlers.length || !(this.room == this.spawnGroup.room))  {
+    if (global.debug) console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
+    this.butlers = this.creepRoleCall('butler', this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, forceSpawn: true }), 2) //{ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
 };
 /**
@@ -118,12 +118,20 @@ MissionButler.prototype.butlerActions = function (creep) {
         delete creep.memory.currentContainerId;
         if (global.debug) console.log(`ERR_NO_PATH, deleting currentSourceId from butler memory - ${this.missionLog}`)
       }
+    } else if (!(creep.room.name == this.flag.pos.roomName)) {
+      creep.moveToModule(this.flag);
     } else {
       let currentJob = creep.memory.currentJob || {};
       let { fill, build, tower } = currentJob;
       if (creep.memory.currentJob = creep.doFillEnergy(fill)) return;
       if (creep.memory.currentJob = creep.doFillTower(tower)) return;
       if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
+      if (creep.room.controller.sign.text != "The Princess is in another castle") {
+        if (creep.signController(creep.room.controller, "The Princess is in another castle") == ERR_NOT_IN_RANGE) {
+          creep.moveToModule(creep.room.controller);
+        }
+        return
+      };
       if (creep.memory.currentJob = creep.doUpgradeController()) return;
       console.log("No task, build standby task here");
     }

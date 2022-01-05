@@ -7,7 +7,11 @@ const bunkerLayout = require('./util.bunkerLayout');
 
 function MissionPlanner(operation) { // constructor, how to build the object
   Mission.call(this, operation, 'planner'); // uses params to pass object through parnt operation constructor first
-  this.spawnAnchorPos = this.spawnGroup.pos;
+  if (this.spawnGroup.room == this.room) {
+    this.spawnAnchorPos = this.spawnGroup.pos;
+  } else {
+    this.spawnAnchorPos = this.flag.pos;
+  }
   this.rcl = this.room.controller.level;
   this.memoryOp = operation.flag.memory;
   this.memoryOp.roadRepairIds = this.memoryOp.roadRepairIds || [];

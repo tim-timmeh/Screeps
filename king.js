@@ -98,8 +98,9 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
   }
 
   if (bestOrder) {
-    if (bestOrder.price < resourcePriceCutoff && !forceSell) {
-      console.log(` Failed. Below ${resourcePercentCutoff}% Avg For ${resourceType}. Current: ${bestOrder.price}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
+    if (highestGain < resourcePriceCutoff && !forceSell) {
+
+      console.log(` Failed. Below ${resourcePercentCutoff}% Avg For ${resourceType}. Current: ${highestGain.toFixed(3)}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
       return;
     }
     if (forceSell) {

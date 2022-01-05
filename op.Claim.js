@@ -1,17 +1,10 @@
 const Operation = require('./Operation');
 const CONST = require('./util.config');
-const MissionLoot = require('./miss.Loot');
+const MissionClaim = require('./miss.Claim');
 
 /*
-Psudocode, placing Plunder flag:
-find closest spawngroup
-spawn dismantlers
-spawn haulers
-move to room
-dismantle/withdraw required
-sell excess
-repeat until room cleared
-remove flag
+Psudocode, placing Claim flag:
+
 */
 
 /**
@@ -35,7 +28,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   if (!this.spawnGroup) {
     this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
   } 
-  this.addMission(new MissionLoot(this));
+  this.addMission(new MissionClaim(this));
 };
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 

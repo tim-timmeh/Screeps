@@ -3,6 +3,7 @@ var myFunc = require('./util.myFunctions');
 const OperationBase = require('./op.Base');
 const King = require('./king');
 const OperationPlunder = require('./op.Plunder');
+const OperationClaim = require('./op.Claim');
 
 /**
  * Flag Primary / Secondary Code. (
@@ -20,10 +21,12 @@ const OperationPlunder = require('./op.Plunder');
 const decode = {
   55: 'OpBase', // Green, Green
   66: 'OpPlunder', // Yellow, Yellow
+  77: 'OpClaim', // Orange, Orange
 }
 const operationTypes = {
   OpBase: OperationBase, // Green, Green
   OpPlunder: OperationPlunder, // Yellow, Yellow
+  OpClaim: OperationClaim, // Orange, Orange
 }
 
 // Functions for setting up Object heirachy
