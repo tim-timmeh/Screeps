@@ -11,6 +11,7 @@ function MissionMiner(operation, name, source) { // constructor, how to build th
   Mission.call(this, operation, name); // .call sends this object and uses it on Mission constructer.
   this.minerSource = source;
   this.haulerAnalysis = {};
+  this.storageMy = this.room.storage && this.room.storage.my ? this.room.storage : false;
 
 }
 
@@ -32,9 +33,10 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
       this.placeMinerContainer();
     }
   } else {
-    this.paveRoad(this.container, this.room.storage || this.spawnGroup);// Check path from container to storage || spawnGroup.spawns[0].pos ?? should add bunker entry as priority?
+    //let storageCheck = this.room.storage && this.room.storage.my ? this.room.storage : false
+    this.paveRoad(this.container, this.storageMy || this.spawnGroup);// Check path from container to storage || spawnGroup.spawns[0].pos ?? should add bunker entry as priority?
   }
-  if (this.container && this.room.storage) {
+  if (this.container && this.storageMy) {
     this.haulerAnalysis = this.analyzeHauler(this.distanceToSpawn, sourceRegen);
   }
 };
@@ -99,7 +101,7 @@ MissionMiner.prototype.minerActions = function (creep) {
 MissionMiner.prototype.placeMinerContainer = function () {
   if (this.room.controller && this.room.controller.my && this.room.controller.level <= 2) return;
   let startingObject;
-  if (this.storage) {
+  if (this.storage && this.storage.my) {
     startingObject = this.storage.pos;
   } else {
     startingObject = this.spawnGroup.pos;

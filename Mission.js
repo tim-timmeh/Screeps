@@ -81,7 +81,7 @@ Mission.prototype.creepRoleCall = function (roleName, creepBody, creepAmount = 1
     if (result.spawnResults == 0) {
       this.memory.spawn[roleName].push(result.creepName);
     } else {
-      console.log(result.spawnResults)
+      if (global.debug) console.log(result.spawnResults);
     }
   }
   return creepArray;
@@ -160,6 +160,7 @@ Mission.prototype.bodyBlockCalc = function (bodyConfig, options = {}) {
   }
   let blockLimit = options.maxRatio ? options.maxRatio : Math.floor((50 - blockPartsReqExtra) / blockPartsReq); //Work out max bodypart ratio - addBodyPart
   let energyPool = options.forceSpawn ? Math.max(this.spawnGroup.currentSpawnEnergy, 300) : this.spawnGroup.maxSpawnEnergy; // if forceSpawn true then spawn with current energy or 300(incase total creep death?)
+  //if (this.room.name == "W17N38") {console.log("TEST", blockLimit, Math.min(Math.floor((energyPool - blockEnergyReqExtra) * (options.maxEnergyPercent || 1) / blockEnergyReq), blockLimit))};
   return Math.min(Math.floor((energyPool - blockEnergyReqExtra) * (options.maxEnergyPercent || 1) / blockEnergyReq), blockLimit); // works out available block multipler (maxratio vs max energy available), minus addBodyPart
 };
 

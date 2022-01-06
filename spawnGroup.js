@@ -1,7 +1,7 @@
 /**
  * Quick fix to stop creeps getting stuck in managers spot middle of bunker
  */
-const spawnDirections = [TOP,
+ const spawnDirections = [TOP,
   TOP_RIGHT,
   RIGHT,
   BOTTOM,
@@ -33,8 +33,6 @@ function SpawnGroup(room) { // Constructor, framework to build a SpawnGroup for 
 SpawnGroup.prototype.spawn = function (body, name, memory) {
   let spawnResults;
   let creepName = name;
-  this.availableSpawnCount -= 1;
-  this.isAvailable = this.availableSpawnCount > 0;
   //this.isAvailable = false;
   for (let spawn of this.spawns) {
     if (spawn.spawning == null) {
@@ -42,11 +40,13 @@ SpawnGroup.prototype.spawn = function (body, name, memory) {
       spawnResults = spawn.spawnCreep(body, creepName, { memory: memory, directions: spawnDirections });
       if (global.debug) console.log(`${spawn.name}(${this.room.name}) Spawning Result: ${spawnResults}, For: ${creepName}, Body: [${body}]Result: ${spawnResults}`);
       if (spawnResults == 0) {
+        this.availableSpawnCount -= 1;
         console.log(`${spawn.name}(${this.room.name}): Spawning : ${creepName} - [${body}]`);
       }
       break;
     }
   }
+  this.isAvailable = this.availableSpawnCount > 0;
   return { spawnResults: spawnResults, creepName: creepName };
 }
 
