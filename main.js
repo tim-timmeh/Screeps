@@ -15,7 +15,7 @@ global.gcOwnedStructures() // Garbage Cleanup old ownedStructures
 //global.profilerGlobalReset.set() // sets profiler monitor time after global reset, default 10, change in config.
 
 module.exports.loop = function () {
-  //profiler.wrap(function () {
+  profiler.wrap(function () {
   //global.profilerGlobalReset.run() // runs profiler if .set > 0
 
   profilerBonzAI.start('pre')
@@ -69,5 +69,5 @@ module.exports.loop = function () {
   }
   exportStats(globalResetTick) // Graphina
   profilerBonzAI.end('post');
-  //});
+  });
 };

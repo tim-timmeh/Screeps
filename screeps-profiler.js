@@ -49,15 +49,20 @@ function setupProfiler() {
 function setupMemory(profileType, duration, filter) {
   resetMemory();
   const disableTick = Number.isInteger(duration) ? Game.time + duration : false;
+  let targetObjProf = {
+    map: {},
+    totalTime: 0,
+    enabledTick: Game.time + 1,
+    disableTick,
+    type: profileType,
+    filter,
+  }
   if (!Memory.profiler) {
-    Memory.profiler = {
-      map: {},
-      totalTime: 0,
-      enabledTick: Game.time + 1,
-      disableTick,
-      type: profileType,
-      filter,
-    };
+    Memory.profiler = targetObjProf
+  } else {
+  console.log(JSON.stringify(targetObjProf), "+", JSON.stringify(Memory.profiler));
+  _.defaultsDeep(Memory.profiler, targetObjProf)
+  console.log(JSON.stringify(Memory.profiler));
   }
 }
 

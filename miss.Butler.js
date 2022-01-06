@@ -30,7 +30,7 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
   } else {
     swarmQty = 1; //this.spawnGroup.spawns.length;
     body = this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', maxRatio: 12 });
-    this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 50 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory}) 
+    this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 50 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } if (!this.butlers || !this.butlers.length)  {
     if (global.debug) console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
     body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, forceSpawn: true });

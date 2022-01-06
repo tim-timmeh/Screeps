@@ -10,6 +10,7 @@ const MissionPlanner = require('./miss.Planner');
 const MissionTower = require('./miss.Tower');
 const MissionDefender = require('./miss.Defender');
 const MissionTerminal = require('./miss.Terminal');
+
 //const {PRIORITY} = require('./config'); 
 
 /**
@@ -56,6 +57,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     }
   }
 };
+
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 
 };

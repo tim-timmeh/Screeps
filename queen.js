@@ -69,4 +69,5 @@ let queen = {
     return sortedList;
   },
 };
+
 module.exports = queen

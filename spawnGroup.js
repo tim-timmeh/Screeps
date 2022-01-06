@@ -1,7 +1,7 @@
 /**
  * Quick fix to stop creeps getting stuck in managers spot middle of bunker
  */
- const spawnDirections = [TOP,
+const spawnDirections = [TOP,
   TOP_RIGHT,
   RIGHT,
   BOTTOM,
