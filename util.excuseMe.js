@@ -195,9 +195,9 @@ function clearNudges() {
       const creepMemory = Memory.creeps[creepName];
       if (creepMemory)
         creepMemory.excuseMe = undefined;
-      const powerCreepMemory = Memory.powerCreeps[creepName];
-      if (powerCreepMemory)
-        powerCreepMemory.excuseMe = undefined;
+      if (Memory.powerCreeps && Memory.powerCreeps[creepName]) {
+        Memory.powerCreeps[creepName].excuseMe = undefined;
+      }
       delete creepsThatTriedToMove[creepName];
     }
   }
