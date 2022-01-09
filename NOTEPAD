@@ -3,6 +3,7 @@ ISSUES
 Bunker placement is duplicate of base placement, includes health check (25t) so as to not let ramparts die. high mem/cpu spike usage.
 Once rampart/wall built not added to repair que, builder will leave.
 MoveTo only paths in current room, then exit to exit of other rooms. Use pathfinder (If walled, will room hop instead of pathing around to open side)
+Put a delay in spawning for non critical additional creeps (spawn 1 upgrader, then others, if spawn still availiable spawn to cap of 10? currently useing % 9)
 
 TODO
 

@@ -113,7 +113,7 @@ Mission.prototype.getLostCreeps = function (roleName) {
  *                        removeBodyPart = remove a body part (eg in haulers require 1-2 move/carry ratio but -1 carry for work)
  * @returns {BodyPartConstant[]} Returns body ready for spawning
  */
-Mission.prototype.getBody = function (bodyConfig, options = {}) { //, ,
+Mission.prototype.getBody = function (bodyConfig, options = {}) { // ?? Add max body size limit (Eg maxEnergyPercent == %200 then creep will be twice as big as what can spawn).
   let blockMultiplier = this.bodyBlockCalc(bodyConfig, options); // Calc max multiplier of bodyConfig
   let creepBody = [];
   if (options.keepFormat) { //To keep format eg [WORK, CARRY, MOVE, WORK, CARRY, MOVE]
@@ -161,6 +161,7 @@ Mission.prototype.bodyBlockCalc = function (bodyConfig, options = {}) {
   let blockLimit = options.maxRatio ? options.maxRatio : Math.floor((50 - blockPartsReqExtra) / blockPartsReq); //Work out max bodypart ratio - addBodyPart
   let energyPool = options.forceSpawn ? Math.max(this.spawnGroup.currentSpawnEnergy, 300) : this.spawnGroup.maxSpawnEnergy; // if forceSpawn true then spawn with current energy or 300(incase total creep death?)
   //if (this.room.name == "W17N38") {console.log("TEST", blockLimit, Math.min(Math.floor((energyPool - blockEnergyReqExtra) * (options.maxEnergyPercent || 1) / blockEnergyReq), blockLimit))};
+  options.maxEnergyPercent = options.maxEnergyPercent ? Math.min(1, Math.max(0, options.maxEnergyPercent)) : 1;
   return Math.min(Math.floor((energyPool - blockEnergyReqExtra) * (options.maxEnergyPercent || 1) / blockEnergyReq), blockLimit); // works out available block multipler (maxratio vs max energy available), minus addBodyPart
 };
 

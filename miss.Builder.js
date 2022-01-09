@@ -36,7 +36,7 @@ MissionBuilder.prototype.initMiss = function () { // Initialize / build objects 
       return (c.progressTotal > 1)
     }
   }).length;
-  if (csitesQty > 10 && this.storage.store.energy > (this.storage.store.getCapacity * 0.3)) {
+  if (csitesQty > 10 && this.storage.store.energy > (this.storage.store.getCapacity() * 0.3)) {
     this.buildersReq = 2;
   } else if (csitesQty) {
     this.buildersReq = 1

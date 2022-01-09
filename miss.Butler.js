@@ -129,7 +129,7 @@ MissionButler.prototype.butlerActions = function (creep) {
       if (creep.memory.currentJob = creep.doFillEnergy(fill)) return;
       if (creep.memory.currentJob = creep.doFillTower(tower)) return;
       if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
-      if (creep.room.controller.sign.text != "The Princess is in another castle") {
+      if (creep.room.controller.sign && creep.room.controller.sign.text != "The Princess is in another castle") {
         if (creep.signController(creep.room.controller, "The Princess is in another castle") == ERR_NOT_IN_RANGE) {
           creep.moveToModule(creep.room.controller);
         }

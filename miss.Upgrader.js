@@ -21,7 +21,7 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
   this.storageCapacity = this.storage.store.getCapacity()
   this.upperReserve = this.storageCapacity - (this.storageCapacity / 2); // 2=50% full, 3=66% full etc
   const lowerReserve = 0; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
-  this.storagePercent = parseFloat(Math.min(1,Math.max(0, (this.storage.store.getUsedCapacity() - lowerReserve) / this.upperReserve)).toFixed(3)); // % of used storage
+  this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
   this.paveRoad(this.storage, this.controller, 3);
   this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined; // Max 15w per tick on RCL8
 };
@@ -29,7 +29,7 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let creepCount = 1;
   if (this.storagePercent >= 1 && this.controller.level != 8) {
-    creepCount = 10
+    if (Game.time % 9 == 0) creepCount = 10;
   }
   //if (this.room.name == "W17N38") {console.log("TEST", this.storagePercent)};
   let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent, maxRatio: this.upgraderCap });

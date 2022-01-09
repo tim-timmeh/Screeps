@@ -90,7 +90,9 @@ MissionMiner.prototype.minerActions = function (creep) {
     creep.moveToModule(dest, { ticks: 10, range: 0 });
 
   } else if (result == ERR_NOT_ENOUGH_RESOURCES) {
-    creep.repair(this.container)
+    if (creep.repair(this.container) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(this.container, { ticks: 10, range: 0 });
+    }
   }
 };
 
