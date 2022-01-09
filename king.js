@@ -64,6 +64,7 @@ King.prototype.closestSpawnGroup = function (targetRoomName) {
   let closest;
   let bestDistance = 20;
   for (let roomName in this.spawnGroups) {
+    //if (this.spawnGroups[roomName].spawns < 2 ) continue;
     let distance = Game.map.getRoomLinearDistance(targetRoomName,roomName);
     if (distance < bestDistance) {
       bestDistance = distance;

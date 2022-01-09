@@ -12,7 +12,7 @@ let positionMem;
  */
 Creep.prototype.moveToModule = function (destination, options = {}) {
   let ignore = options.ignore || true;
-  let ticks = options.ticks || 2;
+  let ticks = options.ticks || 3;
   let range = typeof options.range === 'number' ? options.range : 1;
   let reusePath = 50;
   if (!this.memory.stuckCount) {

@@ -21,7 +21,7 @@ MissionClaim.prototype.initMiss = function () { // Initialize / build objects re
 };
 
 MissionClaim.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  let body = this.getBody({ CLAIM: 1, MOVE: 1 }, {maxRatio : 1 });
+  let body = this.getBody({ MOVE: 1, CLAIM: 1 }, {maxRatio : 1 });
   this.claimers = this.creepRoleCall(this.name, body, 1); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
 };
 

@@ -25,7 +25,7 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
   let body;
   if (this.spawnGroup.room.energyCapacityAvailable < 700 || !this.storageMy) { // 700 - min miner size
     swarmQty = 6
-    body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, maxRatio: 12 });
+    body = this.getBody({ WORK: 1, CARRY: 1, MOVE: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, maxRatio: 12 });
     this.butlers = this.creepRoleCall('butler', body, swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } else {
     swarmQty = 1; //this.spawnGroup.spawns.length;
@@ -33,7 +33,7 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
     this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 50 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } if (!this.butlers || !this.butlers.length)  {
     if (global.debug) console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
-    body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, forceSpawn: true });
+    body = this.getBody({ WORK: 1 , CARRY: 1, MOVE: 1}, { addBodyPart: { MOVE: 1, CARRY: 1 }, forceSpawn: true });
     this.butlers = this.creepRoleCall('butler', body, 2) //{ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
 };

@@ -25,6 +25,7 @@ function OperationBase(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
   this.priority = CONST.PRIORITY.CORE;
   //this.memory.bootstrapTimer = this.memory.bootstrapTimer || 280 // may or may not need?
+  this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
 }
 
 OperationBase.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos
@@ -33,7 +34,6 @@ OperationBase.prototype.constructor = OperationBase; // reset constructor to ope
 OperationBase.prototype.initOp = function () { // Initialize / build objects required
   //Room Layout?
 
-  this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
   if (!this.spawnGroup) { 
     this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
     if (global.debug) console.log(`No spawn group in room, setting spawn group to ${this.spawnGroup.room}`);

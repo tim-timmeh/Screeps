@@ -217,6 +217,8 @@ Creep.prototype.doFillEnergy = function (fill) {
   if (targetF && Object.keys(targetF).length) {
     if (this.transfer(targetF, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       this.moveToModule(targetF);
+    } else {
+      this.giveWay()
     }
     return { fill: targetF.id };
   };
