@@ -1,6 +1,6 @@
 const Operation = require('./Operation');
 const CONST = require('./util.config');
-const MissionHarrass = require('./miss.Harrass');
+const MissionHarass = require('./miss.Harass');
 
 /*
 Psudocode, placing Offence flag:
@@ -15,30 +15,30 @@ Psudocode, placing Offence flag:
  * @param {object} king object used for king-scoped behavior (terminal transmission, etc.)
  * @constructor extends Operation
  */
-function OperationBase(flag, flagName, flagType, king) {
+function OperationOffence(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
   this.priority = CONST.PRIORITY.MED;
 }
 
-OperationBase.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos
-OperationBase.prototype.constructor = OperationBase; // reset constructor to operationbase, or else constructor is operation
+OperationOffence.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos
+OperationOffence.prototype.constructor = OperationOffence; // reset constructor to operationbase, or else constructor is operation
 
-OperationBase.prototype.initOp = function () { // Initialize / build objects required
+OperationOffence.prototype.initOp = function () { // Initialize / build objects required
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
   if (!this.spawnGroup) {
     this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
   } 
-  this.addMission(new MissionHarrass(this));
+  this.addMission(new MissionHarass(this));
 };
-OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
+OperationOffence.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 
 };
-OperationBase.prototype.actionOp = function () { // perform actions / missions
+OperationOffence.prototype.actionOp = function () { // perform actions / missions
 
 };
-OperationBase.prototype.finalizeOp = function () { // finalize?
+OperationOffence.prototype.finalizeOp = function () { // finalize?
 
 };
 
 // Additional methods/functions below
-module.exports = OperationBase;
+module.exports = OperationOffence;

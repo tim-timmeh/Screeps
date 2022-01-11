@@ -21,13 +21,13 @@ MissionHarrass.prototype.initMiss = function () { // Initialize / build objects 
 };
 
 MissionHarrass.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  let body = this.getBody({ MOVE: 1, CLAIM: 1 }, {maxRatio : 1 });
-  this.claimers = this.creepRoleCall(this.name, body, 1); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
+  let body = this.getBody({ MOVE: 1, HEAL: 1 });
+  this.harassers = this.creepRoleCall(this.name, body, 1); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
 };
 
 MissionHarrass.prototype.actionMiss = function () { // perform actions / missions
-  for (let claimer of this.claimers) {
-    this.claimerActions(claimer);
+  for (let harasser of this.harassers) {
+    this.harasserActions(harasser);
   }
 };
 
@@ -37,8 +37,15 @@ MissionHarrass.prototype.finalizeMiss = function () { // finalize?
 
 // Additional methods/functions below
 
-MissionHarrass.prototype.claimerActions = function (creep) {
-  
+MissionHarrass.prototype.harasserActions = function (creep) {
+  let totalHealParts = creep.getActiveBodyparts(HEAL);
+  let healAmount = totalHealParts * 12;
+  if ((creep.hitsMax - creep.hits) > (healAmount * 2)) {
+    creep.moveToModule(this.spawnGroup.pos)
+  } else {
+    creep.moveToModule(this.flag);
+  }
+  creep.heal(creep)
 };
 
 

@@ -77,7 +77,7 @@ King.prototype.closestSpawnGroup = function (targetRoomName) {
   console.log(`NO CLOSE SPAWN FOUND FOR ${targetRoomName}`)
 }
 
-King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell = false) {
+King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell = false, totalCurrentStore) {
   let resourcePriceAvg = Game.market.getHistory(resourceType)[0].avgPrice;
   let resourcePercentCutoff = 80;
   let resourcePriceCutoff = parseFloat(((resourcePercentCutoff / 100) * resourcePriceAvg).toFixed(3));
@@ -100,16 +100,16 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
 
   if (bestOrder) {
     if (highestGain < resourcePriceCutoff && !forceSell) {
-
-      console.log(` Failed. Below ${resourcePercentCutoff}% Avg For ${resourceType}. Current: ${highestGain.toFixed(3)}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
+      if (global.debug) {
+        console.log("TERMINAL: Have too much", resourceType, "in", room, "@", totalCurrentStore);
+        console.log(` Failed. Below ${resourcePercentCutoff}% Avg For ${resourceType}. Current: ${highestGain.toFixed(3)}, Cutoff: ${resourcePriceCutoff}, Avg: ${resourcePriceAvg}`);
+      }
       return;
     }
-    if (forceSell) {
-      console.log(" FORCE SELLING")
-    }
+    console.log("TERMINAL: Have too much", resourceType, "in", room, "@", totalCurrentStore);
+    if (forceSell) console.log(" FORCE SELLING")
     let amount = Math.min(bestOrder.remainingAmount, dealAmount);
     let outcome = Game.market.deal(bestOrder.id, amount, room.name);
-
     let notYetSelling = this.orderCount(ORDER_SELL, resourceType, bestOrder.price) === 0;
     if (notYetSelling) {
       Game.market.createOrder({ type: ORDER_SELL, resourceType, price: bestOrder.price, totalAmount: dealAmount, roomName: room.name });

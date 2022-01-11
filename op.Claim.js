@@ -15,30 +15,31 @@ Psudocode, placing Claim flag:
  * @param {object} king object used for king-scoped behavior (terminal transmission, etc.)
  * @constructor extends Operation
  */
-function OperationBase(flag, flagName, flagType, king) {
+function OperationClaim(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
   this.priority = CONST.PRIORITY.MED;
 }
 
-OperationBase.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos
-OperationBase.prototype.constructor = OperationBase; // reset constructor to operationbase, or else constructor is operation
+OperationClaim.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos
+OperationClaim.prototype.constructor = OperationClaim; // reset constructor to operationbase, or else constructor is operation
 
-OperationBase.prototype.initOp = function () { // Initialize / build objects required
+OperationClaim.prototype.initOp = function () { // Initialize / build objects required
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
   if (!this.spawnGroup) {
+    //this.spawnGroup = this.king.spawnGroups["W17N38"]
     this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
   } 
   this.addMission(new MissionClaim(this));
 };
-OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
+OperationClaim.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 
 };
-OperationBase.prototype.actionOp = function () { // perform actions / missions
+OperationClaim.prototype.actionOp = function () { // perform actions / missions
 
 };
-OperationBase.prototype.finalizeOp = function () { // finalize?
+OperationClaim.prototype.finalizeOp = function () { // finalize?
 
 };
 
 // Additional methods/functions below
-module.exports = OperationBase;
+module.exports = OperationClaim;

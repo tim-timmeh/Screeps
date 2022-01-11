@@ -33,13 +33,12 @@ OperationBase.prototype.constructor = OperationBase; // reset constructor to ope
 
 OperationBase.prototype.initOp = function () { // Initialize / build objects required
   //Room Layout?
-
+  if (!this.room) return
   if (!this.spawnGroup) { 
     this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
     if (global.debug) console.log(`No spawn group in room, setting spawn group to ${this.spawnGroup.room}`);
   }
   this.addMission(new MissionButler(this));
-  if (this.room) {
     if (this.room.energyCapacityAvailable >= 700) { // min miner size
       for (let i = 0; i < this.room.sources.length; i++) {
         this.addMission(new MissionMiner(this, `miner${i}`, this.room.sources[i]));
@@ -55,7 +54,6 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     if (this.room.terminal && this.room.storage) {
       this.addMission(new MissionTerminal(this));
     }
-  }
 };
 
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed

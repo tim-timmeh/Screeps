@@ -56,7 +56,7 @@ MissionTerminal.prototype.sellOverstock = function () {
         saleAmount = 50000;
       };
       console.log("TERMINAL: Have too much", mineralType, "in", this.terminal.room, "@", this.terminal.store[mineralType]);
-      this.king.sellExcess(this.room, mineralType, saleAmount, forceSell);
+      this.king.sellExcess(this.room, mineralType, saleAmount, forceSell, this.terminal.store[mineralType]);
     }
   }
   /*if (this.terminal.store.energy >= 20000) {

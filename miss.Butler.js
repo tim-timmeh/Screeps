@@ -114,7 +114,7 @@ MissionButler.prototype.butlerActions = function (creep) {
         result = creep.moveToModule(sourceMy);
         creep.memory.currentSourceId = sourceMy.id;
       } else {
-        creep.giveWay({ pos: sourceMy.pos, range: 1 })
+        creep.giveWay()
       }
       if (result === -2) {
         delete creep.memory.currentSourceId;

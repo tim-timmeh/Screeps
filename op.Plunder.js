@@ -22,30 +22,30 @@ remove flag
  * @param {object} king object used for king-scoped behavior (terminal transmission, etc.)
  * @constructor extends Operation
  */
-function OperationBase(flag, flagName, flagType, king) {
+function OperationPlunder(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
   this.priority = CONST.PRIORITY.MED;
 }
 
-OperationBase.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos
-OperationBase.prototype.constructor = OperationBase; // reset constructor to operationbase, or else constructor is operation
+OperationPlunder.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos
+OperationPlunder.prototype.constructor = OperationPlunder; // reset constructor to operationbase, or else constructor is operation
 
-OperationBase.prototype.initOp = function () { // Initialize / build objects required
+OperationPlunder.prototype.initOp = function () { // Initialize / build objects required
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
   if (!this.spawnGroup) {
     this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
   } 
   this.addMission(new MissionLoot(this));
 };
-OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
+OperationPlunder.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed
 
 };
-OperationBase.prototype.actionOp = function () { // perform actions / missions
+OperationPlunder.prototype.actionOp = function () { // perform actions / missions
 
 };
-OperationBase.prototype.finalizeOp = function () { // finalize?
+OperationPlunder.prototype.finalizeOp = function () { // finalize?
 
 };
 
 // Additional methods/functions below
-module.exports = OperationBase;
+module.exports = OperationPlunder;

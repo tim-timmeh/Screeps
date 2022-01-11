@@ -1,5 +1,6 @@
 'use strict';
 const Mission = require("./Mission");
+const profiler = require('./screeps-profiler')
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
@@ -26,6 +27,8 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
   this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined; // Max 15w per tick on RCL8
 };
 
+MissionUpgrader.prototype.initMiss = profiler.registerFN(MissionUpgrader.prototype.initMiss, `upgrader - initMiss`);
+
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let creepCount = 1;
   if (this.storagePercent >= 1 && this.controller.level != 8) {
@@ -40,11 +43,15 @@ MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on re
   this.upgraders = this.creepRoleCall('upgrader', body, creepCount, { prespawn: this.distanceToController });
 };
 
+MissionUpgrader.prototype.roleCallMiss = profiler.registerFN(MissionUpgrader.prototype.roleCallMiss, `upgrader - roleCallMiss`);
+
 MissionUpgrader.prototype.actionMiss = function () { // perform actions / missions
   for (let upgrader of this.upgraders) {
     this.upgraderActions(upgrader);
   }
 };
+
+MissionUpgrader.prototype.actionMiss = profiler.registerFN(MissionUpgrader.prototype.actionMiss, `upgrader - actionMiss`);
 
 MissionUpgrader.prototype.finalizeMiss = function () { // finalize?
 
