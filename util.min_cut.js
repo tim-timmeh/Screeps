@@ -1,4 +1,4 @@
-// require('util.min_cut').test('W5N9');
+// require('util.min_cut').test('W12N39');
 
 /**
  * Posted 10 may 2018 by @saruss
@@ -393,10 +393,10 @@
          let cpu=Game.cpu.getUsed();
          // Rectangle Array, the Rectangles will be protected by the returned tiles
          let rect_array=[];
-         rect_array.push({x1: 17, y1: 20, x2:25, y2: 28});
-         rect_array.push({x1: 27, y1: 36, x2:29, y2: 38});
-         rect_array.push({x1: 27, y1: 44, x2:28, y2: 45});
-         rect_array.push({x1: 20, y1: 36, x2:21, y2: 37});
+         rect_array.push({x1: 2, y1: 29, x2:12, y2: 39});
+         rect_array.push({x1: 23, y1: 29, x2:24, y2: 30});
+         rect_array.push({x1: 28, y1: 23, x2:29, y2: 24});
+         rect_array.push({x1: 20, y1: 8, x2:21, y2: 9});
          // Boundary Array for Maximum Range
          let bounds={x1: 0, y1: 0, x2:49, y2: 49};
          // Get Min cut

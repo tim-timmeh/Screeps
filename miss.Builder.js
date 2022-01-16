@@ -30,7 +30,10 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
-  this.storagePercent = Math.max(0, (this.storage.store.getUsedCapacity() / this.storage.store.getCapacity())).toFixed(3);
+  //this.storagePercent = Math.max(0, (this.storage.store.getUsedCapacity() / this.storage.store.getCapacity())).toFixed(3);
+  this.upperReserve = this.storageCapacity - (this.storageCapacity / 1.5); // 2=50% full, 3=66% full etc
+  const lowerReserve = 0; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
+  this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
   let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES, {
     filter : (c) => {
       return (c.progressTotal > 1)

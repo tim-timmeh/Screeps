@@ -157,3 +157,9 @@ Room.prototype.distanceTransform = function(initialCM, enableVisuals) {
 
   return distanceCM
 }
+
+//---- Minty - Discord (Random snippet to get lowest item of array?) ------------
+let target = _.minBy(targets, function(ts){
+  let t = Game.getObjectById(ts)
+  return ( /*creep.pos.getRangeTo(t)*/ +  t.hits > 3000 ? t.hits > 12000 ? t.hits > 25000 ? 300 : 200 : 100 : 0 )
+})
