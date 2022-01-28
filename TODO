@@ -1,0 +1,5 @@
+Framework / code ideas:
+Use a global object, save as much to global as possible, memory as backup for important things.
+
+Psudo Framework:
+
