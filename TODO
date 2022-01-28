@@ -1,5 +1,14 @@
 Framework / code ideas:
-Use a global object, save as much to global as possible, memory as backup for important things.
+
+• Use a global object, save as much to global as possible, memory as backup for important things.
+• split ops/miss into priority and execute in full to enable throttling of lower prio missions
 
 Psudo Framework:
 
+----heap----
+Init - everything to global
+
+
+----loop----
+Init - with short circuit as should be in global, here incase fuckup?
+rolecall
