@@ -76,15 +76,17 @@ MissionButler.prototype.butlerActions = function (creep) {
       let result = -2;
       let sourceMem;
       let storageMy = creep.room.storage;
-      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
-      if (droppedSource.length) {
-        if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveToModule(droppedSource[0], {
-            visualizePathStyle: {
-              stroke: '#fa0'
-            }
-          });
-        }
+      // let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+      // if (droppedSource.length) {
+      //   if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+      //     creep.moveToModule(droppedSource[0], {
+      //       visualizePathStyle: {
+      //         stroke: '#fa0'
+      //       }
+      //     });
+      //   }
+      if (this.creepScavenge(creep)) {
+
       } else if (storageMy && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
         if (creep.withdraw(storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(storageMy);

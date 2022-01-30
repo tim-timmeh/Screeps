@@ -256,10 +256,10 @@ Creep.prototype.doFillTower = function (tower) {
   }
 };
 
-Creep.prototype.doRepair = function (repair) {
+Creep.prototype.doRepair = function (repair, amount) {
   let targetR;
   let r;
-  if (repair && (r = Game.getObjectById(repair)) && r.hits < r.hitsMax) {
+  if (repair && (r = Game.getObjectById(repair)) && r.hits < r.hitsMax && r.hits < (amount || r.hitsMax)) {
     targetR = r;
   } else {
     //targetR = Game.getObjectById(repair);

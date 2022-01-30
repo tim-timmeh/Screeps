@@ -11,6 +11,7 @@ const { MISS_PRIORITY } = require('./util.config');
  */
 function Mission(operation, name, priority) {
   this.name = name;
+  this.operation = operation;
   this.opName = operation.name;
   this.opType = operation.type;
   this.flag = operation.flag;
@@ -394,5 +395,17 @@ Mission.prototype.placeContainer = function (targetObj, range) {
   console.log(`Placing container - ${this.missionLog}`);
   position.createConstructionSite(STRUCTURE_CONTAINER);
 };
+
+Mission.prototype.creepScavenge = function (creep, options = {}) {
+  if (!this.operation.droppedResources.length || !creep) return false
+  for (let resource of this.operation.droppedResources) {
+    if (!(resource == RESOURCE_ENERGY) && !this.room.terminal || !options.minerals) continue
+    if (creep.store.getFreeCapacity() && creep.pos.isNearTo(resource)) {
+      creep.pickup(resource)
+      return true
+    }
+  }
+  return false
+}
 
 module.exports = Mission;

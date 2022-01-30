@@ -106,15 +106,17 @@ MissionMiner.prototype.haulerActions = function (creep) {
     creep.say("Urg");
   }
   if (!creep.memory.building) {
-    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2); //change to inRangeTo (cheaper) and managed by mission not creep logic?
-    if (droppedSource.length) {
-      if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(droppedSource[0], {
-          visualizePathStyle: {
-            stroke: '#fa0'
-          }
-        });
-      }
+    // let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    // if (droppedSource.length) {
+    //   if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+    //     creep.moveTo(droppedSource[0], {
+    //       visualizePathStyle: {
+    //         stroke: '#fa0'
+    //       }
+    //     });
+    //   }
+    if (this.creepScavenge(creep)){
+
     } else if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.container);
     } else {

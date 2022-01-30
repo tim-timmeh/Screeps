@@ -37,7 +37,7 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
             continue;
           }
           this.targetRepairHits = this.targetRepair.hitsMax - this.targetRepair.hits;
-          if (this.targetRepairHits == 0 || this.targetRepair.hits > 25000) {
+          if (this.targetRepairHits == 0 || this.targetRepair.hits >= 25000) {
             this.memoryOp.roadRepairIds.pop()
             continue
           }

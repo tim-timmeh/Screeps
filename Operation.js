@@ -12,8 +12,10 @@ const myFunc = require('./util.myFunctions');
 function Operation(flag, flagName, flagType, king) {
   /** @type {Flag} */
   this.flag = flag;
+  /** @type {RoomPosition} */
+  this.pos = flag.pos
   /** @type {Room} */
-  this.room = this.flag.room;
+  this.room = flag.room;
   /** @type {string} */
   this.name = flagName
   /** @type {string} */

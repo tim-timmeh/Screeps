@@ -56,7 +56,7 @@ MissionPlanner.prototype.checkBase = function (spawnAnchorPos) {
       let positionObj = new RoomPosition(positionOffset.x, positionOffset.y, this.room.name);
       let building = positionObj.lookFor(LOOK_STRUCTURES).find(struct => struct.structureType == buildingName); //?? break this up. if struct != buildingName then destroy. then create correct.
       if (building) {
-        if (building.hits < building.hitsMax || building.hits > 25000) {
+        if (building.hits < building.hitsMax && building.hits < 25000) {
           this.memoryOp.roadRepairIds.push(building.id)
         }
       continue;

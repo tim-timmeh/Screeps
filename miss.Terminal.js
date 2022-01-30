@@ -1,7 +1,8 @@
 const MINERALS_SELL = RESOURCES_ALL
 const MINERAL_TERMINAL_TARGET = {
-  silicon : 0, // add an amount to keep. default is 0 for RESOURCES_ALL
-  energy : 50000,
+  energy : 50000, // add an amount to keep. default is 3000 for RESOURCES_ALL
+  //silicon : 0,
+  //z : 0,
 }
 
 const Mission = require('./Mission');
@@ -47,8 +48,8 @@ MissionTerminal.prototype.sellOverstock = function () {
     forceSell = true;
   }
   for (let mineralType of MINERALS_SELL) {
-    let saleAmount = this.terminal.store[mineralType] - (MINERAL_TERMINAL_TARGET[mineralType] || 0);
-    if (saleAmount < (MINERAL_TERMINAL_TARGET[mineralType] / 2)) {
+    let saleAmount = this.terminal.store[mineralType] - (MINERAL_TERMINAL_TARGET[mineralType] || 3000);
+    if (saleAmount < ((MINERAL_TERMINAL_TARGET[mineralType] || 3000) / 2)) {
       continue;
     }
     if (saleAmount > 0) {
