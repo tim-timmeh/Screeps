@@ -30,7 +30,7 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
       filter: { structureType: STRUCTURE_CONTAINER }
     })[0];
     if (!this.containerCsite) {
-      this.placeMinerContainer();
+      this.placeContainer(this.minerSource, 1);
     }
   } else {
     //let storageCheck = this.room.storage && this.room.storage.my ? this.room.storage : false
@@ -94,39 +94,6 @@ MissionMiner.prototype.minerActions = function (creep) {
       creep.moveToModule(this.container, { ticks: 10, range: 0 });
     }
   }
-};
-
-/**
- * places a container at minerSource
- * @returns 
- */
-MissionMiner.prototype.placeMinerContainer = function () {
-  if (this.room.controller && this.room.controller.my && this.room.controller.level <= 2) return;
-  let startingObject;
-  if (this.storage && this.storage.my) {
-    startingObject = this.storage.pos;
-  } else {
-    startingObject = this.spawnGroup.pos;
-    if (!startingObject) {
-      console.log(`Error finding container start of path - ${this.missionLog}`);
-      return;
-    };
-  }
-  if (this.minerSource.pos.findInRange(FIND_CONSTRUCTION_SITES, 1).length) {
-    console.log("FOUND CONSTRUCTION SITE ABORTING");
-    return;
-  }
-  console.log("NO FOUND CONSTRUCTION SITE, FINDING LOCATION TO BUILD AT");
-  let ret = PathFinder.searchCustom(this.minerSource.pos, startingObject, 1); //? might need to switch ends?
-  console.log(ret.path);
-  if (ret.incomplete || ret.path.length == 0) {
-    console.log(`Pathing for miner container placement failed - ${this.missionLog}`);
-    return;
-  }
-  /**@type {RoomPosition} */
-  let position = ret.path[0];
-  console.log(`Miner: Placing container - ${this.missionLog}`);
-  position.createConstructionSite(STRUCTURE_CONTAINER);
 };
 
 MissionMiner.prototype.haulerActions = function (creep) {

@@ -46,8 +46,12 @@ const myFunc = {
 
   getKeyByValue: function (object, value) {
     return Object.keys(object).find(key => object[key] === value);
-  }
+  },
 
+  roomPosStrip: function (roomPos) {
+    let {x,y,roomName} = roomPos;
+    return {x,y,roomName}
+  }
 
 };
 //   exportStats : function () { // Sets Memory.stats for populating screepspl.us graph
@@ -120,5 +124,6 @@ const myFunc = {
 //   if (rest.length == 0 && obj.hasOwnProperty(level)) return true
 //   return checkNested(obj[level], ...rest)
 // }
+
 
 module.exports = myFunc;

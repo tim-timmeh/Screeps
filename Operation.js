@@ -53,12 +53,12 @@ Operation.prototype.roleCall = function () { // perform rolecall on required cre
 Operation.prototype.action = function () { // perform actions / missions
   for (let missionName in this.missions) {
     let mission = this.missions[missionName]
-    if (mission.priority >= Game.cpu.bucket) {
+    if (Game.cpu.bucket >= mission.priority) {
       myFunc.tryWrap(() => {
         mission.actionMiss();
       }, `ERROR actionMiss, ${this.name} (${this.type}) - ${missionName}`);
     } else {
-      console.log(`ERROR, Not enough bucket to execute, skipping: ${this.name} (${this.type}) - ${missionName}`)
+      //console.log(`ERROR, Not enough bucket to execute (${mission.priority} - ${Game.cpu.bucket}/10000), skipping: ${this.name} (${this.type}) - ${missionName}`)
       //Add logging/cache here
     }
   }

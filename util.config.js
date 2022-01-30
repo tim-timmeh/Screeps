@@ -17,18 +17,18 @@ const CONSTS = {
     VLOW: 5,
   },
 
-  MISS_PRIORITY: { //Priority for missions, based on remaining bucket amount (eg 2 = 2k bucket)
+  MISS_PRIORITY: { //Priority for missions, mapped to remaining bucket amount (eg 2:2000 means run when above 2k bucket)
     0:0,
-    1:1000,
-    2:2000,
-    3:3000,
-    4:4000,
-    5:5000,
-    6:6000,
-    7:7000,
-    8:8000,
-    9:9000,
-    10:10000,
+    1:0,
+    2:0,
+    3:0,
+    4:0,
+    5:0,
+    6:500,
+    7:500,
+    8:500,
+    9:500,
+    10:500,
   }
 
 };

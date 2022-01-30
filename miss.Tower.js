@@ -2,7 +2,7 @@ const Mission = require("./Mission")
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionTower(operation, priority, target = {}) { // constructor, how to build the object
+function MissionTower(operation, priority = 1, target = {}) { // constructor, how to build the object
   Mission.call(this, operation, 'tower', priority); // uses params to pass object through parnt operation constructor first
   this.targetAttack = target.attack;
   this.targetHeal = target.heal;

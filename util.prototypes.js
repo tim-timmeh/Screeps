@@ -259,7 +259,7 @@ Creep.prototype.doFillTower = function (tower) {
 Creep.prototype.doRepair = function (repair) {
   let targetR;
   let r;
-  if (repair && (r = Game.getObjectById(repair)) && r.hits < r.hitsMax && r.hits <= 25000) {
+  if (repair && (r = Game.getObjectById(repair)) && r.hits < r.hitsMax) {
     targetR = r;
   } else {
     //targetR = Game.getObjectById(repair);
@@ -274,3 +274,14 @@ Creep.prototype.doRepair = function (repair) {
     return { repair: targetR.id };
   };
 };
+
+Creep.prototype.doFillContainer = function (targetC) {
+  if (targetC && Object.keys(targetC).length) {
+    if (this.transfer(targetC, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      this.moveToModule(targetC);
+    } else {
+      this.giveWay()
+    }
+    return;
+  };
+}

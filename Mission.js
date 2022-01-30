@@ -1,5 +1,5 @@
 const Operation = require('./Operation');
-const {MISS_PRIORITY} = require('./util.config');
+const { MISS_PRIORITY } = require('./util.config');
 //const _ = require("lodash");
 
 //** Set emergency room mode incase of wipe/fresh spawn.
@@ -278,14 +278,18 @@ Mission.prototype.analyzeHauler = function (distance, regen) {
  * @param {RoomObject} startPos 
  * @param {RoomObject} dest 
  * @param {number} range 
- * @returns 
+ * @returns {PathFinderPath}
  */
-Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
-  if (Game.time % 10000 == 0) {
+Mission.prototype.paveRoad = function (start, dest, options = {}) {
+
+  if (Game.time % 500 == 0) {
     this.memory.roadRepairIds = []; //?? rush implementation to avoid memory overload
   }
   if (Game.time - this.memory.paveTick < 500) return;// short circuit to run only x ticks
-  let path = PathFinder.searchCustom(startPos.pos, dest.pos, range);
+  let startPos = (start instanceof RoomPosition) ? start : start.pos;
+  let destPos = (dest instanceof RoomPosition) ? dest : dest.pos;
+  let range = options.range || 1;
+  let path = options.path || PathFinder.searchCustom(startPos, destPos, range);
   if (!path) console.log(`Aborting Paving Road Function from ${startPos} to ${dest} - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
   let newConSites = this.fixRoad(path.path);
   if (newConSites.length) {
@@ -300,6 +304,7 @@ Mission.prototype.paveRoad = function (startPos, dest, range = 1) {
     }
   }
   this.memory.paveTick = Game.time;
+  return path;
 };
 
 /**
@@ -353,5 +358,41 @@ Mission.prototype.fixRoad = function (path) {
 // Mission.prototype.getBodyFighter = function (){
 //
 // }
+
+/**
+ * 
+ * @param {RoomObject} targetObj 
+ * @param {number} range 
+ * @returns 
+ */
+Mission.prototype.placeContainer = function (targetObj, range) {
+  if (this.room.controller && this.room.controller.my && this.room.controller.level <= 2) return;
+  let targetObjPos = (targetObj instanceof RoomPosition) ? targetObj : targetObj.pos;
+  let startingObject;
+  if (this.storage && this.storage.my) {
+    startingObject = this.storage.pos;
+  } else {
+    startingObject = this.spawnGroup.pos;
+    if (!startingObject) {
+      console.log(`Error finding container start of path - ${this.missionLog}`);
+      return;
+    };
+  }
+  if (targetObjPos.findInRange(FIND_CONSTRUCTION_SITES, range).length) {
+    console.log("FOUND CONSTRUCTION SITE ABORTING");
+    return;
+  }
+  console.log("NO FOUND CONSTRUCTION SITE, FINDING LOCATION TO BUILD AT");
+  let ret = PathFinder.searchCustom(startingObject, targetObjPos, range); //? might need to switch ends?
+  console.log(ret.path);
+  if (ret.incomplete || ret.path.length == 0) {
+    console.log(`Pathing for container placement failed - ${this.missionLog}`);
+    return;
+  }
+  /**@type {RoomPosition} */
+  let position = ret.path[ret.path.length - 1];
+  console.log(`Placing container - ${this.missionLog}`);
+  position.createConstructionSite(STRUCTURE_CONTAINER);
+};
 
 module.exports = Mission;

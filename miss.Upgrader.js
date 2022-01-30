@@ -1,10 +1,11 @@
 'use strict';
 const Mission = require("./Mission");
 const profiler = require('./screeps-profiler')
+const { roomPosStrip } = require('./util.myFunctions');
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionUpgrader(operation, priority) { // constructor, how to build the object
+function MissionUpgrader(operation, priority = 2) { // constructor, how to build the object
   Mission.call(this, operation, 'upgrader', priority); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
   this.storage = this.room.storage;
@@ -23,7 +24,30 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
   this.upperReserve = this.storageCapacity - (this.storageCapacity / 2); // 2=50% full, 3=66% full etc
   const lowerReserve = 0; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
   this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
-  this.paveRoad(this.storage, this.controller, 3);
+  let lastPos
+
+  if (!this.memory.upgraderPos || !Object.keys(this.memory.upgraderPos).length) {
+    let ret = PathFinder.searchCustom(this.storage.pos, this.controller.pos, 3);
+    lastPos = ret.path[ret.path.length - 1]
+    this.memory.upgraderPos = roomPosStrip(lastPos);;
+  }
+
+  lastPos = lastPos || new RoomPosition(this.memory.upgraderPos.x, this.memory.upgraderPos.y, this.memory.upgraderPos.roomName);
+  this.container = lastPos.findInRange(FIND_STRUCTURES, 1, {
+    filter: { structureType: STRUCTURE_CONTAINER }
+  })[0];
+  if (!this.container) {
+    this.containerCsite = lastPos.findInRange(FIND_CONSTRUCTION_SITES, 1, {
+      filter: { structureType: STRUCTURE_CONTAINER }
+    })[0];
+    if (!this.containerCsite) {
+      this.placeContainer(lastPos, 0);
+    }
+  } else {
+    //let storageCheck = this.room.storage && this.room.storage.my ? this.room.storage : false
+    this.paveRoad(this.storage, lastPos, 1);// Check path from container to storage || spawnGroup.spawns[0].pos ?? should add bunker entry as priority?
+  }
+
   this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined; // Max 15w per tick on RCL8
 };
 
@@ -81,13 +105,21 @@ MissionUpgrader.prototype.upgraderActions = function (creep) {
           }
         });
       }
+    } else if (this.container && this.container.store.energy >= 200) {
+      if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        creep.moveToModule(this.container);
+      }
     } else if (creep.withdraw(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.room.storage);
     } else {
       creep.giveWay()
     }
   } else {
-    creep.doUpgradeController()
+    if (this.container && this.container.hits < (this.container.hitsMax - 1000)) {
+      creep.doRepair(this.container.id);
+    } else {
+      creep.doUpgradeController()
+    }
   }
 };
 
