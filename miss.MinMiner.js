@@ -3,7 +3,7 @@ const Mission = require("./Mission")
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionMinMiner(operation, priority = 5) { // constructor, how to build the object
+function MissionMinMiner(operation, priority = 7) { // constructor, how to build the object
   Mission.call(this, operation, 'minminer', priority); // uses params to pass object through parnt operation constructor first
   this.storage = this.room.storage;
 
