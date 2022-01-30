@@ -5,8 +5,8 @@ const bunkerLayout = require('./util.bunkerLayout');
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionPlanner(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'planner'); // uses params to pass object through parnt operation constructor first
+function MissionPlanner(operation, priority) { // constructor, how to build the object
+  Mission.call(this, operation, 'planner', priority); // uses params to pass object through parnt operation constructor first
   if (this.spawnGroup.room == this.room) {
     this.spawnAnchorPos = this.spawnGroup.pos;
   } else {

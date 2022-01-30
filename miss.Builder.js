@@ -1,10 +1,11 @@
 'use strict';
 const Mission = require("./Mission");
+const {MISS_PRIORITY} = require('./util.config');
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionBuilder(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'builder'); // uses params to pass object through parnt operation constructor first
+function MissionBuilder(operation, priority = 2) { // constructor, how to build the object
+  Mission.call(this, operation, 'builder', priority); // uses params to pass object through parnt operation constructor first
   this.storage = this.room.storage;
   this.memoryOp = operation.flag.memory;
   if (this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {

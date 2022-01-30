@@ -6,8 +6,8 @@ const Operation = require('./Operation');
  * 
  * @param {Operation} operation 
  */
-function MissionButler(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'butler') // .call sends this object and uses it on Mission constructer.
+function MissionButler(operation, priority = 2) { // constructor, how to build the object
+  Mission.call(this, operation, 'butler', priority) // .call sends this object and uses it on Mission constructer.
   this.storageMy = this.room.storage && this.room.storage.my ? this.room.storage : false;
 }
 

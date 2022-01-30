@@ -9,8 +9,8 @@ const Operation = require('./Operation');
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionTerminal(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'terminal'); // uses params to pass object through parnt operation constructor first
+function MissionTerminal(operation, priority = 4) { // constructor, how to build the object
+  Mission.call(this, operation, 'terminal', priority); // uses params to pass object through parnt operation constructor first
 
 }
 

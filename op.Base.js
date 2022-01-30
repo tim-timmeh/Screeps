@@ -1,7 +1,7 @@
 
 
 const Operation = require('./Operation');
-const CONST = require('./util.config');
+const {OP_PRIORITY} = require('./util.config');
 const MissionButler = require('./miss.Butler');
 const MissionMiner = require('./miss.Miner');
 const MissionUpgrader = require('./miss.Upgrader');
@@ -23,7 +23,7 @@ const MissionTerminal = require('./miss.Terminal');
  */
 function OperationBase(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
-  this.priority = CONST.PRIORITY.CORE;
+  this.priority = OP_PRIORITY.CORE;
   //this.memory.bootstrapTimer = this.memory.bootstrapTimer || 280 // may or may not need?
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
 }
@@ -41,7 +41,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   this.addMission(new MissionButler(this));
     if (this.room.energyCapacityAvailable >= 700) { // min miner size
       for (let i = 0; i < this.room.sources.length; i++) {
-        this.addMission(new MissionMiner(this, `miner${i}`, this.room.sources[i]));
+        this.addMission(new MissionMiner(this, undefined, `miner${i}`, this.room.sources[i]));
       }
     }
     this.addMission(new MissionTower(this));

@@ -4,8 +4,8 @@ const profiler = require('./screeps-profiler')
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionUpgrader(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'upgrader'); // uses params to pass object through parnt operation constructor first
+function MissionUpgrader(operation, priority) { // constructor, how to build the object
+  Mission.call(this, operation, 'upgrader', priority); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
   this.storage = this.room.storage;
 }

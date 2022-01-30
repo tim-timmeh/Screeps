@@ -1,4 +1,5 @@
 const Operation = require('./Operation');
+const {MISS_PRIORITY} = require('./util.config');
 //const _ = require("lodash");
 
 //** Set emergency room mode incase of wipe/fresh spawn.
@@ -8,7 +9,7 @@ const Operation = require('./Operation');
  * @param {Operation} operation 
  * @param {string} name 
  */
-function Mission(operation, name) {
+function Mission(operation, name, priority) {
   this.name = name;
   this.opName = operation.name;
   this.opType = operation.type;
@@ -17,6 +18,7 @@ function Mission(operation, name) {
   this.king = operation.king;
   this.spawnGroup = operation.spawnGroup;
   this.sources = operation.sources;
+  this.priority = MISS_PRIORITY[priority];
   this.nameTemplate = this.opType.substring(2, 5) + this.opName.split("g")[1] + '.';
   if (!operation.flag.memory[this.name]) operation.flag.memory[this.name] = {};
   this.memory = operation.flag.memory[this.name];
