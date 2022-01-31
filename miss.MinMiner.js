@@ -18,6 +18,9 @@ MissionMinMiner.prototype.constructor = MissionMinMiner; // reset constructor to
 
 MissionMinMiner.prototype.initMiss = function () { // Initialize / build objects required
   this.mineral = this.room.find(FIND_MINERALS)[0]
+  let resourcePriceAvg = Game.market.getHistory(this.mineral.mineralType)[0].avgPrice;
+  let energyPriceAvg = Game.market.getHistory(RESOURCE_ENERGY)[0].avgPrice;
+  this.minLowValue = resourcePriceAvg < energyPriceAvg ? true : false; // If mineral is below energy price, skip
   this.mineralAmount = this.mineral.mineralAmount;
   this.distanceToSpawn = this.findDistanceToSpawn(this.mineral.pos);
   this.body = this.getBody({ MOVE: 1, WORK: 2 });
@@ -55,7 +58,7 @@ MissionMinMiner.prototype.initMiss = function () { // Initialize / build objects
 
 MissionMinMiner.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   if (!this.extractor || !this.container) return;
-  this.minMinerQty = this.mineralAmount == 0 ? 0 : 1;
+  this.minMinerQty = this.mineralAmount == 0 || this.minLowValue ? 0 : 1;
   let body = this.body;
   this.minMiners = this.creepRoleCall(this.name, body, this.minMinerQty, { prespawn: this.distanceToSpawn }); //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   if (Object.keys(this.haulerAnalysis).length) {
