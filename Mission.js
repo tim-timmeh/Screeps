@@ -397,9 +397,12 @@ Mission.prototype.placeContainer = function (targetObj, range) {
 };
 
 Mission.prototype.creepScavenge = function (creep, options = {}) {
+    
   if (!this.operation.droppedResources.length || !creep) return false
   for (let resource of this.operation.droppedResources) {
-    if (!(resource == RESOURCE_ENERGY) && !this.room.terminal || !options.minerals) continue
+    if (!resource[RESOURCE_ENERGY] && (!this.room.terminal || !options.minerals)) {
+        continue
+    }
     if (creep.store.getFreeCapacity() && creep.pos.isNearTo(resource)) {
       creep.pickup(resource)
       return true
