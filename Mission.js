@@ -397,11 +397,16 @@ Mission.prototype.placeContainer = function (targetObj, range) {
 };
 
 Mission.prototype.creepScavenge = function (creep, options = {}) {
+    
   if (!this.operation.droppedResources.length || !creep) return false
   for (let resource of this.operation.droppedResources) {
-    if (!(resource == RESOURCE_ENERGY) && !this.room.terminal || !options.minerals) continue
-    if (creep.store.getFreeCapacity() && creep.pos.isNearTo(resource)) {
-      creep.pickup(resource)
+    if (!resource[RESOURCE_ENERGY] && (!this.room.terminal || !options.minerals)) {
+        continue
+    }
+    if (creep.store.getFreeCapacity() && creep.pos.inRangeTo(resource,2)) {
+      if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
+          creep.moveToModule(resource)
+      }
       return true
     }
   }
