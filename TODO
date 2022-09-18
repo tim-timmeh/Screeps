@@ -1,0 +1,15 @@
+Framework / code ideas:
+
+• Use a global object, save as much to global as possible, memory as backup for important things.
+• split ops/miss into priority and execute in full to enable throttling of lower prio missions
+init then init/update everything, then rolecall & action by priority, or even remove rolecall.
+
+Psudo Framework:
+
+----heap----
+Init - check if king else create king on global
+
+
+----loop----
+Init - with short circuit as should be in global, here incase fuckup?
+Update

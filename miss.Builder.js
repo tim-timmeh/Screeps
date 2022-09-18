@@ -1,10 +1,11 @@
 'use strict';
 const Mission = require("./Mission");
+const {MISS_PRIORITY} = require('./util.config');
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionBuilder(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'builder'); // uses params to pass object through parnt operation constructor first
+function MissionBuilder(operation, priority = 2) { // constructor, how to build the object
+  Mission.call(this, operation, 'builder', priority); // uses params to pass object through parnt operation constructor first
   this.storage = this.room.storage;
   this.memoryOp = operation.flag.memory;
   if (this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {
@@ -74,12 +75,13 @@ MissionBuilder.prototype.builderActions = function (creep) {
     creep.memory.building = false;
     creep.say("Hmm");
   }
-  if (!creep.memory.building && creep.store.energy == creep.store.getCapacity()) {
+  if (!creep.memory.building && !creep.store.getFreeCapacity()) {
     creep.memory.building = true;
     creep.say("Urg");
   }
   if (!creep.memory.building) {
-    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    /* let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    if (creep.room.terminal)
     if (droppedSource.length) {
       if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
         creep.moveTo(droppedSource[0], {
@@ -87,18 +89,26 @@ MissionBuilder.prototype.builderActions = function (creep) {
             stroke: '#fa0'
           }
         });
-      }
+      }*/
+    if (this.creepScavenge(creep)) {
     } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.storage);
     } else {
       creep.giveWay();
     }
   } else {
+    if (Object.keys(creep.store).length > 1 || Object.keys(creep.store)[0] != RESOURCE_ENERGY) {
+      if (creep.transfer(this.room.terminal, Object.keys(creep.store)[0]) == ERR_NOT_IN_RANGE) {
+        creep.moveToModule(this.room.terminal);
+      } else {
+        creep.giveWay()
+      }
+    }
     let currentJob = creep.memory.currentJob || {};
     let { fill, build, tower, repair} = currentJob;
     if (!repair) repair = this.repairTarget;
     if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
-    if ((creep.memory.currentJob = creep.doRepair(repair)) || this.repairTarget) return;
+    if ((creep.memory.currentJob = creep.doRepair(repair, 25000)) || this.repairTarget) return;
     if (this.spawnGroup.spawns[0].recycleCreep(creep) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.spawnGroup.spawns[0]);
       //console.log("SUICIDING")

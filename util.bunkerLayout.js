@@ -51,6 +51,33 @@ let bunkerFortLevels = [
 ];
 
 let bunkerRampart = [
+  ' RRRRRRRRR ',
+  'RR       RR',
+  'R         R',
+  'R         R',
+  'R         R',
+  'R         R',
+  'R         R',
+  'R         R',
+  'R         R',
+  'RR       RR',
+  ' RRRRRRRRR ',
+
+];
+let bunkerRampartLevels = [
+  ' 555555555 ',
+  '55       55',
+  '5         5',
+  '5         5',
+  '5         5',
+  '5         5',
+  '5         5',
+  '5         5',
+  '5         5',
+  '55       55',
+  ' 555555555 ',
+];
+/*let bunkerRampart = [
   '  RRR RRR  ',
   ' RRRRRRRRR ',
   'RRRRRRRRRRR',
@@ -63,8 +90,8 @@ let bunkerRampart = [
   ' RRRRRRRRR ',
   '  RRR RRR  ',
 
-];
-let bunkerRampartLevels = [
+];*/
+/*let bunkerRampartLevels = [
   '  555 555  ',
   ' 558555755 ',
   '55888868755',
@@ -76,7 +103,7 @@ let bunkerRampartLevels = [
   '55888888855',
   ' 558555855 ',
   '  555 555  ',
-];
+];*/
 
 // A similar structure might describe rampart locations and levels
 

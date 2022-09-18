@@ -5,8 +5,8 @@ const bunkerLayout = require('./util.bunkerLayout');
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionPlanner(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'planner'); // uses params to pass object through parnt operation constructor first
+function MissionPlanner(operation, priority = 6) { // constructor, how to build the object
+  Mission.call(this, operation, 'planner', priority); // uses params to pass object through parnt operation constructor first
   if (this.spawnGroup.room == this.room) {
     this.spawnAnchorPos = this.spawnGroup.pos;
   } else {
@@ -56,7 +56,7 @@ MissionPlanner.prototype.checkBase = function (spawnAnchorPos) {
       let positionObj = new RoomPosition(positionOffset.x, positionOffset.y, this.room.name);
       let building = positionObj.lookFor(LOOK_STRUCTURES).find(struct => struct.structureType == buildingName); //?? break this up. if struct != buildingName then destroy. then create correct.
       if (building) {
-        if (building.hits < building.hitsMax || building.hits > 25000) {
+        if (building.hits < building.hitsMax && building.hits < 25000) {
           this.memoryOp.roadRepairIds.push(building.id)
         }
       continue;

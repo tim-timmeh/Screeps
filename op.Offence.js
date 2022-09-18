@@ -1,5 +1,5 @@
 const Operation = require('./Operation');
-const CONST = require('./util.config');
+const {OP_PRIORITY} = require('./util.config');
 const MissionHarass = require('./miss.Harass');
 
 /*
@@ -17,7 +17,7 @@ Psudocode, placing Offence flag:
  */
 function OperationOffence(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
-  this.priority = CONST.PRIORITY.MED;
+  this.priority = OP_PRIORITY.MED;
 }
 
 OperationOffence.prototype = Object.create(Operation.prototype); // makes operationbase protos copy of operation protos

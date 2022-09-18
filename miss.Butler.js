@@ -6,8 +6,8 @@ const Operation = require('./Operation');
  * 
  * @param {Operation} operation 
  */
-function MissionButler(operation) { // constructor, how to build the object
-  Mission.call(this, operation, 'butler') // .call sends this object and uses it on Mission constructer.
+function MissionButler(operation, priority = 2) { // constructor, how to build the object
+  Mission.call(this, operation, 'butler', priority) // .call sends this object and uses it on Mission constructer.
   this.storageMy = this.room.storage && this.room.storage.my ? this.room.storage : false;
 }
 
@@ -31,9 +31,9 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
     swarmQty = 1; //this.spawnGroup.spawns.length;
     body = this.getBody({ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', maxRatio: 12 });
     this.butlers = this.creepRoleCall('butler', body, swarmQty, { prespawn: 50 }) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
-  } if (!this.butlers || !this.butlers.length)  {
+  } if (!this.butlers || !this.butlers.length) {
     if (global.debug) console.log(`No Butlers found, Bootstrapping - ${this.room} - ${this.opName} (${this.opType}) - ${this.name}`);
-    body = this.getBody({ WORK: 1 , CARRY: 1, MOVE: 1}, { addBodyPart: { MOVE: 1, CARRY: 1 }, forceSpawn: true });
+    body = this.getBody({ WORK: 1, CARRY: 1, MOVE: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, forceSpawn: true });
     this.butlers = this.creepRoleCall('butler', body, 2) //{ CARRY: 2, MOVE: 1 }, { addBodyPart: { WORK: 1 }, removeBodyPart: 'CARRY', forceSpawn: true }), 2) // if no butlers forceSpawn (total creep wipe)
   }
 };
@@ -76,15 +76,17 @@ MissionButler.prototype.butlerActions = function (creep) {
       let result = -2;
       let sourceMem;
       let storageMy = creep.room.storage;
-      let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
-      if (droppedSource.length) {
-        if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveToModule(droppedSource[0], {
-            visualizePathStyle: {
-              stroke: '#fa0'
-            }
-          });
-        }
+      // let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+      // if (droppedSource.length) {
+      //   if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+      //     creep.moveToModule(droppedSource[0], {
+      //       visualizePathStyle: {
+      //         stroke: '#fa0'
+      //       }
+      //     });
+      //   }
+      if (this.creepScavenge(creep)) {
+
       } else if (storageMy && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
         if (creep.withdraw(storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(storageMy);
@@ -135,6 +137,17 @@ MissionButler.prototype.butlerActions = function (creep) {
         }
         return
       };
+      if (this.memoryOp.upgrader.upgraderPos && Object.keys(this.memoryOp.upgrader.upgraderPos).length) {
+        let memPos = this.memoryOp.upgrader.upgraderPos
+        let lastPos = new RoomPosition(memPos.x, memPos.y, memPos.roomName);
+        let container = lastPos.findInRange(FIND_STRUCTURES, 1, {
+          filter: { structureType: STRUCTURE_CONTAINER }
+        })[0];
+        if (container && container.store.getFreeCapacity() > 0) {
+          creep.doFillContainer(container)
+          return
+        }
+      }
       if (creep.memory.currentJob = creep.doUpgradeController()) return;
       console.log("No task, build standby task here");
     }

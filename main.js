@@ -65,7 +65,8 @@ module.exports.loop = function () {
   // Post Analasis / Utility
   profilerBonzAI.start('post');
   if (Game.cpu.bucket == 10000 && Game.cpu.generatePixel) {
-    Game.cpu.generatePixel()
+     Game.cpu.generatePixel();
+     console.log("Generated Pixel");
   }
   exportStats(globalResetTick) // Graphina
   profilerBonzAI.end('post');

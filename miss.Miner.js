@@ -7,8 +7,8 @@ const Operation = require('./Operation');
  * @param {string} name
  * @param {Source} source 
  */
-function MissionMiner(operation, name, source) { // constructor, how to build the object
-  Mission.call(this, operation, name); // .call sends this object and uses it on Mission constructer.
+function MissionMiner(operation, priority = 2, name, source) { // constructor, how to build the object
+  Mission.call(this, operation, name, priority); // .call sends this object and uses it on Mission constructer.
   this.minerSource = source;
   this.haulerAnalysis = {};
   this.storageMy = this.room.storage && this.room.storage.my ? this.room.storage : false;
@@ -30,7 +30,7 @@ MissionMiner.prototype.initMiss = function () { // Initialize / build objects re
       filter: { structureType: STRUCTURE_CONTAINER }
     })[0];
     if (!this.containerCsite) {
-      this.placeMinerContainer();
+      this.placeContainer(this.minerSource, 1);
     }
   } else {
     //let storageCheck = this.room.storage && this.room.storage.my ? this.room.storage : false
@@ -96,39 +96,6 @@ MissionMiner.prototype.minerActions = function (creep) {
   }
 };
 
-/**
- * places a container at minerSource
- * @returns 
- */
-MissionMiner.prototype.placeMinerContainer = function () {
-  if (this.room.controller && this.room.controller.my && this.room.controller.level <= 2) return;
-  let startingObject;
-  if (this.storage && this.storage.my) {
-    startingObject = this.storage.pos;
-  } else {
-    startingObject = this.spawnGroup.pos;
-    if (!startingObject) {
-      console.log(`Error finding container start of path - ${this.missionLog}`);
-      return;
-    };
-  }
-  if (this.minerSource.pos.findInRange(FIND_CONSTRUCTION_SITES, 1).length) {
-    console.log("FOUND CONSTRUCTION SITE ABORTING");
-    return;
-  }
-  console.log("NO FOUND CONSTRUCTION SITE, FINDING LOCATION TO BUILD AT");
-  let ret = PathFinder.searchCustom(this.minerSource.pos, startingObject, 1); //? might need to switch ends?
-  console.log(ret.path);
-  if (ret.incomplete || ret.path.length == 0) {
-    console.log(`Pathing for miner container placement failed - ${this.missionLog}`);
-    return;
-  }
-  /**@type {RoomPosition} */
-  let position = ret.path[0];
-  console.log(`Miner: Placing container - ${this.missionLog}`);
-  position.createConstructionSite(STRUCTURE_CONTAINER);
-};
-
 MissionMiner.prototype.haulerActions = function (creep) {
   if (creep.memory.building && creep.store.energy == 0) {
     creep.memory.building = false;
@@ -139,15 +106,17 @@ MissionMiner.prototype.haulerActions = function (creep) {
     creep.say("Urg");
   }
   if (!creep.memory.building) {
-    let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2); //change to inRangeTo (cheaper) and managed by mission not creep logic?
-    if (droppedSource.length) {
-      if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(droppedSource[0], {
-          visualizePathStyle: {
-            stroke: '#fa0'
-          }
-        });
-      }
+    // let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    // if (droppedSource.length) {
+    //   if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+    //     creep.moveTo(droppedSource[0], {
+    //       visualizePathStyle: {
+    //         stroke: '#fa0'
+    //       }
+    //     });
+    //   }
+    if (this.creepScavenge(creep)){
+
     } else if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.container);
     } else {

@@ -1,7 +1,7 @@
 
 
 const Operation = require('./Operation');
-const CONST = require('./util.config');
+const { OP_PRIORITY } = require('./util.config');
 const MissionButler = require('./miss.Butler');
 const MissionMiner = require('./miss.Miner');
 const MissionUpgrader = require('./miss.Upgrader');
@@ -10,6 +10,7 @@ const MissionPlanner = require('./miss.Planner');
 const MissionTower = require('./miss.Tower');
 const MissionDefender = require('./miss.Defender');
 const MissionTerminal = require('./miss.Terminal');
+const MissionMinMiner = require('./miss.MinMiner');
 
 //const {PRIORITY} = require('./config'); 
 
@@ -23,7 +24,7 @@ const MissionTerminal = require('./miss.Terminal');
  */
 function OperationBase(flag, flagName, flagType, king) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
-  this.priority = CONST.PRIORITY.CORE;
+  this.priority = OP_PRIORITY.CORE;
   //this.memory.bootstrapTimer = this.memory.bootstrapTimer || 280 // may or may not need?
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
 }
@@ -34,26 +35,30 @@ OperationBase.prototype.constructor = OperationBase; // reset constructor to ope
 OperationBase.prototype.initOp = function () { // Initialize / build objects required
   //Room Layout?
   if (!this.room) return
-  if (!this.spawnGroup) { 
+  if (!this.spawnGroup) {
     this.spawnGroup = this.king.closestSpawnGroup(this.flag.pos.roomName);
     if (global.debug) console.log(`No spawn group in room, setting spawn group to ${this.spawnGroup.room}`);
   }
+  this.droppedResources = this.room.find(FIND_DROPPED_RESOURCES)
   this.addMission(new MissionButler(this));
-    if (this.room.energyCapacityAvailable >= 700) { // min miner size
-      for (let i = 0; i < this.room.sources.length; i++) {
-        this.addMission(new MissionMiner(this, `miner${i}`, this.room.sources[i]));
-      }
+  if (this.room.energyCapacityAvailable >= 700) { // min miner size
+    for (let i = 0; i < this.room.sources.length; i++) {
+      this.addMission(new MissionMiner(this, undefined, `miner${i}`, this.room.sources[i]));
     }
-    this.addMission(new MissionTower(this));
-    this.addMission(new MissionDefender(this))
-    if (this.room.storage && this.room.storage.my) {
-      this.addMission(new MissionUpgrader(this));
-      this.addMission(new MissionBuilder(this));
-    }
-    this.addMission(new MissionPlanner(this));
-    if (this.room.terminal && this.room.storage) {
-      this.addMission(new MissionTerminal(this));
-    }
+  }
+  this.addMission(new MissionTower(this));
+  this.addMission(new MissionDefender(this))
+  if (this.room.storage && this.room.storage.my) {
+    this.addMission(new MissionUpgrader(this));
+    this.addMission(new MissionBuilder(this));
+  }
+  this.addMission(new MissionPlanner(this));
+  if (this.room.terminal && this.room.storage) {
+    this.addMission(new MissionTerminal(this));
+  }
+  if (this.room.controller.level >= 8 && this.room.terminal){
+    //this.addMission(new MissionMinMiner(this));
+  }
 };
 
 OperationBase.prototype.roleCallOp = function () { // perform rolecall on required creeps spawn if needed

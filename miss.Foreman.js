@@ -3,8 +3,8 @@ const MainObj = require("./MainObj")
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function SubObj(operation) { // constructor, how to build the object
-  MainObj.call(this, operation, 'Obj'); // uses params to pass object through parnt operation constructor first
+function SubObj(operation, priority = 2) { // constructor, how to build the object
+  MainObj.call(this, operation, 'Obj', priority); // uses params to pass object through parnt operation constructor first
   this.properties = "example";
 }
 
