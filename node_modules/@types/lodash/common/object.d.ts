@@ -2005,7 +2005,7 @@ declare module "../index" {
         /**
          * @see _.pick
          */
-        pick<T>(object: T | null | undefined, ...props: PropertyPath[]): PartialObject<T>;
+        pick<T>(object: T | null | undefined, ...props: Array<Many<PropertyPath>>): PartialObject<T>;
     }
     interface Object<T> {
         /**
@@ -2015,7 +2015,7 @@ declare module "../index" {
         /**
          * @see _.pick
          */
-        pick(...props: PropertyPath[]): Object<PartialObject<T>>;
+        pick(...props: Array<Many<PropertyPath>>): Object<PartialObject<T>>;
     }
     interface ObjectChain<T> {
         /**
@@ -2025,7 +2025,7 @@ declare module "../index" {
         /**
          * @see _.pick
          */
-        pick(...props: PropertyPath[]): ObjectChain<PartialObject<T>>;
+        pick(...props: Array<Many<PropertyPath>>): ObjectChain<PartialObject<T>>;
     }
     interface LoDashStatic {
         /**
@@ -2079,7 +2079,7 @@ declare module "../index" {
         /**
          * @see _.pickBy
          */
-        pickBy(predicate?: ValueKeyIteratee<T[keyof T]>): Object<PartialObject<T>>;
+        pickBy(predicate?: ValueKeyIteratee<T[keyof T]>): Object<T extends Dictionary<unknown> ? Dictionary<T[keyof T]> : T extends NumericDictionary<unknown> ? NumericDictionary<T[keyof T]> : PartialObject<T>>;
     }
     interface CollectionChain<T> {
         /**
@@ -2099,7 +2099,7 @@ declare module "../index" {
         /**
          * @see _.pickBy
          */
-        pickBy(predicate?: ValueKeyIteratee<T[keyof T]>): ObjectChain<PartialObject<T>>;
+        pickBy(predicate?: ValueKeyIteratee<T[keyof T]>): ObjectChain<T extends Dictionary<unknown> ? Dictionary<T[keyof T]> : T extends NumericDictionary<unknown> ? NumericDictionary<T[keyof T]> : PartialObject<T>>;
     }
     interface LoDashStatic {
         /**

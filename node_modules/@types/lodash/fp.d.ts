@@ -317,7 +317,10 @@ declare namespace _ {
     }
     type LodashConcat1x1<T> = (values: lodash.Many<T>) => T[];
     type LodashConcat1x2<T> = (array: lodash.Many<T>) => T[];
-    type LodashCond = <T, R>(pairs: Array<lodash.CondPair<T, R>>) => (Target: T) => R;
+    interface LodashCond {
+        <R>(pairs: Array<lodash.CondPairNullary<R>>): () => R;
+        <T, R>(pairs: Array<lodash.CondPairUnary<T, R>>): (Target: T) => R;
+    }
     interface LodashConformsTo {
         <T>(source: lodash.ConformsPredicateObject<T>): LodashConformsTo1x1<T>;
         <T>(source: lodash.__, object: T): LodashConformsTo1x2<T>;
@@ -1919,7 +1922,15 @@ declare namespace _ {
     type LodashIsBuffer = (value: any) => boolean;
     type LodashIsDate = (value: any) => value is Date;
     type LodashIsElement = (value: any) => boolean;
-    type LodashIsEmpty = (value: any) => boolean;
+    interface LodashIsEmpty {
+        <T extends { __trapAny: any }>(value: T): boolean;
+        (value: string | null | undefined): value is '' | null | undefined;
+        (value: any[] | null | undefined): boolean;
+        (value: ReadonlyArray<any> | null | undefined): value is Readonly<[]> | null | undefined;
+        (value: Map<any, any> | Set<any> | lodash.List<any> | null | undefined): boolean;
+        <T extends object>(value: T | null | undefined): value is lodash.EmptyObjectOf<T> | null | undefined;
+        (value?: any): boolean;
+    }
     interface LodashIsEqualWith {
         (customizer: lodash.IsEqualCustomizer): LodashIsEqualWith1x1;
         (customizer: lodash.__, value: any): LodashIsEqualWith1x2;

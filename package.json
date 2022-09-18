@@ -1,0 +1,26 @@
+{
+  "name": "screeps",
+  "version": "1.0.0",
+  "description": "Screeps Coding Game",
+  "main": "main.js",
+  "dependencies": {
+    "@types/lodash": "^4.14.185",
+    "@types/node": "^18.7.18",
+    "@types/screeps": "^3.3.0",
+    "@types/screeps-profiler": "^1.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "console.log(\"NPM Test Command\")"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tim-timmeh/Screeps.git"
+  },
+  "author": "MrHappyFace",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/tim-timmeh/Screeps/issues"
+  },
+  "homepage": "https://github.com/tim-timmeh/Screeps#readme"
+}
