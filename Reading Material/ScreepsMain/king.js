@@ -1,3 +1,4 @@
+// @ts-nocheck
 const SpawnGroup = require('../../spawnGroup');
 
 const RESOURCE_VALUE = {

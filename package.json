@@ -22,5 +22,6 @@
   "bugs": {
     "url": "https://github.com/tim-timmeh/Screeps/issues"
   },
-  "homepage": "https://github.com/tim-timmeh/Screeps#readme"
+  "homepage": "https://github.com/tim-timmeh/Screeps#readme",
+  "type":"commonjs"
 }
