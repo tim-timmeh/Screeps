@@ -7,11 +7,11 @@
     "@types/lodash": "^3.10.1",
     "@types/node": "^18.7.18",
     "@types/screeps": "^3.3.0",
-    "@types/screeps-profiler": "^1.2.2"
+    "@types/screeps-profiler": "^1.2.2",
+    "screeps-multimeter": "^2.1.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "console.log(\"NPM Test Command\")"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

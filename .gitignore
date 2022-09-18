@@ -1,2 +1,4 @@
 /Reading Material/Personal
-/node_modules
+node_modules/
+*.log
+*.history
