@@ -1,3 +1,4 @@
+// @ts-nocheck
 //----- TooAngel -----
 
 /**
@@ -62,31 +63,49 @@
   },
 });
 
-/**
- * updateBasicData - Updates basic room data
- * - Sets the number of sources
- * - Sets the controller id
- * - Sets the hostile count
- *
- * @param {object} room - The room to init
- * @return {void}
- **/
- function updateBasicData(room) {
-  if (room.data.sources === undefined) {
-    room.data.sources = room.findSources().length;
+
+// STEP THROUGH CODE 
+
+brain.main.execute = function() {
+  if (Game.time > 1000 && Game.cpu.bucket < 1.5 * Game.cpu.tickLimit && Game.cpu.bucket < Game.cpu.limit * 10) {
+    console.log(`${Game.time} Skipping tick CPU Bucket too low. bucket: ${Game.cpu.bucket} tickLimit: ${Game.cpu.tickLimit} limit: ${Game.cpu.limit}`);
+    return;
   }
-  if (room.data.controllerId === undefined) {
-    room.data.controllerId = false;
-    if (room.controller) {
-      room.data.controllerId = room.controller.id;
-      if (!room.data.mineral) {
-        const minerals = room.findMinerals();
-        room.data.mineral = minerals[0].mineralType;
-      }
-    }
+  Memory.time = Game.time;
+  try {
+    brain.prepareMemory();
+    brain.buyPower();
+    brain.handleNextroomer();
+    brain.handleSquadManager();
+    brain.handleIncomingTransactions();
+    handleQuests();
+    checkPlayers();
+  } catch (e) {
+    console.log('Brain Exception', e.stack);
   }
-  room.data.hostileCreepCount = room.find(FIND_HOSTILE_CREEPS).length;
-}
+
+  brain.stats.addRoot();
+  brain.main.roomExecution();
+  brain.main.visualizeRooms();
+  brain.main.updateSkippedRoomsLog();
+  brain.stats.add(['cpu'], {
+    used: Game.cpu.getUsed(),
+  });
+
+  if (global.config.tickSummary.gcl) {
+    console.log(`${Game.time} GCL ${Game.gcl.level}: ${global.utils.leftPadRound(Game.gcl.progress/Game.gcl.progressTotal*100, 3, 5)} %  ${Math.round(Game.gcl.progress)}/${Math.round(Game.gcl.progressTotal)}`);
+  }
+  if (global.config.tickSummary.bucket) {
+    console.log(`${Game.time} Bucket: ${Game.cpu.bucket}`);
+  }
+  if (global.config.tickSummary.separator) {
+    console.log(Game.time, '-----------');
+  }
+};
+
+brain.main.roomExecution = function() {
+  Memory.myRooms = _(Game.rooms).filter((r) => r.execute()).map((r) => r.name).value();
+};
 
 Room.prototype.execute = function() {
   try {
@@ -117,7 +136,16 @@ Room.prototype.handle = function() {
   return false;
 };
 
-function updateBasicData(room) {
+/**
+ * updateBasicData - Updates basic room data
+ * - Sets the number of sources
+ * - Sets the controller id
+ * - Sets the hostile count
+ *
+ * @param {object} room - The room to init
+ * @return {void}
+ **/
+ function updateBasicData(room) {
   if (room.data.sources === undefined) {
     room.data.sources = room.findSources().length;
   }
@@ -134,7 +162,7 @@ function updateBasicData(room) {
   room.data.hostileCreepCount = room.find(FIND_HOSTILE_CREEPS).length;
 }
 
-oom.prototype.myHandleRoom = function() {
+Room.prototype.myHandleRoom = function() {
   this.data.state = 'Controlled';
   if (!Memory.username) {
     Memory.username = this.controller.owner.username;
