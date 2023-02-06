@@ -2,8 +2,6 @@
 // Requires
 const { printTest, printHello } = require("./functions");
 
-
-
 // Pre-Init
 global.tickLimit = Game.cpu.limit; //? Adjust to include Sigmoid function of bucket %
 global.load = Math.round(Game.cpu.getUsed());
