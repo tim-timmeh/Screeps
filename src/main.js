@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 require('./util.require'); // load globals / prototypes
 const exportStats = require('./util.stats'); // stat function
 const queen = require('./queen'); // Import Functions
@@ -13,6 +14,11 @@ const globalResetTick = Game.time;
 global.initRoomsMem(); // Ensure constant room features of visable rooms are in memory and structured eg. Sources
 global.gcOwnedStructures() // Garbage Cleanup old ownedStructures
 //global.profilerGlobalReset.set() // sets profiler monitor time after global reset, default 10, change in config.
+=======
+// Pre-Init
+global.tickLimit = Game.cpu.limit; //? Adjust to include Sigmoid function of bucket %
+global.load = Math.round(Game.cpu.getUsed());
+>>>>>>> 495faadb568af88674ea9d6dbaec7a38efd2a36c
 
 module.exports.loop = function () {
   profiler.wrap(function () {
