@@ -1,6 +1,6 @@
 module.exports = {
   /**
-   * this is jsdocm
+   * this is jsdoc
    * @param {String} input 
    */
   printTest: function(input){
