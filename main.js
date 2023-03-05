@@ -6,6 +6,8 @@ const myFunc = require('./util.myFunctions'); // Import Functions
 const profilerBonzAI = require('./profilerBonzAI');
 const profiler = require('./screeps-profiler');
 
+//test sync
+
 //profiler.enable();
 
 console.log(`#Global has been reset!\n#Overhead reset CPU: ${Game.cpu.getUsed().toFixed(2)} (${(Game.cpu.getUsed() / Game.cpu.limit * 100).toFixed(2) || '(sim)'}%), Memory: ${global.memorySize / 1000} KB(${(global.memorySize / 2048000 * 100).toFixed(2)}%)`);
