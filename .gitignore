@@ -2,3 +2,5 @@
 node_modules/
 *.log
 *.history
+screeps.json
+/dist

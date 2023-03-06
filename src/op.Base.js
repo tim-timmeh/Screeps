@@ -57,7 +57,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     this.addMission(new MissionTerminal(this));
   }
   if (this.room.controller.level >= 8 && this.room.terminal){
-    //this.addMission(new MissionMinMiner(this));
+    this.addMission(new MissionMinMiner(this));
   }
 };
 

@@ -33,7 +33,7 @@ MissionMinMiner.prototype.initMiss = function () { // Initialize / build objects
     if (!this.extractorCsite) {
       this.mineral.pos.createConstructionSite(STRUCTURE_EXTRACTOR)[0]
     }
-  } else {
+  } else if (!this.minLowValue) {
     this.container = this.extractor.pos.findInRange(FIND_STRUCTURES, 1, {
       filter: { structureType: STRUCTURE_CONTAINER }
     })[0];
