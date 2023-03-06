@@ -1,0 +1,11 @@
+servers:
+  main:
+    host: screeps.com
+    secure: true
+configs:
+  multimeter:
+    plugins: []
+    aliases: {}
+    logFilename: 'multimeter.log'
+
+#$ export SCREEPS_TOKEN=

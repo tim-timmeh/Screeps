@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es6"
+  },
+  "include": ["node_modules/@types/*","src/*"]
+}

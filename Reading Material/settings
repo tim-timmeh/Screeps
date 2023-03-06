@@ -1,6 +1,18 @@
 
 "39078118+tim-timmeh@users.noreply.github.com"
 
+// Latest settings 19.9.22
+{
+  "terminal.integrated.shell.windows": "${execPath}\\..\\..\\VScode\\data\\user-data\\User\\user-tools\\Git\\bin\\bash.exe",
+    "js/ts.implicitProjectConfig.checkJs": true,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2,
+    //"git.path": "D:\\TOOLS\\VSCode\\data\\user-data\\User\\user-tools\\Git\\bin\\git.exe", //ADDED TO PATH VARIABLE FOR HOME PC
+    "editor.acceptSuggestionOnCommitCharacter": false,
+
+}
+
+// OLD? Settings below
 {
     "js/ts.implicitProjectConfig.checkJs": true,
     "editor.detectIndentation": false,
