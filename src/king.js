@@ -1,5 +1,5 @@
 // @ts-nocheck
-const SpawnGroup = require('../../spawnGroup');
+const SpawnGroup = require('./spawnGroup');
 
 const RESOURCE_VALUE = {
   energy: .05,
