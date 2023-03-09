@@ -42,7 +42,7 @@ let queen = {
   },
 
   getOperations: function (king) {
-    let operationList = global.data.flag;
+    let operationList = {};
     for (let flagName in Game.flags) { // iterate over all flags / designated operations
       let flagCode = `${Game.flags[flagName].color}${Game.flags[flagName].secondaryColor}`; // convert color to code
       if (flagCode == '1010') continue; // white flags do nothing
@@ -52,54 +52,25 @@ let queen = {
         if (operationType) {
           let flag = Game.flags[flagName];
           let operation;
-          if (!operationList[flagName]){
-            myFunc.tryWrap(() => { // try/catch wrapper function
-              operation = new operationType(flag, flagName, flagType, king);
-            }, 'ERROR generating op from flag');
-            operationList[flagName] = operation;
-          }
+          // First one will not change anything if failed, second one will return/change variable to undefined
+          myFunc.tryWrap(() => { // try/catch wrapper function
+            operation = new operationType(flag, flagName, flagType, king);
+          }, 'ERROR generating op from flag');
+          //operation = myFunc.tryWrap(()=> new operationType(flag, flagName, opCode, king),'Error generating operation from flag')
+          operationList[flagName] = operation;
+          //global[flagName] = operation; // Add operation object to global?
         } else {
           console.log('Error in Operation / flag matchup - ' + flagType);
+
         }
       } else {
         console.log(`Error in flag color classification, ${flagName} - ${flagType} `)
       }
     }
     let sortedList = _.sortBy(operationList, (op) => op.priority);
+    //console.log((sortedList[0].priority));
     return sortedList;
   },
 };
-
-/*
-getOperations: function (king) {
-  let operationList = {};
-  for (let flagName in Game.flags) { // iterate over all flags / designated operations
-    let flagCode = `${Game.flags[flagName].color}${Game.flags[flagName].secondaryColor}`; // convert color to code
-    if (flagCode == '1010') continue; // white flags do nothing
-    let flagType = decode[flagCode];
-    if (flagType) {
-      let operationType = operationTypes[flagType];
-      if (operationType) {
-        let flag = Game.flags[flagName];
-        let operation;
-        if (!global.data.flag[flagName]) {
-          myFunc.tryWrap(() => { // try/catch wrapper function
-            operation = new operationType(flag, flagName, flagType, king);
-          }, 'ERROR generating op from flag');
-          //operationList[flagName] = operation;
-          global.data.flag[flagName] = operation
-        }
-      } else {
-        console.log('Error in Operation / flag matchup - ' + flagType);
-      }
-    } else {
-      console.log(`Error in flag color classification, ${flagName} - ${flagType} `)
-    }
-  }
-  //let sortedList = _.sortBy(operationList, (op) => op.priority);
-  let sortedList = _.sortBy(global.data.flag, (op) => op.priority);
-  return sortedList;
-},
-};*/
 
 module.exports = queen

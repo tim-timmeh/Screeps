@@ -7,7 +7,7 @@ const Operation = require('./Operation');
  * @param {string} name
  * @param {Source} source 
  */
-function MissionMiner(operation, name, priority = 2, source) { // constructor, how to build the object
+function MissionMiner(operation, priority = 2, name, source) { // constructor, how to build the object
   Mission.call(this, operation, name, priority); // .call sends this object and uses it on Mission constructer.
   this.minerSource = source;
   this.haulerAnalysis = {};

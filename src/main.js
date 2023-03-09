@@ -13,12 +13,6 @@ global.initRoomsMem(); // Ensure constant room features of visable rooms are in 
 global.gcOwnedStructures() // Garbage Cleanup old ownedStructures
 //global.profilerGlobalReset.set() // sets profiler monitor time after global reset, default 10, change in config.
 
-// migrate to global testing below
-
-global.data = {};
-global.data.flag = {}
-global.data.king = queen.initKing();
-
 module.exports.loop = function () {
   profiler.wrap(function () {
   //global.profilerGlobalReset.run() // runs profiler if .set > 0
@@ -38,7 +32,7 @@ module.exports.loop = function () {
 
   // Init Phase
   profilerBonzAI.start('init');
-  let king = global.data.king // Asigns king Object
+  let king = queen.initKing() // Creates king Object
   let operations = queen.getOperations(king) // Instantiate list of Operation Flags
   for (let operation of operations) { // Loop through all Operation Objects
 
