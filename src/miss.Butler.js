@@ -137,7 +137,7 @@ MissionButler.prototype.butlerActions = function (creep) {
         }
         return
       };
-      if (this.memoryOp.upgrader && this.memoryOp.upgrader.upgraderPos && Object.keys(this.memoryOp.upgrader.upgraderPos).length) {
+      if (this.memoryOp.upgrader.upgraderPos && Object.keys(this.memoryOp.upgrader.upgraderPos).length) {
         let memPos = this.memoryOp.upgrader.upgraderPos
         let lastPos = new RoomPosition(memPos.x, memPos.y, memPos.roomName);
         let container = lastPos.findInRange(FIND_STRUCTURES, 1, {
