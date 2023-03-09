@@ -40,24 +40,42 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     if (global.debug) console.log(`No spawn group in room, setting spawn group to ${this.spawnGroup.room}`);
   }
   this.droppedResources = this.room.find(FIND_DROPPED_RESOURCES)
-  this.addMission(new MissionButler(this));
+  if(!this.missions['butler']) {
+    this.addMission(new MissionButler(this));
+  }
   if (this.room.energyCapacityAvailable >= 700) { // min miner size
     for (let i = 0; i < this.room.sources.length; i++) {
-      this.addMission(new MissionMiner(this, undefined, `miner${i}`, this.room.sources[i]));
+      if(!this.missions[`miner${i}`]) {
+        this.addMission(new MissionMiner(this, `miner${i}`, undefined, this.room.sources[i]));
+      }
     }
   }
-  this.addMission(new MissionTower(this));
-  this.addMission(new MissionDefender(this))
-  if (this.room.storage && this.room.storage.my) {
-    this.addMission(new MissionUpgrader(this));
-    this.addMission(new MissionBuilder(this));
+  if(!this.missions['tower']) {
+    this.addMission(new MissionTower(this));
   }
-  this.addMission(new MissionPlanner(this));
+  if(!this.missions['defender']) {
+    this.addMission(new MissionDefender(this))
+  }
+  if (this.room.storage && this.room.storage.my) {
+    if(!this.missions['upgrader']) {
+      this.addMission(new MissionUpgrader(this));
+    }
+    if(!this.missions['builder']) {
+      this.addMission(new MissionBuilder(this));
+    }
+  }
+  if(!this.missions['planner']) {
+    this.addMission(new MissionPlanner(this));
+  }
   if (this.room.terminal && this.room.storage) {
-    this.addMission(new MissionTerminal(this));
+    if(!this.missions['terminal']) {
+      this.addMission(new MissionTerminal(this));
+    }
   }
   if (this.room.controller.level >= 8 && this.room.terminal){
-    this.addMission(new MissionMinMiner(this));
+    if(!this.missions['minminer']) {
+      this.addMission(new MissionMinMiner(this));
+    }
   }
 };
 
