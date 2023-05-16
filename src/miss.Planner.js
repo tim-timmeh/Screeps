@@ -42,6 +42,7 @@ MissionPlanner.prototype.finalizeMiss = function () { // finalize?
 };
 
 // Additional methods/functions below
+
 MissionPlanner.prototype.checkBase = function (spawnAnchorPos) {
   if (!this.room.controller.my || !spawnAnchorPos || ((Game.time - this.memory.baseTick) < 1000)) return;
   let anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
@@ -103,6 +104,18 @@ MissionPlanner.prototype.checkBase = function (spawnAnchorPos) {
 }
 
 MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
+  /* Psudocode
+  set bounding box from spawnAnchorPos
+  set remaining bounding boxs (controller/source and maybe mineral?)
+  retrieve mincut locations from memory, else calculate mincut.
+  
+
+  */
+}
+
+/* Old Rampart Planner
+
+MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   if (!this.room.controller.my || !spawnAnchorPos || ((Game.time - this.memory.baseRampartTick) < 25)) return;
   let anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
   let anchorPos = this.minusPosition(anchorOffset, spawnAnchorPos)
@@ -145,7 +158,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
     }
   }
   this.memory.baseRampartTick = Game.time;
-}
+}*/
 
 MissionPlanner.prototype.minusPosition = function (anchorOffset, basePos) {
   let x1 = basePos.x,
