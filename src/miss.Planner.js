@@ -126,25 +126,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
     rectArray.push(baseBoundingBox); // Base bounding box
     rectArray.push(controllerBoundingBox); // controller bounding box
 
-    this.memory.rampartPositions = (function runMinCut(roomName, rectArray) {
-      let room = Game.rooms[roomName];
-      if (!room)
-        console.log(`MinCut error, ${roomName} not valid`);
-        return
-      let cpu = Game.cpu.getUsed();
-
-      // rectArray, the Rectangles will be protected by the returned tiles
-
-      // Boundary Array for Maximum Range
-      let bounds={x1: 0, y1: 0, x2:49, y2: 49};
-      // Get Min cut
-      let rampartPositions = util_mincut.GetCutTiles(roomname,rectArray,bounds,true); // Positions is an array where to build walls/ramparts
-      // Test output
-      console.log('Positions returned',positions.length);
-      cpu = Game.cpu.getUsed()-cpu;
-      console.log('Needed',cpu,' cpu time');
-      return rampartPositions;
-    })();
+    this.memory.rampartPositions = this.rampartPositions(this.room.name, rectArray)
   }
 
   rampartPositions = this.memory.rampartPositions
@@ -182,6 +164,26 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   }
 this.memory.baseRampartTick = Game.time;
 }
+
+MissionPlanner.prototype.runMinCut = function(roomName, rectArray) {
+  let room = Game.rooms[roomName];
+  if (!room)
+    console.log(`MinCut error, ${roomName} not valid`);
+    return
+  let cpu = Game.cpu.getUsed();
+
+  // rectArray, the Rectangles will be protected by the returned tiles
+
+  // Boundary Array for Maximum Range
+  let bounds={x1: 0, y1: 0, x2:49, y2: 49};
+  // Get Min cut
+  let rampartPositions = util_mincut.GetCutTiles(roomname,rectArray,bounds,true); // Positions is an array where to build walls/ramparts
+  // Test output
+  console.log('Positions returned',positions.length);
+  cpu = Game.cpu.getUsed()-cpu;
+  console.log('Needed',cpu,' cpu time');
+  return rampartPositions;
+};
 
 MissionPlanner.prototype.setBaseBoundingBox = function(spawnAnchorPos) {
   let anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
