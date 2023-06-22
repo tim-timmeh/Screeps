@@ -1,7 +1,7 @@
 'use strict';
 const Mission = require("./Mission");
 const bunkerLayout = require('./util.bunkerLayout');
-const util_mincut = require('./util.min_cut.js');
+const util_mincut = require('./util.min_cut');
 
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
