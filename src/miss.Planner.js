@@ -119,21 +119,9 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
     let controllerPos = this.room.controller.pos
     let rectArray=[];
 
-    let baseBoundingBox = (function setBaseBoundingBox(this, spawnAnchorPos) {
-      let anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
-      let anchorPosTL = this.minusPosition(anchorOffset, spawnAnchorPos);
-      let bunkerFortSize = { "x" : 10, "y": 10}; // BunkerFort width 10 height 10
-      let anchoPosBR = this.addPosition(anchorPosTL, bunkerFortSize);
-      return {x1: anchorPosTL.x, y1: anchorPosTL.y, x2: anchorPosBR.x, y2: anchorPosBR.y}
-    })();
+    let baseBoundingBox = this.setBaseBoundingBox(spawnAnchorPos)
 
-    let controllerBoundingBox = (function setControllerBoundingBox(this, controllerPos) {
-      let anchorOffset = { "x": 1, "y": 1 }; // set top left controller pos
-      let anchorPosTL = this.minusPosition(anchorOffset, controllerPos);
-      let controllerSize = { "x" : 2, "y": 2}; // box around controller
-      let anchoPosBR = this.addPosition(anchorPosTL, controllerSize);
-      return {x1: anchorPosTL.x, y1: anchorPosTL.y, x2: anchorPosBR.x, y2: anchorPosBR.y}
-    })();
+    let controllerBoundingBox = this.setControllerBoundingBox(controllerPos)
 
     rectArray.push(baseBoundingBox); // Base bounding box
     rectArray.push(controllerBoundingBox); // controller bounding box
@@ -193,6 +181,22 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   }
 this.memory.baseRampartTick = Game.time;
 }
+
+MissionPlanner.prototype.setBaseBoundingBox = function(spawnAnchorPos) {
+  let anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
+  let anchorPosTL = this.minusPosition(anchorOffset, spawnAnchorPos);
+  let bunkerFortSize = { "x" : 10, "y": 10}; // BunkerFort width 10 height 10
+  let anchoPosBR = this.addPosition(anchorPosTL, bunkerFortSize);
+  return {x1: anchorPosTL.x, y1: anchorPosTL.y, x2: anchorPosBR.x, y2: anchorPosBR.y}
+};
+
+MissionPlanner.prototype.setControllerBoundingBox = function(controllerPos) {
+  let anchorOffset = { "x": 1, "y": 1 }; // set top left controller pos
+  let anchorPosTL = this.minusPosition(anchorOffset, controllerPos);
+  let controllerSize = { "x" : 2, "y": 2}; // box around controller
+  let anchoPosBR = this.addPosition(anchorPosTL, controllerSize);
+  return {x1: anchorPosTL.x, y1: anchorPosTL.y, x2: anchorPosBR.x, y2: anchorPosBR.y}
+};
 
 /* Old Rampart Planner
 
