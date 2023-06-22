@@ -127,7 +127,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
     rectArray.push(controllerBoundingBox); // controller bounding box
 
     this.memory.rampartPositions = (function runMinCut(roomName, rectArray) {
-      let room = Game.rooms[roomname];
+      let room = Game.rooms[roomName];
       if (!room)
         console.log(`MinCut error, ${roomName} not valid`);
         return
