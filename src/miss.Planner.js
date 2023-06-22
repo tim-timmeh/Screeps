@@ -134,6 +134,8 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
 
   rampartPositions = this.memory.rampartPositions
 
+  console.log(rampartPositions.length);
+
   if (rampartPositions.length > 40){
     console.log("MinCut has more ramparts than Bunker, review")
   }
