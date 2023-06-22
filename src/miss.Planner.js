@@ -116,6 +116,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   let rampartPositions;
 
   if (!this.memory.rampartPositions || this.memory.rampartPositions.length == 0 || Game.time % 100000){
+    console.log("ENTERING mincut");
     let controllerPos = this.room.controller.pos
     let rectArray=[];
 
@@ -125,16 +126,17 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
 
     rectArray.push(baseBoundingBox); // Base bounding box
     rectArray.push(controllerBoundingBox); // controller bounding box
-
+    console.log("PRINTING VARS ", controllerPos, rectArray);
     this.memory.rampartPositions = this.runMinCut(this.room.name, rectArray)
   }
 
   rampartPositions = this.memory.rampartPositions
-  
+  console.log(`logging rampartPositions - ${rampartPositions}`)
+
   let countConSites = this.room.find(FIND_CONSTRUCTION_SITES).length;
 
   let newConSites = [];
-  console.log(`logging rampartPositions - ${rampartPositions}`)
+  
   for (let position of rampartPositions) {
     let positionObj = new RoomPosition(position.x, position.y, this.room.name);
     let building = positionObj.lookFor(LOOK_STRUCTURES).find(struct => struct.structureType == STRUCTURE_RAMPART); //?? break this up. if struct != buildingName then destroy. then create correct.
