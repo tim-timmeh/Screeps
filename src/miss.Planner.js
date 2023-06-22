@@ -168,6 +168,7 @@ this.memory.baseRampartTick = Game.time;
 }
 
 MissionPlanner.prototype.runMinCut = function(roomName, rectArray) {
+  console.log("***ENTERING runMinCut****")
   let room = Game.rooms[roomName];
   if (!room)
     console.log(`MinCut error, ${roomName} not valid`);
