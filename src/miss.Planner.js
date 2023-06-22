@@ -132,7 +132,6 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   }
 
   rampartPositions = this.memory.rampartPositions
-  console.log(`logging rampartPositions - ${rampartPositions}`)
 
   let countConSites = this.room.find(FIND_CONSTRUCTION_SITES).length;
 
