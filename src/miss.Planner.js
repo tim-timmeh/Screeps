@@ -108,10 +108,11 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   /* Psudocode
   done - set bounding box from spawnAnchorPos
   done (only base/controller) - set remaining bounding boxs (controller/source and maybe mineral?)
-  retrieve mincut locations from memory, else calculate mincut.
+  done - retrieve mincut locations from memory, else calculate mincut.
+  calculate mincut vs bunker rampart amount
   */
 
-  if (!this.room.controller.my || !spawnAnchorPos || ((Game.time - this.memory.baseRampartTick) < 25)) return;
+  if (!this.room.controller.my || !spawnAnchorPos || this.rcl < 5 || ((Game.time - this.memory.baseRampartTick) < 25)) return;
   
   let rampartPositions;
 
@@ -133,6 +134,9 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
 
   rampartPositions = this.memory.rampartPositions
 
+  if (rampartPositions.length > 40){
+    console.log("MinCut has more ramparts than Bunker, review")
+  }
   let countConSites = this.room.find(FIND_CONSTRUCTION_SITES).length;
 
   let newConSites = [];
@@ -164,6 +168,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   } else {
     console.log(`Too many global constructionSites to place more ${this.missionLog}`);
   }
+
 this.memory.baseRampartTick = Game.time;
 }
 
