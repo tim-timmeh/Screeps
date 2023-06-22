@@ -183,7 +183,7 @@ MissionPlanner.prototype.runMinCut = function(roomName, rectArray) {
   // Get Min cut
   let rampartPositions = util_mincut.GetCutTiles(roomName,rectArray,bounds,true); // Positions is an array where to build walls/ramparts
   // Test output
-  console.log('Positions returned',positions.length);
+  console.log('Positions returned', rampartPositions.length);
   cpu = Game.cpu.getUsed()-cpu;
   console.log('Needed',cpu,' cpu time');
   return rampartPositions;
