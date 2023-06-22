@@ -179,7 +179,7 @@ MissionPlanner.prototype.runMinCut = function(roomName, rectArray) {
   // Boundary Array for Maximum Range
   let bounds={x1: 0, y1: 0, x2:49, y2: 49};
   // Get Min cut
-  let rampartPositions = util_mincut.GetCutTiles(roomname,rectArray,bounds,true); // Positions is an array where to build walls/ramparts
+  let rampartPositions = util_mincut.GetCutTiles(roomName,rectArray,bounds,true); // Positions is an array where to build walls/ramparts
   // Test output
   console.log('Positions returned',positions.length);
   cpu = Game.cpu.getUsed()-cpu;
