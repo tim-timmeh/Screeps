@@ -145,7 +145,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
     let positionObj = new RoomPosition(position.x, position.y, this.room.name);
     let building = positionObj.lookFor(LOOK_STRUCTURES).find(struct => struct.structureType == STRUCTURE_RAMPART); //?? break this up. if struct != buildingName then destroy. then create correct.
     if (building) {
-      if (building.hits < building.hitsMax && building.hits < 100000) {
+      if (building.hits < building.hitsMax && building.hits < 10000) {
         this.memoryOp.roadRepairIds.push(building.id)
       }
     continue;
