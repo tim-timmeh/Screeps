@@ -126,7 +126,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
     rectArray.push(baseBoundingBox); // Base bounding box
     rectArray.push(controllerBoundingBox); // controller bounding box
 
-    this.memory.rampartPositions = this.rampartPositions(this.room.name, rectArray)
+    this.memory.rampartPositions = this.runMinCut(this.room.name, rectArray)
   }
 
   rampartPositions = this.memory.rampartPositions
