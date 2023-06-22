@@ -126,7 +126,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
 
     rectArray.push(baseBoundingBox); // Base bounding box
     rectArray.push(controllerBoundingBox); // controller bounding box
-    console.log("PRINTING VARS ", controllerPos, rectArray);
+    console.log("PRINTING VARS ", spawnAnchorPos, controllerPos, baseBoundingBox, controllerBoundingBox, rectArray);
     this.memory.rampartPositions = this.runMinCut(this.room.name, rectArray)
   }
 
