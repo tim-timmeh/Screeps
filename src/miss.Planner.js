@@ -116,7 +116,8 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   let rampartPositions;
 
   if (!this.memory.rampartPositions || this.memory.rampartPositions.length == 0 || Game.time % 100000){
-    console.log("ENTERING mincut");
+    console.log("ENTERING mincut Refresh - ", this.memory.rampartPositions, this.memory.rampartPositions.length);
+
     let controllerPos = this.room.controller.pos
     let rectArray=[];
 
@@ -126,7 +127,7 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
 
     rectArray.push(baseBoundingBox); // Base bounding box
     rectArray.push(controllerBoundingBox); // controller bounding box
-    console.log("PRINTING VARS ", spawnAnchorPos, controllerPos, JSON.stringify(baseBoundingBox), JSON.stringify(controllerBoundingBox), JSON.stringify(rectArray));
+    
     this.memory.rampartPositions = this.runMinCut(this.room.name, rectArray)
   }
 
