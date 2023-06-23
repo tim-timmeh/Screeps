@@ -8,6 +8,7 @@ function MissionTower(operation, priority = 1, target = {}) { // constructor, ho
   this.targetHeal = target.heal;
   this.targetRepair = target.repair;
   this.memoryOp = operation.flag.memory
+  this.targetRepairHits = 0
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -38,8 +39,8 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
             this.memoryOp.roadRepairIds.pop();
             continue;
           }
-          let targetRepairHits = targetRepair.hitsMax - targetRepair.hits;
-          if (targetRepairHits == 0 || targetRepair.hits >= 25000) {
+          this.targetRepairHits = targetRepair.hitsMax - targetRepair.hits;
+          if (this.targetRepairHits == 0 || targetRepair.hits >= 25000) {
             this.memoryOp.roadRepairIds.pop()
             continue
           }
