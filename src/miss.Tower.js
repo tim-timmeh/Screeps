@@ -30,7 +30,7 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
         filter: (creep) => creep.room.name == this.room.name && creep.hits < creep.hitsMax
       });
       if (!this.targetHeal.length && !this.targetRepair && this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {
-        this.memoryOp.roadRepairIds = _shuffle(this.memoryOp.roadRepairIds);
+        this.memoryOp.roadRepairIds = _.shuffle(this.memoryOp.roadRepairIds);
         for (let i = this.memoryOp.roadRepairIds.length - 1; i >= 0 ; i--) {
           this.targetRepair = Game.getObjectById(this.memoryOp.roadRepairIds[i]);
           if (!this.targetRepair) {
