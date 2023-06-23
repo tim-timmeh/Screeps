@@ -45,7 +45,6 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
             continue
           }
           this.targetRepair = targetRepair;
-          console.log("TEST", this.targetRepair)
           break;
         }
       }
@@ -84,7 +83,7 @@ MissionTower.prototype.towerActions = function (tower) {
     if (global.debug) console.log(`Healing ${targetsHeal[0]} (Tower: ${tower.id})`);
     tower.heal(targetsHeal[0]);
   } else if (targetRepair && (this.targetRepairHits > 0) && tower.store.energy > (tower.store.getCapacity('energy') * 0.60)) { // Repair my structures while above 50% energy
-    /*if (global.debug)*/ console.log(`Repairing ${targetRepair} (Tower: ${tower.id})`);
+    if (global.debug) console.log(`Repairing ${targetRepair} (Tower: ${tower.id})`);
     if (tower.repair(targetRepair) == OK) {
       this.targetRepairHits - 200
     }
