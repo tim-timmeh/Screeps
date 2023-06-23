@@ -32,16 +32,18 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
       if (!this.targetHeal.length && !this.targetRepair && this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {
         this.memoryOp.roadRepairIds = _.shuffle(this.memoryOp.roadRepairIds);
         for (let i = this.memoryOp.roadRepairIds.length - 1; i >= 0 ; i--) {
-          this.targetRepair = Game.getObjectById(this.memoryOp.roadRepairIds[i]);
-          if (!this.targetRepair) {
+          let targetRepair = Game.getObjectById(this.memoryOp.roadRepairIds[i]);
+          //this.targetRepair = Game.getObjectById(this.memoryOp.roadRepairIds[i]);
+          if (!targetRepair) {
             this.memoryOp.roadRepairIds.pop();
             continue;
           }
-          this.targetRepairHits = this.targetRepair.hitsMax - this.targetRepair.hits;
-          if (this.targetRepairHits == 0 || this.targetRepair.hits >= 25000) {
+          targetRepairHits = targetRepair.hitsMax - targetRepair.hits;
+          if (targetRepairHits == 0 || targetRepair.hits >= 25000) {
             this.memoryOp.roadRepairIds.pop()
             continue
           }
+          this.targetRepair = targetRepair;
           break;
         }
       }
