@@ -40,6 +40,7 @@ const exportStats = function (globalResetTick) {
   // Collect GCL stats
   Memory.stats.gcl.progress = Game.gcl.progress;
   Memory.stats.gcl.progressTotal = Game.gcl.progressTotal;
+  Memory.stats.gcl.progressPercent = (Game.gcl.progress / Game.gcl.progressTotal);
   Memory.stats.gcl.level = Game.gcl.level;
   // Collect CPU stats
   Memory.stats.cpu.lastGlobalReset = globalResetTick;
