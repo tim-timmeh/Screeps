@@ -8,6 +8,7 @@ const exportStats = function (globalResetTick) {
     cpu: {},
     memory: {},
     time: Game.time,
+    market: {},
   }
   Object.assign(Memory.stats, clearStats);
 
@@ -48,6 +49,8 @@ const exportStats = function (globalResetTick) {
   // Collect Memory stats
   Memory.stats.memory.used = RawMemory.get().length / 1000;
   Memory.stats.memory.limit = 2048;
+  // Collect global stats
+  Memory.stats.market.credits = Game.market.credits;
 }
 
 module.exports = exportStats;

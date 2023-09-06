@@ -55,9 +55,12 @@ MissionUpgrader.prototype.initMiss = profiler.registerFN(MissionUpgrader.prototy
 
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let creepCount = 1;
+  if (this.controller.level == 8 && this.room.controller.ticksToDowngrade > 100000) {
+      creepCount = 0
+  };
   if (this.storagePercent >= 1 && this.controller.level != 8) {
     if (Game.time % 9 == 0) creepCount = 10;
-  }
+  };
   //if (this.room.name == "W17N38") {console.log("TEST", this.storagePercent)};
   let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent, maxRatio: this.upgraderCap });
   //if (this.room.name == "W17N38") {console.log("TEST2", body, this.storagePercent)};
