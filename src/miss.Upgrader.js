@@ -55,7 +55,7 @@ MissionUpgrader.prototype.initMiss = profiler.registerFN(MissionUpgrader.prototy
 
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let creepCount = 1;
-  if (this.controller.level == 8 && this.room.controller.ticksToDowngrade > 100000 && this.storagePercent < 90 ){ // if we are max rcl, high controller timer, and low storage, skip.
+  if (this.controller.level == 8 && this.room.controller.ticksToDowngrade > 190000 && this.storagePercent < 90 ){ // if we are max rcl, high controller timer, and low storage, skip.
       creepCount = 0
   };
   if (this.storagePercent >= 1 && this.controller.level != 8) {
