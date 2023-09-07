@@ -148,7 +148,6 @@ MissionButler.prototype.butlerActions = function (creep) {
           return
         }
       }
-      console.log(this.room.terminal.store[RESOURCE_ENERGY]);
       if (this.room.terminal.store[RESOURCE_ENERGY] < 50000 && (creep.memory.currentJob = creep.doFillEnergy(this.room.terminal))) return;
       //if (creep.memory.currentJob = creep.doUpgradeController()) return;
       //console.log("No task, build standby task here");
