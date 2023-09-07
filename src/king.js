@@ -124,7 +124,7 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
     } else if (outcome === ERR_INVALID_ARGS) {
       console.log(" invalid deal args:", bestOrder.id, amount, room.name);
     } else if (outcome === ERR_NOT_ENOUGH_RESOURCES) {
-      console.log(` insufficient credits/energy: Energy ${room.terminal.store[RESOURCE_ENERGY]} - Req ${transferCost}`)
+      console.log(` insufficient credits/energy: Energy ${room.terminal.store[RESOURCE_ENERGY]} - Req ${transferCost * (amount * RESOURCE_VALUE[RESOURCE_ENERGY])}`) // or should this be base amount and not multiplicative
     } else{
       console.log(" there was a problem trying to deal:", outcome);
     }
