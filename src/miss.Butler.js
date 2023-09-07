@@ -148,8 +148,8 @@ MissionButler.prototype.butlerActions = function (creep) {
           return
         }
       }
-      if (creep.memory.currentJob = creep.doUpgradeController()) return;
-      console.log("No task, build standby task here");
+      //if (creep.memory.currentJob = creep.doUpgradeController()) return;
+      //console.log("No task, build standby task here");
     }
   }
 };

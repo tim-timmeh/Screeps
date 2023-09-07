@@ -85,16 +85,18 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
   let orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: resourceType });
   this.removeOrders(ORDER_BUY, resourceType);
   let bestOrder;
+  let transferCost
   let highestGain = 0;
   for (let order of orders) {
     if (order.remainingAmount < 101) continue;
     // TODO: If .username == an enemy then skip order
     let gain = order.price;
-    let transferCost = Game.market.calcTransactionCost(100, room.name, order.roomName) / 100;
-    gain -= transferCost * RESOURCE_VALUE[RESOURCE_ENERGY];
+    let tempTransferCost = Game.market.calcTransactionCost(100, room.name, order.roomName) / 100;
+    gain -= tempTransferCost * RESOURCE_VALUE[RESOURCE_ENERGY];
     if (gain > highestGain) {
       highestGain = gain;
       bestOrder = order;
+      transferCost = tempTransferCost
       if (global.debug) console.log(" I could sell it to", order.roomName, "for", order.price, "(+" + transferCost + ")");
     }
   }
@@ -121,7 +123,9 @@ King.prototype.sellExcess = function (room, resourceType, dealAmount, forceSell 
       console.log(" Sold", amount, resourceType, "to", bestOrder.roomName, "for", bestOrder.price, ` Cr (${(bestOrder.price/resourcePriceAvg*100).toFixed(3)}%)`);
     } else if (outcome === ERR_INVALID_ARGS) {
       console.log(" invalid deal args:", bestOrder.id, amount, room.name);
-    } else {
+    } else if (outcome === ERR_NOT_ENOUGH_RESOURCES) {
+      console.log(` insufficient credits/energy: Energy ${room.terminal.store[RESOURCE_ENERGY]} - Req ${transferCost}`)
+    } else{
       console.log(" there was a problem trying to deal:", outcome);
     }
   }
