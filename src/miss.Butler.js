@@ -137,7 +137,7 @@ MissionButler.prototype.butlerActions = function (creep) {
         }
         return
       };
-      if (this.memoryOp.upgrader.upgraderPos && Object.keys(this.memoryOp.upgrader.upgraderPos).length) {
+      if (this.memoryOp.upgrader && this.memoryOp.upgrader.upgraderPos && Object.keys(this.memoryOp.upgrader.upgraderPos).length) {
         let memPos = this.memoryOp.upgrader.upgraderPos
         let lastPos = new RoomPosition(memPos.x, memPos.y, memPos.roomName);
         let container = lastPos.findInRange(FIND_STRUCTURES, 1, {
@@ -148,7 +148,7 @@ MissionButler.prototype.butlerActions = function (creep) {
           return
         }
       }
-      if (this.room.terminal.store[RESOURCE_ENERGY] < 50000 && (creep.memory.currentJob = creep.doFillEnergy(this.room.terminal.id))) return;
+      if (this.room.terminal && this.room.terminal.store[RESOURCE_ENERGY] < 50000 && (creep.memory.currentJob = creep.doFillEnergy(this.room.terminal.id))) return;
       //if (creep.memory.currentJob = creep.doUpgradeController()) return;
       //console.log("No task, build standby task here");
       creep.giveWay();
