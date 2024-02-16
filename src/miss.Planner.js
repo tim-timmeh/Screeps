@@ -115,8 +115,10 @@ MissionPlanner.prototype.checkBaseRampart = function (spawnAnchorPos) {
   if (!this.room.controller.my || !spawnAnchorPos || this.rcl < 5 || ((Game.time - this.memory.baseRampartTick) < 25)) return;
   
   let rampartPositions;
-
-  if (!this.memory.rampartPositions || this.memory.rampartPositions.length == 0 || Game.time % 100000 == 0){
+  this.memory.rampartPositions = this.memory.rampartPositions || [];
+  
+  if (this.memory.rampartPositions.length == 0 || Game.time % 100000 == 0){
+    
     console.log("ENTERING mincut Refresh - ", this.memory.rampartPositions, this.memory.rampartPositions.length);
 
     let controllerPos = this.room.controller.pos
