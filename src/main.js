@@ -71,7 +71,7 @@ module.exports.loop = myFunc.wrapLoop(function () {
       console.log("Generated Pixel");
     }
     exportStats(global.globalResetTick) // Graphina
-    speedrunSuite.run({ position: { x: 1, y: 25 }, avgDuration: 250 });
+    // speedrunSuite.run({ position: { x: 1, y: 25 }, avgDuration: 250 }); //Speedrun Statistics
     profilerBonzAI.end('post');
   //}) //Profiler
 });
