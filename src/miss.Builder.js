@@ -6,7 +6,7 @@ const {MISS_PRIORITY} = require('./util.config');
 
 function MissionBuilder(operation, priority = 2) { // constructor, how to build the object
   Mission.call(this, operation, 'builder', priority); // uses params to pass object through parnt operation constructor first
-  this.storage = this.room.storage;
+  this.storage = this.room.storage || this.storageContainer;
   this.memoryOp = operation.flag.memory;
   if (this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {
     this.repairTarget = this.memoryOp.roadRepairIds[this.memoryOp.roadRepairIds.length - 1];
@@ -31,16 +31,20 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
+  if (this.storage && this.storage.store){
+    this.storageCapacity = this.storage.store.getCapacity();
+    this.storageUsedCapacity = this.storage.store.getUsedCapacity() ;
+  };
   //this.storagePercent = Math.max(0, (this.storage.store.getUsedCapacity() / this.storage.store.getCapacity())).toFixed(3);
   this.upperReserve = this.storageCapacity - (this.storageCapacity / 1.5); // 2=50% full, 3=66% full etc
-  const lowerReserve = 0; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
-  this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
+  const lowerReserve = 2000; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
+  this.storagePercent = parseFloat(Math.max(0, (this.storageUsedCapacity - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
   let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES, {
     filter : (c) => {
       return (c.progressTotal > 1)
     }
   }).length;
-  if (csitesQty > 10 && this.storage.store.energy > (this.storage.store.getCapacity() * 0.3)) {
+  if (csitesQty > 10 && this.storage.store.energy > (this.storageCapacity * 0.3)) {
     this.buildersReq = 2;
   } else if (csitesQty) {
     this.buildersReq = 1

@@ -40,6 +40,8 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     if (global.debug) console.log(`No spawn group in room, setting spawn group to ${this.spawnGroup.room}`);
   }
   this.droppedResources = this.room.find(FIND_DROPPED_RESOURCES)
+  let storageContainerPos = new RoomPosition(this.pos.x + 1, this.pos.y + 1, this.room.name)
+  this.storageContainer = storageContainerPos.lookFor(LOOK_STRUCTURES);
   this.addMission(new MissionButler(this));
   if (this.room.energyCapacityAvailable >= 700) { // min miner size
     for (let i = 0; i < this.room.sources.length; i++) {
@@ -48,7 +50,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   }
   this.addMission(new MissionTower(this));
   this.addMission(new MissionDefender(this))
-  if (this.room.storage && this.room.storage.my) {
+  if (this.storageContainer || (this.room.storage && this.room.storage.my)) {
     this.addMission(new MissionUpgrader(this));
     this.addMission(new MissionBuilder(this));
   }

@@ -8,7 +8,7 @@ const { roomPosStrip } = require('./util.myFunctions');
 function MissionUpgrader(operation, priority = 2) { // constructor, how to build the object
   Mission.call(this, operation, 'upgrader', priority); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
-  this.storage = this.room.storage;
+  this.storage = (this.room.storage || this.storageContainer[0]);
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -20,10 +20,14 @@ MissionUpgrader.prototype.constructor = MissionUpgrader; // reset constructor to
 
 MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects required
   this.distanceToController = this.findDistanceToSpawn(this.controller.pos, 3);
-  this.storageCapacity = this.storage.store.getCapacity()
+
+  if (this.storage && this.storage.store){
+    this.storageCapacity = this.storage.store.getCapacity();
+    this.storageUsedCapacity = this.storage.store.getUsedCapacity() ;
+  };
   this.upperReserve = this.storageCapacity - (this.storageCapacity / 2); // 2=50% full, 3=66% full etc
   const lowerReserve = 0; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
-  this.storagePercent = parseFloat(Math.max(0, (this.storage.store.getUsedCapacity() - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
+  this.storagePercent = parseFloat(Math.max(0, (this.storageUsedCapacity - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
   let lastPos
 
   if (!this.memory.upgraderPos || !Object.keys(this.memory.upgraderPos).length) {
@@ -45,6 +49,7 @@ MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects
     }
   } else {
     //let storageCheck = this.room.storage && this.room.storage.my ? this.room.storage : false
+    this.memoryOp.controllerContainer = this.container.id;
     this.paveRoad(this.storage, lastPos, 1);// Check path from container to storage || spawnGroup.spawns[0].pos ?? should add bunker entry as priority?
   }
 
@@ -55,7 +60,7 @@ MissionUpgrader.prototype.initMiss = profiler.registerFN(MissionUpgrader.prototy
 
 MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
   let creepCount = 1;
-  if (this.controller.level == 8 && this.room.controller.ticksToDowngrade > 190000 && (this.storage.store.getUsedCapacity() < (0.9 * this.storageCapacity)) ){ // if we are max rcl, high controller timer, and low storage, skip.
+  if (this.controller.level == 8 && this.room.controller.ticksToDowngrade > 190000 && (this.storageUsedCapacity < (0.9 * this.storageCapacity)) ){ // if we are max rcl, high controller timer, and low storage, skip.
       creepCount = 0
   };
   if (this.storagePercent >= 1 && this.controller.level != 8) {
@@ -105,8 +110,8 @@ MissionUpgrader.prototype.upgraderActions = function (creep) {
       if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveToModule(this.container);
       }
-    } else if (creep.withdraw(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-      creep.moveToModule(this.room.storage);
+    } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(this.storage);
     } else {
       creep.giveWay()
     }

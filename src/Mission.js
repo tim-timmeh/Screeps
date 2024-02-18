@@ -20,6 +20,7 @@ function Mission(operation, name, priority) {
   this.spawnGroup = operation.spawnGroup;
   this.sources = operation.sources;
   this.priority = MISS_PRIORITY[priority];
+  this.storageContainer = operation.storageContainer
   this.nameTemplate = this.opType.substring(2, 5) + this.opName.split("g")[1] + '.';
   if (!operation.flag.memory[this.name]) operation.flag.memory[this.name] = {};
   this.memory = operation.flag.memory[this.name];

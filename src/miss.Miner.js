@@ -11,7 +11,8 @@ function MissionMiner(operation, priority = 2, name, source) { // constructor, h
   Mission.call(this, operation, name, priority); // .call sends this object and uses it on Mission constructer.
   this.minerSource = source;
   this.haulerAnalysis = {};
-  this.storageMy = this.room.storage && this.room.storage.my ? this.room.storage : false;
+  this.storageMy = this.room.storage && this.room.storage.my ? this.room.storage : this.storageContainer[0];
+
 
 }
 
@@ -122,16 +123,16 @@ MissionMiner.prototype.haulerActions = function (creep) {
     } else {
       creep.giveWay({ pos: this.container.pos, range: 1 })
     }
-  } else if (this.room.storage && (this.room.storage.store.getFreeCapacity() > 0)) {
-    if (creep.transfer(this.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-      creep.moveToModule(this.room.storage);
+  } else if (this.storageMy && (this.storageMy.store.getFreeCapacity() > 0)) {
+    if (creep.transfer(this.storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(this.storageMy);
     }
   } else if (this.room.terminal) {
     if (creep.transfer(this.room.terminal, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.room.terminal);
-    } else {
-      creep.giveWay()
-    }
+    } 
+  } else {
+    creep.giveWay()
   }
 };
 
