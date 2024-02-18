@@ -16,6 +16,7 @@ Improvements:
     DEFCON Status (stop remote missions, log enemy, )
 
 Fixes:
+    Refactor out Butlers, should be using haulers miners builders for RCL 2 +
     fix has respawned code and clearing flags/memory etc
     GC on construction sites (incase loss of room could have 10 sites forever there)
     

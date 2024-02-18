@@ -8,7 +8,7 @@ const { roomPosStrip } = require('./util.myFunctions');
 function MissionUpgrader(operation, priority = 2) { // constructor, how to build the object
   Mission.call(this, operation, 'upgrader', priority); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
-  this.storage = (this.room.storage || this.storageContainer[0]);
+  this.storage = (this.room.storage && this.room.storage.my) || this.storageContainer[0];
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
@@ -64,7 +64,7 @@ MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on re
       creepCount = 0
   };
   if (this.storagePercent >= 1 && this.controller.level != 8) {
-    if (Game.time % 9 == 0) creepCount = 10;
+    if (Game.time % 9 == 0) creepCount = 8;
   };
   //if (this.room.name == "W17N38") {console.log("TEST", this.storagePercent)};
   let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent, maxRatio: this.upgraderCap });

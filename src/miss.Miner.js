@@ -131,6 +131,10 @@ MissionMiner.prototype.haulerActions = function (creep) {
     if (creep.transfer(this.room.terminal, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.room.terminal);
     } 
+  } else if (this.memoryOp.controllerContainer && Game.getObjectById(this.memoryOp.controllerContainer).store.getFreeCapacity() > 0){
+    if (creep.transfer(Game.getObjectById(this.memoryOp.controllerContainer), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(Game.getObjectById(this.memoryOp.controllerContainer));
+    }
   } else {
     creep.giveWay()
   }
