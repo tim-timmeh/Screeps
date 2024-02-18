@@ -14,6 +14,8 @@ Improvements:
     SK Rooms (Energy & Minerals)
     Advanced Tower/Defence Code (check for heal output, damage output, DEFCON status)
     DEFCON Status (stop remote missions, log enemy, )
+    dynamic hauling, build small haulers and intra tick calculate energy throughput and future estimate
+    spawning of upgraders based on upgrade uptime eg 80% uptime reduce by 20%?
 
 Fixes:
     Refactor out Butlers, should be using haulers miners builders for RCL 2 +

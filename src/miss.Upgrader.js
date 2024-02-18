@@ -106,12 +106,12 @@ MissionUpgrader.prototype.upgraderActions = function (creep) {
   if (!creep.memory.building) {
     if (this.creepScavenge(creep)) {
 
-    } else if (this.container && this.container.store.energy >= 200) {
+    } else if (this.container && this.container.store.energy > 0) {
       if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveToModule(this.container);
       }
-    } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-      creep.moveToModule(this.storage);
+    //} else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    //  creep.moveToModule(this.storage);
     } else {
       creep.giveWay()
     }

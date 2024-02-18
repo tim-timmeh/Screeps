@@ -19,7 +19,7 @@ class Traveler {
             return ERR_INVALID_ARGS;
         }
         if (creep.fatigue > 0) {
-            Traveler.circle(creep.pos, "aqua", .3);
+            //Traveler.circle(creep.pos, "aqua", .3);
             creep.say("😰");
             return ERR_TIRED;
         }
@@ -52,7 +52,7 @@ class Traveler {
         // check if creep is stuck
         if (this.isStuck(creep, state)) {
             state.stuckCount++;
-            Traveler.circle(creep.pos, "magenta", state.stuckCount * .2);
+            //Traveler.circle(creep.pos, "magenta", state.stuckCount * .2);
             creep.say("🤨");
         }
         else {

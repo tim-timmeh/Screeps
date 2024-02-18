@@ -91,7 +91,7 @@ MissionButler.prototype.butlerActions = function (creep) {
         if (creep.withdraw(storageMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveToModule(storageMy);
         }
-      } else if (creep.memory.currentContainerId) {
+      } else if (creep.memory.currentContainerId && Game.getObjectById(creep.memory.currentContainerId).store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
         sourceMem = Game.getObjectById(creep.memory.currentContainerId);
         if (sourceMem && sourceMem.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && creep.withdraw(sourceMem, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           result = creep.moveToModule(sourceMem);
