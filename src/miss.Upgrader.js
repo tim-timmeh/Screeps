@@ -8,7 +8,7 @@ const { roomPosStrip } = require('./util.myFunctions');
 function MissionUpgrader(operation, priority = 2) { // constructor, how to build the object
   Mission.call(this, operation, 'upgrader', priority); // uses params to pass object through parnt operation constructor first
   this.controller = this.room.controller;
-  this.storage = this.room.storage && this.room.storage.my ? this.room.storage : this.storageContainer[0];
+  this.storage = (this.room.storage && this.room.storage.my) ? this.room.storage : this.storageContainer[0];
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
