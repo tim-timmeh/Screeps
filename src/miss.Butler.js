@@ -23,7 +23,7 @@ MissionButler.prototype.initMiss = function () { // Initialize / build objects r
 MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x and bigger and bigger, need alt plan in low spawning times to save energy. max size 300 carry (for Spawn)?
   let swarmQty;
   let body;
-  if (this.spawnGroup.room.energyCapacityAvailable < 700 || !this.storageMy) { // 700 - min miner size
+  if (this.spawnGroup.room.energyCapacityAvailable < 700 || !this.storage) { // 700 - min miner size
     swarmQty = 6
     body = this.getBody({ WORK: 1, CARRY: 1, MOVE: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, maxRatio: 12 });
     this.butlers = this.creepRoleCall('butler', body, swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
