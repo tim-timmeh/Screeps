@@ -1,4 +1,4 @@
-
+const profilerBonzAI = require('./profilerBonzAI');
 // Custom functions reusable in code
 const myFunc = {
 
@@ -35,10 +35,14 @@ const myFunc = {
   //myFunc.tryWrap(() => {
   //
   //},`ERROR `)
-  tryWrap: function (fn, description = 'Nondescript Error') { // wrap any function in a try/catch to let code keep running around error
+  tryWrap: function (fn, description, profilerName) { // wrap any function in a try/catch to let code keep running around error
     try {
-      return fn(); // try to do function. (Not sure if to use return or not?)
+      if (profilerName) profilerBonzAI.start(profilerName)
+      let results = fn(); // try to do function. (Not sure if to use return or not?)
+      if (profilerName) profilerBonzAI.end(profilerName)
+      return results;
     } catch (e) {
+      if (profilerName) profilerBonzAI.end(profilerName)
       console.log(`${description} @ ${e.stack}`) // if error console log stack at error
       //console.log(`${description} @ ${__file} : ${__line}\n${e.stack}`) // if error console log stack at error
     }
@@ -51,6 +55,39 @@ const myFunc = {
   roomPosStrip: function (roomPos) {
     let {x,y,roomName} = roomPos;
     return {x,y,roomName}
+  },
+
+  wrapLoop: function(fn) {
+
+    let memory;
+    let tick;
+  
+    return () => {
+      if (tick && tick + 1 === Game.time && memory) {
+        // this line is required to disable the default Memory deserialization
+        delete global.Memory;
+        Memory = memory;
+      } else {
+        memory = Memory;
+      }
+  
+      tick = Game.time;
+  
+      fn();	// Main loop
+  
+      //let profilerBonzai.start('saveMemory');
+
+      if (global.skipMemorySave && Game.time - global.globalResetTick > 25 && Game.time - global.lastMemSave < global.skipMemorySave) {	// Stable global?
+        
+      } else {
+        RawMemory.set(JSON.stringify(Memory));
+        global.lastMemSave = Game.time;
+        //	log("saving mem!");
+      }
+  
+      //let profilerBonzai.end('saveMemory');
+  
+    };
   }
 
 };

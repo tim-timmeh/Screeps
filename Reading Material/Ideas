@@ -1,0 +1,21 @@
+Improvements:
+    *Use miners/haulers at rcl 2 with temp container instead of storage
+    *Distance Transform for base planning auto setup
+    *Scouting (room ranking for expansion, enemy loc, routing)
+    *Auto Expand & unclaim (unclaim see snippets)
+    *Remotes
+    Rooms by effective level (incase of downgrade or attack, see snippets)
+    Economy Tracking (room & remote e/tick, minerals)
+    Assigning of energy ie if 100e left and closest creep has 100e then rest go do something else
+    Mission level cpu tracking (Currently at operation level)
+    Alternative Base Layout (Mini bunker / ext / lab stamps / Dynamic)
+    Links
+    Labs
+    SK Rooms (Energy & Minerals)
+    Advanced Tower/Defence Code (check for heal output, damage output, DEFCON status)
+    DEFCON Status (stop remote missions, log enemy, )
+
+Fixes:
+    fix has respawned code and clearing flags/memory etc
+    GC on construction sites (incase loss of room could have 10 sites forever there)
+    

@@ -1,0 +1,286 @@
+global.inTickObject // track intick things like energy expenditures
+
+function unclaming() { // check room health & unclaiming?
+    if (this.controller.safeMode && mem.unclaimDueToSafeMode) {
+        unclaimed = true;
+    }
+    else if ((global.totalRooms || Game.myRooms.length) === Game.gcl.level) {
+        // Try to get design fails due to bugs. Give it 1000 ticks.
+        if (Memory.botArena &&
+            Memory.timedRound &&
+            Game.time - (mem.claimTick || Infinity) > 1000 &&
+            (global.totalRooms || Game.myRooms.length) > 1 &&
+            global.ROOM_DESIGN_NUM_STAGES !== undefined) {
+            if (this.mem.designed != global.ROOM_DESIGN_NUM_STAGES) {
+                unclaimed = true
+            }
+        }
+
+        // It's been 10000 ticks and we've not made RCL 2. Cut this room.
+        if (mem.maxRCL == 1 && Game.time - mem.claimTick > 5000 && (global.totalRooms || Game.myRooms.length) > 1 && !this.controller.safeMode && this.spawns.length == 0) {
+            console.log("Room node made RCL 2 fast enough. Unclaiming", this.name);
+            unclaimed = true;
+        }
+        // Target for an unmolested room is 5000 ticks.
+        else if (mem.maxRCL <= 2 && Game.time - mem.claimTick > 20000 && (global.totalRooms || Game.myRooms.length) > 1 && !this.controller.safeMode && this.spawns.length == 0) {
+            console.log("Room node made RCL 3 fast enough. Unclaiming", this.name);
+            unclaimed = true;
+        }
+        // Target for an unmolested room is 15000 ticks.
+        else if (mem.maxRCL <= 3 && Game.time - mem.claimTick > 100000 && (global.totalRooms || Game.myRooms.length) > 1 && !this.controller.safeMode && this.spawns.length == 0) {
+            console.log("Room node made RCL 4 fast enough. Unclaiming", this.name);
+            unclaimed = true;
+        }
+        // We've lost 3 levels. Looks like we're not getting this one back.
+        else if (mem.maxRCL - this.controller.level >= 3) {
+            console.log("Room lost 3 levels. Unclaiming", this.name);
+            unclaimed = true;
+        }
+        else if (mem.maxRCL >= 4 && mem.ticksUnderEffectiveLevel > this.controller.level * 25000 && (global.totalRooms || Game.myRooms.length) > 1 && !this.controller.safeMode && this.spawns.length == 0) {
+            console.log("Room under effectiveLevel too long. Unclaiming", this.name);
+            unclaimed = true;
+        }
+        else if (Game.myRooms.length == 1 && global.totalRooms != Game.myRooms.length &&
+            Game.time - mem.claimTick > 20000 &&
+            !this.controller.safeMode &&
+            this.spawns.length == 0 &&
+            this.towers.length == 0 &&
+            this.controller.level < mem.maxRCL &&
+            this.controller.safeModeCooldown) {
+            console.log("Intershard claim seems to have failed", this.name);
+            unclaimed = true;
+        }
+
+
+
+        if ((Memory.roomToUnclaim == this.name && Game.time - (Memory.roomToUnclaimTick || 0) > 200000 && Game.myRooms.length > 10 && Memory.minRoomLevel == 8) || (Memory.season && Memory.seasonUnclaim == this.name)) {
+            global.currentlyUnclaimingRoom = this.name
+            this.clearTerminal = 1
+            if (this.powerSpawn) {
+                this.powerSpawn.processPower();
+            }
+
+            if ((!this.storage || this.storage.store.getUsedCapacity() === (this.storage.store[RESOURCE_ENERGY] || 0)) &&
+                (!this.terminal || this.terminal.store.getUsedCapacity() === (this.terminal.store[RESOURCE_ENERGY] || 0)) &&
+                (!Memory.season5 || this.calcEffectiveEnergy(false) < 10000 || this.mem.supportFrom) &&
+                (!this.factory || this.factory.store.getUsedCapacity() === (this.factory.store[RESOURCE_ENERGY] || 0))) {
+                unclaimed = true;
+                // Should probably fire one off for giggles.
+                if (this.nuker) {
+
+                }
+            }
+        }
+    };
+    if (unclaimed) {
+        console.log("-----------------------------UNCLAIMING", this)
+        Game.notify("UNCLAIMING" + this.name)
+
+        if (!Memory.unclaimDisabled) {
+            // Safety check
+            let totalRooms = 0
+            for (let shard of global.activeShards) {
+                if (shard == Game.shard.name) {
+                    totalRooms += Game.myRooms.length
+                }
+                else {					
+                    let isMemory = interShardMemoryManager.getMem(shard)
+                    totalRooms += Object.keys(isMemory.myRooms).length
+                }
+            }
+
+            if (totalRooms == Game.gcl.level || mem.unclaimDueToSafeMode) {
+                totalRooms--
+                if (mem.unclaimDueToSafeMode) {
+                    // Try to claim it back
+                    mem.numAttemptedClaims = Math.max((mem.numAttemptedClaims || 0) - 5, -5)
+                }
+                else {							
+                    mem.numAttemptedClaims = (mem.numAttemptedClaims || 0) + 10;
+
+                    var baseCoords = util.getRoomCoords(this.name);
+
+                    var radius = this.controller.level;
+
+                    for (var i = -radius; i <= radius; i++) {
+                        for (var j = -radius; j <= radius; j++) {
+                            let coords = {"x": baseCoords.x + i, "y" : baseCoords.y + j};
+                            var newRoomName = util.getRoomNameFromCoords(coords);
+
+                            if (Memory.rooms[newRoomName]) {
+                                Memory.rooms[newRoomName].numAttemptedClaims = (Memory.rooms[newRoomName].numAttemptedClaims || 0) + (radius - Math.max(i, j) + 1);
+                            }
+                        }
+                    }
+                }
+
+
+                for (let flag of this.find(FIND_FLAGS)) {
+                    flag.remove();
+                }
+                this.controller.unclaim();
+
+                this.memory = {lo: Game.time}
+
+                /*delete mem.unclaimDueToSafeMode;
+                delete mem.buildings;
+                delete mem.tmpBuildings;
+                delete mem.compressedBuildings;
+                delete mem.designed;
+                delete mem.claimTick;
+                delete mem.spawnBatteryCentreX;
+                delete mem.spawnBatteryCentreY;
+                delete mem.storageBatteryX;
+                delete mem.storageBatteryY;
+                delete mem.storageX;
+                delete mem.storageY;
+                delete mem.storageControllerLinkDist;
+                delete mem.labPositionX;
+                delete mem.labPositionY;
+                delete mem.extenstionStarsX;
+                delete mem.extenstionStarsY;
+                delete mem.supressFetchers;
+                delete mem.upgradersStarved;
+                delete mem.phatHaulers;
+                delete mem.mediumHaulers
+                delete mem.smallHaulers
+                delete mem.verySmallHaulers
+                delete mem.attackScore;
+                delete mem.towerStratChangeTimer;
+                delete mem.assignedPowerCreeps;
+                delete mem.haulerTransferredEnergyAvg;
+                delete mem.attackScore;
+                delete mem.maxRCL;
+                delete mem.childRooms;
+                delete mem.goodRooms;
+                delete mem.regularHarvestRooms;
+                delete mem.doubleHarvestRooms;
+                delete mem.protectRooms;
+                delete mem.observeRooms;
+                delete mem.powerRooms;
+                delete mem.depositRooms;
+                delete mem.convoyRooms;
+                delete mem.lootRooms;
+                delete mem.buildRooms;
+                delete mem.keeperHarvestRooms;
+                delete mem.keeperMineRooms;
+                delete mem.avgImportValues;
+                delete mem.avgExportValues;
+                delete mem.harvestPointsX;
+                delete mem.harvestPointsY;
+                delete mem.rampartCount;
+                delete mem.meanExtensionStorageDist;
+                delete mem.fallbackX;
+                delete mem.fallbackY;
+                delete mem.pressureBuildings;
+                delete mem.towerStrategy;
+                delete mem.currentTarget;
+                delete mem.currentTargetLastHits;
+                delete mem.lastTargets;
+                delete mem.energyCreepsECost;
+                delete mem.energyCreepsCCost;
+                delete mem.priorityBuilds;
+                delete mem.postBuildExtraMemory;
+                delete mem.overrideBody;
+                delete mem.overrideName;
+                delete mem.workFetcher;
+                delete mem.spawnUtilization;
+                delete mem.buildTick;
+                delete mem.priorityBuildsTicks;
+                delete mem.lastBreached;
+                delete mem.outerWallDamageLevel;
+                delete mem.incompleteHarvestPathRooms;
+                delete mem.towerRepairSleep;
+                delete mem.turretSleep;
+                delete mem.requestRenew;
+                delete mem.healersDefaultHealOthersFirst;
+                delete mem.healersAlwaysHealSelfFirst;
+                delete mem.reRoadWithBuilders;
+                delete mem.ticksUnderEffectiveLevel;
+                delete mem.oldRampartPrioritiesT;
+                delete mem.oldRampartPrioritiesT;
+                delete mem.boostsRequestedTime;
+                // delete mem.upgradeThroughputLimited;
+                delete mem.lastAttackScore0
+
+                delete mem.advManagedLabs;
+                delete mem.triggerRebuild
+                delete mem.triggerRebuildCooldown
+
+                delete mem.lastSpawnToIdlePool
+
+                delete mem.fetcherArrivalPoints
+                delete mem.closeRamparts
+
+                delete mem.attemptingToUnBoostRick
+                delete mem.spawningHeavyMission
+                delete mem.observeRoomIdx
+                delete mem.combatBoostsPending
+                delete mem.neededBoosts
+                delete mem.energyPrice
+                delete mem.civilianLabs
+                delete mem.labMemory*/
+
+
+
+                // TODO
+
+                _.pull(Game.myRooms, this)
+
+                return;
+            }
+    
+        }
+        return
+    }
+}
+
+function effectivelevel() { // this should be used incase of errors or downgrade or attack
+    let numSpawns = this.spawns.length;
+
+    if (numSpawns == 0) {
+        // This was set to 2 before. Not sure why. 
+        this.effectiveLevel = Math.min(this.controller.level, 1);
+    }
+    else if (!roomAI.hasSpawnBatteryContainers(this)) {
+        this.effectiveLevel = Math.min(this.controller.level, 2);
+    }
+    else if (this.energyCapacityAvailable <= 400 || this.towers.length == 0) {
+        this.effectiveLevel = Math.min(this.controller.level, 3);
+    }
+    else if (!this.storage || this.energyCapacityAvailable <= 800) {
+        this.effectiveLevel = Math.min(this.controller.level, 4);
+    }
+    else if (this.links.length < 2 ||
+        roomAI.getSpawnBatteryCentre(this.name).lookFor(LOOK_STRUCTURES).length == 0 ||
+        this.energyCapacityAvailable <= 1300) {
+        this.effectiveLevel = Math.min(this.controller.level, 5);
+    }
+    else if (!this.terminal || this.energyCapacityAvailable <= 1800 + 1500 ||
+        this.lookForAt(LOOK_STRUCTURES, mem.storageBatteryX - 1, mem.storageBatteryY + 1).length == 0) {
+        this.effectiveLevel = Math.min(this.controller.level, 6);
+    }
+    else if ((numSpawns < 2 && !Memory.season3) || this.energyCapacityAvailable <= 2300 + 2000) {
+        this.effectiveLevel = Math.min(this.controller.level, 7);
+    }
+    else {
+        this.effectiveLevel = this.controller.level;
+    }
+
+    if (this.effectiveLevel < this.controller.level) {
+        mem.ticksUnderEffectiveLevel = (mem.ticksUnderEffectiveLevel || 0) + 1;
+        Game.damagedRooms = (Game.damagedRooms || 0) + 1;
+    }
+    else {
+        delete mem.ticksUnderEffectiveLevel;
+    }
+
+    if (!Memory.ignoreNukeDefcon) {
+        if ((mem.nukeLandTime || 0) - Game.time > 20000 * (mem.nukeCount || 1)) {
+            this.defcon = Math.max(1, this.defcon - Math.round(Math.sqrt(1 * (mem.nukeCount || 1))));
+        }
+        else if ((mem.nukeLandTime || 0) - Game.time > 0) {
+            this.defcon = Math.max(1, this.defcon - Math.round(Math.sqrt(2 * (mem.nukeCount || 1))));
+        }
+    }
+}

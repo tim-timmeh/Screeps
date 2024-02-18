@@ -38,18 +38,18 @@ function Operation(flag, flagName, flagType, king) {
 Operation.prototype.init = function () { // Initialize / build objects required
   myFunc.tryWrap(() => {
     this.initOp(); // instantiate all objects require for operation including missions
-  }, `ERROR initOp ${this.name} ${this.type}`);
+  }, `ERROR initOp ${this.name} ${this.type}`, `initOp_${this.name}`);
   for (let missionName in this.missions) { // then instantiate objects required for missions and functions
     myFunc.tryWrap(() => {
       this.missions[missionName].initMiss();
-    }, `ERROR initMiss ${this.name} (${this.type}) - ${missionName}`);
+    }, `ERROR initMiss ${this.name} (${this.type}) - ${missionName}`, `initMiss_${this.name}`);
   }
 };
 Operation.prototype.roleCall = function () { // perform rolecall on required creeps spawn if needed
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].roleCallMiss();
-    }, `ERROR roleCallMiss ${this.name} (${this.type}) - ${missionName}`);
+    }, `ERROR roleCallMiss ${this.name} (${this.type}) - ${missionName}`, `RoleCallMiss_${this.name}`);
   }
 };
 Operation.prototype.action = function () { // perform actions / missions
@@ -58,7 +58,7 @@ Operation.prototype.action = function () { // perform actions / missions
     if (Game.cpu.bucket >= mission.priority) {
       myFunc.tryWrap(() => {
         mission.actionMiss();
-      }, `ERROR actionMiss, ${this.name} (${this.type}) - ${missionName}`);
+      }, `ERROR actionMiss, ${this.name} (${this.type}) - ${missionName}`, `actionMiss_${this.name}`);
     } else {
       //console.log(`ERROR, Not enough bucket to execute (${mission.priority} - ${Game.cpu.bucket}/10000), skipping: ${this.name} (${this.type}) - ${missionName}`)
       //Add logging/cache here
@@ -69,11 +69,11 @@ Operation.prototype.finalize = function () { // finalize?
   for (let missionName in this.missions) {
     myFunc.tryWrap(() => {
       this.missions[missionName].finalizeMiss();
-    }, `ERROR finalizeMiss ${this.name} (${this.type}) - ${missionName}`);
+    }, `ERROR finalizeMiss ${this.name} (${this.type}) - ${missionName}`, `finalizeMiss_${this.name}`);
   };
   myFunc.tryWrap(() => {
     this.finalizeOp();
-  }, `ERROR finalizeOp ${this.name} (${this.type}) - ${Object.keys(this.missions)}`);
+  }, `ERROR finalizeOp ${this.name} (${this.type}) - ${Object.keys(this.missions)}`, `finalizeOp_${this.name}`);
 };
 
 // Additional methods/functions below

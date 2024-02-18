@@ -3,7 +3,9 @@
 
 // Globals not related to specific objects
 
-global.test1 = 'this is global.test1'; // Test global that works
+//global.debug = true;
+
+//global.skipMemorySave = 10; //set time between memory saves. Caution, global reset between saves will lose data
 
 global.memorySize = RawMemory.get().length; // size of memory in bytes
 

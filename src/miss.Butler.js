@@ -72,8 +72,8 @@ MissionButler.prototype.butlerActions = function (creep) {
 
     if (!creep.memory.building) {
       let sourceMy;
-      let containerMy
-      let result = -2;
+      let containerMy;
+      let result;
       let sourceMem;
       let storageMy = creep.room.storage;
       // let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
@@ -109,19 +109,22 @@ MissionButler.prototype.butlerActions = function (creep) {
         }
       })) {
         if (creep.withdraw(containerMy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          result = creep.moveToModule(sourceMy);
+          result = creep.moveToModule(containerMy);
           creep.memory.currentContainerId = containerMy.id;
         }
-      } else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES)) == ERR_NOT_IN_RANGE) {
+      } else if (creep.harvest(sourceMy = creep.pos.findClosestByPath(FIND_SOURCES, {
+        filter: (s) => {
+          return (s.energy > 0)
+        }})) == ERR_NOT_IN_RANGE) { // add to check is not empty
         result = creep.moveToModule(sourceMy);
         creep.memory.currentSourceId = sourceMy.id;
       } else {
         creep.giveWay()
       }
-      if (result === -2) {
+      if (result === -2) { // add if result is source/container is empty the delete
         delete creep.memory.currentSourceId;
         delete creep.memory.currentContainerId;
-        if (global.debug) console.log(`ERR_NO_PATH, deleting currentSourceId from butler memory - ${this.missionLog}`)
+        if (global.debug) console.log(`ERR_NO_PATH, deleting currentSourceId from butler memory ${creep.name} - ${this.missionLog}`)
       }
     } else if (!(creep.room.name == this.flag.pos.roomName)) {
       creep.moveToModule(this.flag);
@@ -149,8 +152,8 @@ MissionButler.prototype.butlerActions = function (creep) {
         }
       }
       if (this.room.terminal && this.room.terminal.store[RESOURCE_ENERGY] < 50000 && (creep.memory.currentJob = creep.doFillEnergy(this.room.terminal.id))) return;
-      //if (creep.memory.currentJob = creep.doUpgradeController()) return;
-      //console.log("No task, build standby task here");
+      if (creep.memory.currentJob = creep.doUpgradeController()) return;
+      if (global.debug) console.log(`No task, build standby task here ${this.missionLog}`);
       creep.giveWay();
     }
   }
