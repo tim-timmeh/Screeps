@@ -50,7 +50,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
   }
   this.addMission(new MissionTower(this));
   this.addMission(new MissionDefender(this))
-  if (this.storageContainer || (this.room.storage && this.room.storage.my)) {
+  if (this.storageContainer.length || (this.room.storage && this.room.storage.my)) {
     this.addMission(new MissionUpgrader(this));
     this.addMission(new MissionBuilder(this));
   }

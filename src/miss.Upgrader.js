@@ -7,7 +7,6 @@ const {MISS_PRIORITY} = require('./util.config');
 function MissionBuilder(operation, priority = 2) { // constructor, how to build the object
   Mission.call(this, operation, 'builder', priority); // uses params to pass object through parnt operation constructor first
   this.storage = this.room.storage && this.room.storage.my ? this.room.storage : this.storageContainer[0];
-  if (!this.storage) return;
   this.memoryOp = operation.flag.memory;
   if (this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {
     this.repairTarget = this.memoryOp.roadRepairIds[this.memoryOp.roadRepairIds.length - 1];
@@ -32,7 +31,6 @@ MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to o
 
 MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
   this.buildersReq = 0;
-  if (!this.storage) return;
   if (this.storage && this.storage.store){
     this.storageCapacity = this.storage.store.getCapacity();
     this.storageUsedCapacity = this.storage.store.getUsedCapacity() ;
