@@ -1,91 +1,75 @@
 'use strict';
 const Mission = require("./Mission");
-const profiler = require('./screeps-profiler')
-const { roomPosStrip } = require('./util.myFunctions');
+const {MISS_PRIORITY} = require('./util.config');
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionUpgrader(operation, priority = 2) { // constructor, how to build the object
-  Mission.call(this, operation, 'upgrader', priority); // uses params to pass object through parnt operation constructor first
-  this.controller = this.room.controller;
-  this.storage = (this.room.storage && this.room.storage.my) ? this.room.storage : this.storageContainer[0];
+function MissionBuilder(operation, priority = 2) { // constructor, how to build the object
+  Mission.call(this, operation, 'builder', priority); // uses params to pass object through parnt operation constructor first
+  this.storage = this.room.storage && this.room.storage.my ? this.room.storage : this.storageContainer[0];
+  if (!this.storage) return;
+  this.memoryOp = operation.flag.memory;
+  if (this.memoryOp.roadRepairIds && this.memoryOp.roadRepairIds.length) {
+    this.repairTarget = this.memoryOp.roadRepairIds[this.memoryOp.roadRepairIds.length - 1];
+    this.repairTargetObj = Game.getObjectById(this.repairTarget);
+    if (!this.repairTargetObj) {
+      this.memoryOp.roadRepairIds.pop();
+    } else {
+      this.targetRepairHits = this.repairTargetObj.hitsMax - this.repairTargetObj.hits;
+      if (this.targetRepairHits == 0 || this.repairTargetObj.hits > 25000) {
+        this.memoryOp.roadRepairIds.pop()
+      }
+    }
+  } 
 }
 
 //-- Creates prototype inheritance, will give child obj the parents prototypes
 
-MissionUpgrader.prototype = Object.create(Mission.prototype); // makes MissionUpgrader protos copy of Mission protos
-MissionUpgrader.prototype.constructor = MissionUpgrader; // reset constructor to operationbase, or else constructor is operation
+MissionBuilder.prototype = Object.create(Mission.prototype); // makes MissionBuilder protos copy of Mission protos
+MissionBuilder.prototype.constructor = MissionBuilder; // reset constructor to operationbase, or else constructor is operation
 
 //-- Creates methods for prototype
 
-MissionUpgrader.prototype.initMiss = function () { // Initialize / build objects required
-  this.distanceToController = this.findDistanceToSpawn(this.controller.pos, 3);
-
+MissionBuilder.prototype.initMiss = function () { // Initialize / build objects required
+  this.buildersReq = 0;
+  if (!this.storage) return;
   if (this.storage && this.storage.store){
     this.storageCapacity = this.storage.store.getCapacity();
     this.storageUsedCapacity = this.storage.store.getUsedCapacity() ;
-  };
-  this.upperReserve = this.storageCapacity - (this.storageCapacity / 2); // 2=50% full, 3=66% full etc
-  const lowerReserve = 0; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
-  this.storagePercent = parseFloat(Math.max(0, (this.storageUsedCapacity - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
-  let lastPos
-
-  if (!this.memory.upgraderPos || !Object.keys(this.memory.upgraderPos).length) {
-    let ret = PathFinder.searchCustom(this.storage.pos, this.controller.pos, 3);
-    lastPos = ret.path[ret.path.length - 1]
-    this.memory.upgraderPos = roomPosStrip(lastPos);;
-  }
-
-  lastPos = lastPos || new RoomPosition(this.memory.upgraderPos.x, this.memory.upgraderPos.y, this.memory.upgraderPos.roomName);
-  this.container = lastPos.findInRange(FIND_STRUCTURES, 1, {
-    filter: { structureType: STRUCTURE_CONTAINER }
-  })[0];
-  if (!this.container) {
-    this.containerCsite = lastPos.findInRange(FIND_CONSTRUCTION_SITES, 1, {
-      filter: { structureType: STRUCTURE_CONTAINER }
-    })[0];
-    if (!this.containerCsite) {
-      this.placeContainer(lastPos, 0);
-    }
   } else {
-    //let storageCheck = this.room.storage && this.room.storage.my ? this.room.storage : false
-    this.memoryOp.controllerContainer = this.container.id;
-    this.paveRoad(this.storage, lastPos, 1);// Check path from container to storage || spawnGroup.spawns[0].pos ?? should add bunker entry as priority?
+      return
+  };
+  //this.storagePercent = Math.max(0, (this.storage.store.getUsedCapacity() / this.storage.store.getCapacity())).toFixed(3);
+  this.upperReserve = this.storageCapacity - (this.storageCapacity / 1.5); // 2=50% full, 3=66% full etc
+  const lowerReserve = 2000; //Forces a lower reserve limit to start scaling from. Eg 500k will only start spawning larger creeps from that limit.
+  this.storagePercent = parseFloat(Math.max(0, (this.storageUsedCapacity - lowerReserve) / this.upperReserve).toFixed(3)); // % of used storage
+  let csitesQty = this.room.find(FIND_CONSTRUCTION_SITES, {
+    filter : (c) => {
+      return (c.progressTotal > 1)
+    }
+  }).length;
+  if (csitesQty > 10 && this.storage.store.energy > (this.storageCapacity * 0.3)) {
+    this.buildersReq = 2;
+  } else if (csitesQty) {
+    this.buildersReq = 1
   }
-
-  this.upgraderCap = this.room.controller.level == 8 ? 5 : undefined; // Max 15w per tick on RCL8
 };
 
-MissionUpgrader.prototype.initMiss = profiler.registerFN(MissionUpgrader.prototype.initMiss, `upgrader - initMiss`);
-
-MissionUpgrader.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
-  let creepCount = 1;
-  if (this.controller.level == 8 && this.room.controller.ticksToDowngrade > 190000 && (this.storageUsedCapacity < (0.9 * this.storageCapacity)) ){ // if we are max rcl, high controller timer, and low storage, skip.
-      creepCount = 0
-  };
-  if (this.storagePercent >= 1 && this.controller.level != 8) {
-    if (Game.time % 9 == 0) creepCount = 8;
-  };
-  //if (this.room.name == "W17N38") {console.log("TEST", this.storagePercent)};
-  let body = this.getBody({ CARRY: 1, MOVE: 2, WORK: 3 }, { maxEnergyPercent: this.storagePercent, maxRatio: this.upgraderCap });
-  //if (this.room.name == "W17N38") {console.log("TEST2", body, this.storagePercent)};
+MissionBuilder.prototype.roleCallMiss = function () { // perform rolecall on required creeps spawn if needed
+  let body = this.getBody({ CARRY: 1, MOVE: 1, WORK: 1 }, { maxEnergyPercent: this.storagePercent });
   if (!body.length) {
-    body = ['carry', 'move', 'work']; // add this to getBody?, as if maxEnergyPercent too low will not spawn
+    body = ['carry', 'move', 'work']
   }
-  this.upgraders = this.creepRoleCall('upgrader', body, creepCount, { prespawn: this.distanceToController });
+  this.builders = this.creepRoleCall('builder', body, this.buildersReq);
 };
 
-MissionUpgrader.prototype.roleCallMiss = profiler.registerFN(MissionUpgrader.prototype.roleCallMiss, `upgrader - roleCallMiss`);
-
-MissionUpgrader.prototype.actionMiss = function () { // perform actions / missions
-  for (let upgrader of this.upgraders) {
-    this.upgraderActions(upgrader);
+MissionBuilder.prototype.actionMiss = function () { // perform actions / missions
+  for (let builder of this.builders) {
+    this.builderActions(builder);
   }
 };
 
-MissionUpgrader.prototype.actionMiss = profiler.registerFN(MissionUpgrader.prototype.actionMiss, `upgrader - actionMiss`);
-
-MissionUpgrader.prototype.finalizeMiss = function () { // finalize?
+MissionBuilder.prototype.finalizeMiss = function () { // finalize?
 
 };
 
@@ -94,34 +78,51 @@ MissionUpgrader.prototype.finalizeMiss = function () { // finalize?
  * 
  * @param {Creep} creep 
  */
-MissionUpgrader.prototype.upgraderActions = function (creep) {
+MissionBuilder.prototype.builderActions = function (creep) {
   if (creep.memory.building && creep.store.energy == 0) {
     creep.memory.building = false;
     creep.say("Hmm");
   }
-  if (!creep.memory.building && creep.store.energy == creep.store.getCapacity()) {
+  if (!creep.memory.building && !creep.store.getFreeCapacity()) {
     creep.memory.building = true;
     creep.say("Urg");
   }
   if (!creep.memory.building) {
+    /* let droppedSource = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3); //change to inRangeTo (cheaper) and managed by mission not creep logic?
+    if (creep.room.terminal)
+    if (droppedSource.length) {
+      if (creep.pickup(droppedSource[0]) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(droppedSource[0], {
+          visualizePathStyle: {
+            stroke: '#fa0'
+          }
+        });
+      }*/
     if (this.creepScavenge(creep)) {
-
-    } else if (this.container && this.container.store.energy > 0) {
-      if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        creep.moveToModule(this.container);
-      }
-    } else if (this.storagePercent >= 1 && creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    } else if (creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
       creep.moveToModule(this.storage);
     } else {
-      creep.giveWay()
+      creep.giveWay();
     }
   } else {
-    if (this.container && this.container.hits < (this.container.hitsMax - 1000)) {
-      creep.doRepair(this.container.id);
-    } else {
-      creep.doUpgradeController()
+    if (Object.keys(creep.store).length > 1 || Object.keys(creep.store)[0] != RESOURCE_ENERGY) {
+      if (creep.transfer(this.room.terminal, Object.keys(creep.store)[0]) == ERR_NOT_IN_RANGE) {
+        creep.moveToModule(this.room.terminal);
+      } else {
+        creep.giveWay()
+      }
     }
+    let currentJob = creep.memory.currentJob || {};
+    let { fill, build, tower, repair} = currentJob;
+    if (!repair) repair = this.repairTarget;
+    if (creep.memory.currentJob = creep.doBuildCsite(build)) return;
+    if ((creep.memory.currentJob = creep.doRepair(repair, 25000)) || this.repairTarget) return;
+    if (this.spawnGroup.spawns[0].recycleCreep(creep) == ERR_NOT_IN_RANGE) {
+      creep.moveToModule(this.spawnGroup.spawns[0]);
+      //console.log("SUICIDING")
+    }
+
   }
 };
 
-module.exports = MissionUpgrader;
+module.exports = MissionBuilder;
