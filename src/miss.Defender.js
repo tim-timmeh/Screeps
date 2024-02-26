@@ -20,7 +20,7 @@ MissionDefender.prototype.constructor = MissionDefender; // reset constructor to
 MissionDefender.prototype.initMiss = function () { // Initialize / build objects required
   if (!this.targetAttack) {
     let enemyCreeps = this.room.find(FIND_HOSTILE_CREEPS);
-    if (enemyCreeps.length && enemyCreeps[0].owner.username != 'Invader' || this.room.controller.level < 3 || enemyCreeps.length > 1) {
+    if (enemyCreeps.length && enemyCreeps[0].owner.username != 'Invader' || enemyCreeps[0].owner.username != 'Sanvicta' /*Truce for transit 26.2.24*/ || this.room.controller.level < 3 || enemyCreeps.length > 1) {
       this.targetAttack = this.flag.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     }
   }
