@@ -27,7 +27,7 @@ MissionTower.prototype.initMiss = function () { // Initialize / build objects re
   if (!this.targetAttack && this.towers[0]) {
     let targetAttack = this.towers[0].pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if (targetAttack && targetAttack.owner.username == "Sanvicta") return; // whitelist for transit 26.2.24 (check defender for truce also)
-    this.targetAttack = this.towers[0].pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    this.targetAttack = targetAttack;
     if (!this.targetAttack && !this.targetHeal) {
       this.targetHeal = this.room.find(FIND_MY_CREEPS, {
         filter: (creep) => creep.room.name == this.room.name && creep.hits < creep.hitsMax
