@@ -14,7 +14,7 @@ class Traveler {
      */
     static travelTo(creep, destination, options = {}) {
         // uncomment if you would like to register hostile rooms entered
-        // this.updateRoomStatus(creep.room);
+        this.updateRoomStatus(creep.room);
         if (!destination) {
             return ERR_INVALID_ARGS;
         }
@@ -149,7 +149,13 @@ class Traveler {
      * @returns {RoomMemory|number}
      */
     static checkAvoid(roomName) {
-        return Memory.rooms && Memory.rooms[roomName] && Memory.rooms[roomName].avoid;
+        if (Memory.rooms && Memory.rooms[roomName] && Memory.rooms[roomName].avoid) {
+            if (Game.time - Memory.rooms[roomName].avoid > 100000) {
+                delete Memory.rooms[roomName].avoid
+                return false
+            }
+            return true
+        }
     }
     /**
      * check if a position is an exit
@@ -198,7 +204,7 @@ class Traveler {
         }
         if (room.controller) {
             if (room.controller.owner && !room.controller.my) {
-                room.memory.avoid = 1;
+                room.memory.avoid = Game.time;
             }
             else {
                 delete room.memory.avoid;
