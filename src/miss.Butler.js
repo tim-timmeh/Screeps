@@ -25,7 +25,11 @@ MissionButler.prototype.roleCallMiss = function () { //?? will always make 2x an
   let body;
   if (this.spawnGroup.room.energyCapacityAvailable < 700 || !this.storage) { // 700 - min miner size
     swarmQty = 6
-    body = this.getBody({ WORK: 1, CARRY: 1, MOVE: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, maxRatio: 12 });
+    if (this.spawnGroup.room.name != this.room.name) {
+      body = this.getBody({ WORK: 1, CARRY: 1, MOVE: 2 }, { maxRatio: 12 });
+    } else {
+      body = this.getBody({ WORK: 1, CARRY: 1, MOVE: 1 }, { addBodyPart: { MOVE: 1, CARRY: 1 }, maxRatio: 12 });
+    }
     this.butlers = this.creepRoleCall('butler', body, swarmQty) //(roleName, .getBody({work, carry, move}, {maxRatio, maxEnergyPercent, forceSpawn, keepFormat, addBodyPart, removeBodyPart}), qty, {prespawn, memory})
   } else {
     swarmQty = 1; //this.spawnGroup.spawns.length;
