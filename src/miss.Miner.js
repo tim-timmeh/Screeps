@@ -57,6 +57,7 @@ MissionMiner.prototype.roleCallMiss = function () { // ?? creepRoleCall all pull
  * Perform actions of mission
  */
 MissionMiner.prototype.actionMiss = function () {
+  if (!this.miners) return;
   for (let miner of this.miners) {
     this.minerActions(miner);
   }
