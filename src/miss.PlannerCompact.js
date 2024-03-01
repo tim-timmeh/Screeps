@@ -46,7 +46,7 @@ MissionPlannerCompact.prototype.finalizeMiss = function () { // finalize?
 
 MissionPlannerCompact.prototype.checkBase = function (spawnAnchorPos) {
   if (!this.room.controller.my || !spawnAnchorPos || ((Game.time - this.memory.baseTick) < 1000)) return;
-  let anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
+  let anchorOffset = { "x": 3, "y": 2 }; // bunkerFort x4/y4
   let anchorPos = this.minusPosition(anchorOffset, spawnAnchorPos)
   let bunkerCurrentReq = {};
   bunkerCurrentReq = bunkerLayout.getLayout(bunkerLayout.baseLayout, { levelLayout: bunkerLayout.baseLevels, rcl: this.rcl });
