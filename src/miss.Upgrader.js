@@ -115,7 +115,7 @@ MissionUpgrader.prototype.upgraderActions = function (creep) {
       if (creep.withdraw(this.container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveToModule(this.container);
       }
-    } else if (this.storagePercent >= 1 && creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    } else if (this.storagePercent >= 1 && creep.withdraw(this.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || this.controller.ticksToDowngrade < 10000) {
       creep.moveToModule(this.storage);
     } else {
       creep.giveWay()
