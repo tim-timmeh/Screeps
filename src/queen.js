@@ -5,6 +5,7 @@ const King = require('./king');
 const OperationPlunder = require('./op.Plunder');
 const OperationClaim = require('./op.Claim');
 const OperationOffence = require('./op.Offence');
+const OperationBaseCompact = require('./op.BaseCompact');
 
 /**
  * Flag Primary / Secondary Code. (
@@ -20,12 +21,14 @@ const OperationOffence = require('./op.Offence');
  * COLOR_WHITE: 10 )
  */
 const decode = {
+  44: 'OpBaseCompact', // ltblue, ltblue
   55: 'OpBase', // Green, Green
   66: 'OpPlunder', // Yellow, Yellow
   77: 'OpClaim', // Orange, Orange
   11: 'OpOffence', // Red, Red
 }
 const operationTypes = {
+  OpBaseCompact: OperationBaseCompact, // ltblue, ltblue
   OpBase: OperationBase, // Green, Green
   OpPlunder: OperationPlunder, // Yellow, Yellow
   OpClaim: OperationClaim, // Orange, Orange
