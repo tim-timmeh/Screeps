@@ -40,8 +40,8 @@ OperationBaseCompact.prototype.initOp = function () { // Initialize / build obje
     if (global.debug) console.log(`No spawn group in room, setting spawn group to ${this.spawnGroup.room}`);
   }
   this.droppedResources = this.room.find(FIND_DROPPED_RESOURCES)
-  let storageContainerPos = new RoomPosition(this.pos.x + 1, this.pos.y + 1, this.room.name)
-  this.storageContainer = storageContainerPos.lookFor(LOOK_STRUCTURES);
+  let storageContainerPos = new RoomPosition(this.pos.x + 3, this.pos.y + 1, this.room.name) // in relation to flag
+  this.storageContainer = storageContainerPos.lookFor(LOOK_STRUCTURES); //If road on container will error??
   this.addMission(new MissionButler(this));
   if (this.room.energyCapacityAvailable >= 700) { // min miner size
     for (let i = 0; i < this.room.sources.length; i++) {
