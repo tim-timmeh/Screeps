@@ -1,11 +1,10 @@
-
 var myFunc = require('./util.myFunctions');
 const OperationBase = require('./op.Base');
 const King = require('./king');
 const OperationPlunder = require('./op.Plunder');
 const OperationClaim = require('./op.Claim');
 const OperationOffence = require('./op.Offence');
-const OperationBaseCompact = require('./op.BaseCompact');
+//const OperationBaseCompact = require('./op.BaseCompact');
 
 /**
  * Flag Primary / Secondary Code. (
@@ -47,31 +46,27 @@ let queen = {
   getOperations: function (king) {
     let operationList = {};
     for (let flagName in Game.flags) { // iterate over all flags / designated operations
-      let flagCode = `${Game.flags[flagName].color}${Game.flags[flagName].secondaryColor}`; // convert color to code
+      let flag = Game.flags[flagName];
+      let flagCode = `${flag.color}${flag.secondaryColor}`; // convert color to code
       if (flagCode == '1010') continue; // white flags do nothing
       let flagType = decode[flagCode];
       if (flagType) {
         let operationType = operationTypes[flagType];
         if (operationType) {
-          let flag = Game.flags[flagName];
+          let isCompact = flagCode == '44'; // Determine if the operation should run in compact mode based on flag color
           let operation;
-          // First one will not change anything if failed, second one will return/change variable to undefined
           myFunc.tryWrap(() => { // try/catch wrapper function
-            operation = new operationType(flag, flagName, flagType, king);
+            operation = new operationType(flag, flagName, flagType, king, isCompact);
           }, 'ERROR generating op from flag');
-          //operation = myFunc.tryWrap(()=> new operationType(flag, flagName, opCode, king),'Error generating operation from flag')
           operationList[flagName] = operation;
-          //global[flagName] = operation; // Add operation object to global?
         } else {
           console.log('Error in Operation / flag matchup - ' + flagType);
-
         }
       } else {
         console.log(`Error in flag color classification, ${flagName} - ${flagType} `)
       }
     }
     let sortedList = _.sortBy(operationList, (op) => op.priority);
-    //console.log((sortedList[0].priority));
     return sortedList;
   },
 };

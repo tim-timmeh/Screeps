@@ -1,12 +1,10 @@
-
-
 const Operation = require('./Operation');
 const { OP_PRIORITY } = require('./util.config');
 const MissionButler = require('./miss.Butler');
 const MissionMiner = require('./miss.Miner');
 const MissionUpgrader = require('./miss.Upgrader');
 const MissionBuilder = require('./miss.Builder');
-const MissionPlanner = require('./miss.Planner');
+const MissionPlanner = require('./miss.Planner'); // Assuming this is now the merged mission class
 const MissionTower = require('./miss.Tower');
 const MissionDefender = require('./miss.Defender');
 const MissionTerminal = require('./miss.Terminal');
@@ -20,11 +18,13 @@ const MissionMinMiner = require('./miss.MinMiner');
  * @param {string} flagName flag.name should be default set flag1/2/3 etc maybe need to add additional incase of doubleup?
  * @param {string} flagType decoded flag color used to determine which operation to instantiate (eg green/green = 55 = OpBase)
  * @param {object} king object used for king-scoped behavior (terminal transmission, etc.)
+ * @param {boolean} isCompact flag to determine if the base should operate in compact mode
  * @constructor extends Operation
  */
-function OperationBase(flag, flagName, flagType, king) {
+function OperationBase(flag, flagName, flagType, king, isCompact = false) {
   Operation.call(this, flag, flagName, flagType, king); // uses params to pass object through operation constructor first
   this.priority = OP_PRIORITY.CORE;
+  this.isCompact = isCompact;
   //this.memory.bootstrapTimer = this.memory.bootstrapTimer || 280 // may or may not need?
   this.spawnGroup = this.king.getSpawnGroup(this.flag.pos.roomName);
 }
@@ -54,7 +54,7 @@ OperationBase.prototype.initOp = function () { // Initialize / build objects req
     this.addMission(new MissionUpgrader(this));
     this.addMission(new MissionBuilder(this));
   }
-  this.addMission(new MissionPlanner(this));
+  this.addMission(new MissionPlanner(this, this.isCompact));
   if (this.room.terminal && this.room.storage) {
     this.addMission(new MissionTerminal(this));
   }

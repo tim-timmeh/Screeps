@@ -1,13 +1,17 @@
 'use strict';
 const Mission = require("./Mission");
-const bunkerLayout = require('./util.bunkerLayout');
+const bunkerLayoutCompact = require('./util.bunkerLayoutCompact');
+const bunkerLayoutNormal = require('./util.bunkerLayout');
+let bunkerLayout;
 const util_mincut = require('./util.min_cut');
 
 
 //-- Constructor function, use .call to pass args through parent constructor first if req.
 
-function MissionPlanner(operation, priority = 6) { // constructor, how to build the object
+function MissionPlanner(operation, isCompact = false, priority = 6) { // constructor, how to build the object
   Mission.call(this, operation, 'planner', priority); // uses params to pass object through parnt operation constructor first
+  this.isCompact = isCompact;
+  this.isCompact ? bunkerLayout = bunkerLayoutCompact : bunkerLayout = bunkerLayoutNormal;
   if (this.spawnGroup.room == this.room) {
     this.spawnAnchorPos = this.spawnGroup.pos;
   } else {
@@ -46,7 +50,8 @@ MissionPlanner.prototype.finalizeMiss = function () { // finalize?
 
 MissionPlanner.prototype.checkBase = function (spawnAnchorPos) {
   if (!this.room.controller.my || !spawnAnchorPos || ((Game.time - this.memory.baseTick) < 1000)) return;
-  let anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
+  let anchorOffset
+  this.isCompact ? anchorOffset = { "x": 3, "y": 2 } : anchorOffset = { "x": 4, "y": 4 }; // bunkerFort x4/y4
   let anchorPos = this.minusPosition(anchorOffset, spawnAnchorPos)
   let bunkerCurrentReq = {};
   bunkerCurrentReq = bunkerLayout.getLayout(bunkerLayout.baseLayout, { levelLayout: bunkerLayout.baseLevels, rcl: this.rcl });

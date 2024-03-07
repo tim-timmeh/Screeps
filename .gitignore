@@ -4,3 +4,4 @@ node_modules/
 *.history
 screeps.json
 /dist
+/engine
