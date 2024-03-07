@@ -27,7 +27,7 @@ const decode = {
   11: 'OpOffence', // Red, Red
 }
 const operationTypes = {
-  OpBaseCompact: OperationBaseCompact, // ltblue, ltblue
+  //OpBaseCompact: OperationBaseCompact, // ltblue, ltblue
   OpBase: OperationBase, // Green, Green
   OpPlunder: OperationPlunder, // Yellow, Yellow
   OpClaim: OperationClaim, // Orange, Orange
