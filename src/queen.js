@@ -20,7 +20,7 @@ const OperationOffence = require('./op.Offence');
  * COLOR_WHITE: 10 )
  */
 const decode = {
-  44: 'OpBaseCompact', // ltblue, ltblue
+  44: 'OpBase', // ltblue, ltblue
   55: 'OpBase', // Green, Green
   66: 'OpPlunder', // Yellow, Yellow
   77: 'OpClaim', // Orange, Orange
